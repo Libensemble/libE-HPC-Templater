@@ -1,0 +1,9 @@
+{
+    "job_wallclock_minutes": 30,
+	"project": "CSC250STMS07",
+	"do_plots": "false",
+    "do_balsam_plots": "false",
+	"plot_dir": "../../../",
+    "balsam_plot_dir": "../../../",
+    "conda_env_name": "balsam_dbindel_with_deap"
+}

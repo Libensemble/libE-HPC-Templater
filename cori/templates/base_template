@@ -1,0 +1,70 @@
+#!/bin/bash
+#SBATCH -J {{ job_name }}
+#SBATCH -N {{ num_nodes }}
+#SBATCH -p {{ queue }}
+#SBATCH -o tlib.%j.%N.out
+#SBATCH -e tlib.%j.%N.error
+#SBATCH -t 00:{{ job_wallclock_minutes }}:00
+#SBATCH -A {{ project }}
+#SBATCH -C {{ node_type }}
+
+# Script to run libEnsemble using multiprocessing.
+# LibEnsemble will run on a dedicated node.
+# The remaining nodes in the allocation will be dedicated to the jobs launched by the workers.
+
+#Requirements for running:
+# Comms set to 'local' and set/receive number of workers: e.g. libE_specs = {'nprocesses': 16, 'comms': 'local'}
+# If use job_controller, set auto-resources=True and central_mode=True. [**************** maybe auto if comms local/mproc)]
+# Note: Requires a schedular having an environment variable giving a global nodelist in a supported format (eg. SLURM/COBALT)
+#       Otherwise a worker_list file will be required.
+
+#Currently requires even distribution - either multiple workers per node or nodes per worker
+
+#User to edit these variables
+export EXE={{ test }}
+
+export NUM_WORKERS={{ num_workers }}
+
+# Name of Conda environment
+export CONDA_ENV_NAME={{ conda_env_name }}
+
+export LIBE_PLOTS={{ do_plots }} # Require plot scripts in $PLOT_DIR (see at end)
+export PLOT_DIR={{ plot_dir }}
+#---------------------------------------------------------------------------------------------
+#Test
+echo -e "Slurm job ID: $SLURM_JOBID"
+
+#cd $PBS_O_WORKDIR
+cd $SLURM_SUBMIT_DIR
+
+# Activate conda environment
+export PYTHONNOUSERSITE=1
+. activate $CONDA_ENV_NAME
+
+# A little useful information for the log file...
+echo -e "Master process running on: $HOSTNAME"
+echo -e "Directory is:  $PWD"
+
+# Testing
+echo -e "Conda env is: $CONDA_DEFAULT_ENV"
+echo -e "Slurm nodelist is: $SLURM_NODELIST"
+
+#This will work for the number of contexts that will fit on one node (eg. 320 on Bebop) - increase libE nodes for more.
+# cmd="srun --ntasks=$(($NUM_WORKERS+1)) --nodes=1 python $EXE $LIBE_WALLCLOCK"
+
+cmd="{{ cmd_prefix }} python $EXE {{ cmd_suffix }}"
+
+echo The command is: $cmd
+echo End PBS script information.
+echo All further output is from the process being run and not the pbs script.\n\n $cmd # Print the date again -- when finished
+
+$cmd
+
+if [[ $LIBE_PLOTS = "true" ]]; then
+  python $PLOT_DIR/plot_libe_calcs_util_v_time.py
+  python $PLOT_DIR/plot_libe_runs_util_v_time.py
+  python $PLOT_DIR/plot_libE_histogram.py
+fi
+
+# Print the date again -- when finished
+echo Finished at: `date`

@@ -1,0 +1,6 @@
+{
+    "num_nodes": 129,
+    "num_workers": 128,
+    "cmd_prefix": "srun --overcommit --ntasks $(($NUM_WORKERS+1)) --nodes=1",
+    "template": "base_template"
+}

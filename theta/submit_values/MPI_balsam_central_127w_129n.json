@@ -1,0 +1,11 @@
+{
+    "cobalt_num_nodes": 129,
+    "num_workers": 127,
+    "queue": "default",
+    "wallclock": 25,
+    "workflow": "libe_workflow",
+    "balsam_db_name": "dbase_pg_forces_large",
+    "balsam_num_nodes": 2,
+    "balsam_ranks_per_node": 64,
+    "template": "balsam_template"
+}

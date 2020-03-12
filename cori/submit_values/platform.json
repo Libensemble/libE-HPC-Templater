@@ -1,0 +1,10 @@
+{
+	"job_name": "libE_test",
+	"queue": "debug",
+	"project": "m3353",
+	"do_plots": "false",
+	"plot_dir": "..",
+    "job_wallclock_minutes": 30,
+    "conda_env_name": "libe_common_intel_py3.6",
+	"node_type": "knl"
+}
