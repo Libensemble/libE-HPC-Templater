@@ -32,15 +32,13 @@ Usage
 Configuration
 -------------
 
-- Each platform has its own input directory structure:
+- Each platform has its own input directory structure::
 
-``
     - [platform]
         - calling_values
         - submit_values
         - templates
         - test_config
-``
 
 - calling_values: Per-test configurations for test calling scripts.
 
