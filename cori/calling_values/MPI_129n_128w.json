@@ -1,7 +1,6 @@
 {
     "use_balsam": false,
-    "use_mpi": true,
-    "mpi_subtract_nworkers": true,
+    "persis_gen": false,
     "mpi_exctr_args": "auto_resources=True, central_mode=True",
     "num_sim_particles": 1e5,
     "sim_max": 512,
