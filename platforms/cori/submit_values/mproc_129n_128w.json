@@ -1,0 +1,6 @@
+{
+    "num_nodes": 129,
+    "num_workers": 128,
+    "cmd_suffix": "$NUM_WORKERS > out.txt 2>&1",
+    "template": "cori/base_template"
+}

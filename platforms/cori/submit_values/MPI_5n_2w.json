@@ -1,0 +1,6 @@
+{
+    "num_nodes": 5,
+    "num_workers": 2,
+    "cmd_prefix": "srun --overcommit --ntasks $(($NUM_WORKERS+1)) --nodes=1",
+    "template": "cori/base_template"
+}

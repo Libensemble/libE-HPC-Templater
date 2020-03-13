@@ -1,0 +1,6 @@
+{
+    "cobalt_num_nodes": 128,
+    "queue": "default",
+    "num_workers": 128,
+    "template": "theta/mproc_MOM_template"
+}

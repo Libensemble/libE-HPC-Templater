@@ -1,0 +1,6 @@
+{
+    "cobalt_num_nodes": 8,
+    "queue": "debug-cache-quad",
+    "num_workers": 4,
+    "template": "theta/mproc_MOM_template"
+}

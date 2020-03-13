@@ -1,0 +1,5 @@
+{
+    "num_nodes": 128,
+    "num_workers": 128,
+    "template": "summit/base_template"
+}

@@ -1,0 +1,11 @@
+{
+    "cobalt_num_nodes": 5,
+    "queue": "debug-flat-quad",
+    "num_workers": 2,
+    "wallclock": 25,
+    "workflow": "libe_workflow",
+    "balsam_db_name": "dbase_pg_forces_large",
+    "balsam_num_nodes": 1,
+    "balsam_ranks_per_node": 3,
+    "template": "theta/balsam_template"
+}

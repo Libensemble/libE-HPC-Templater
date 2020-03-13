@@ -1,6 +1,0 @@
-{
-    "num_nodes": 5,
-    "num_workers": 4,
-    "cmd_suffix": "$NUM_WORKERS > out.txt 2>&1",
-    "template": "base_template"
-}
