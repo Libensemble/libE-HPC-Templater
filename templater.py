@@ -5,6 +5,7 @@ import shutil
 import argparse
 from jinja2 import Environment, FileSystemLoader
 
+
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
 
@@ -79,6 +80,13 @@ def make_test_dir(out_platform_dir, config):
     return out_test_dir
 
 
+def load_config(in_type_dir, config):
+    """ Load current configuration file"""
+    with open(os.path.join(in_type_dir, config), "r") as r:
+        values = json.load(r)
+
+    return values
+
 def render(values, jinja_env):
     """ Render a template with passed values"""
     chosen_template = values.get("template")
@@ -87,20 +95,14 @@ def render(values, jinja_env):
     return template.render(values)
 
 
-def render_calling(in_type_dir, config, out_test_dir, test, jinja_env):
+def render_calling(values, out_test_dir, test, jinja_env):
     """ Load configs for a calling script, output rendered template"""
-    with open(os.path.join(in_type_dir, config), "r") as r:
-        values = json.load(r)
-
     with open(os.path.join(out_test_dir, test), "w") as f:
         f.write(render(values, jinja_env))
 
 
-def render_submit(in_type_dir, config, out_test_dir, test, jinja_env):
+def render_submit(values, out_test_dir, test, jinja_env):
     """ Load configs for a job submission script, output rendered template"""
-    with open(os.path.join(in_type_dir, config), "r") as r:
-        values = json.load(r)
-
     with open(os.path.join(in_type_dir, "platform.json")) as p:
         platform_values = json.load(p)
 
@@ -131,9 +133,11 @@ if __name__ == '__main__':
                     if is_test(config):
                         out_test_dir = make_test_dir(out_platform_dir, config)
 
+                    values = load_config(in_type_dir, config)
+
                     if type == "calling":
-                        render_calling(in_type_dir, config, out_test_dir, test, jinja_env)
+                        render_calling(values, out_test_dir, test, jinja_env)
 
                     elif type == "submit":
                         if is_test(config):
-                            render_submit(in_type_dir, config, out_test_dir, test, jinja_env)
+                            render_submit(values, out_test_dir, test, jinja_env)
