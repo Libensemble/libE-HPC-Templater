@@ -1,0 +1,8 @@
+{
+	"num_workers": 4,
+	"num_nodes": 2,
+	"exports": ["export I_MPI_FABRICS_LIST=tmi,tcp",
+		 		"export I_MPI_FALLBACK=1"],
+	"cmd_prefix": "srun --ntasks $(($NUM_WORKERS+1))",
+	"template": "base_template"
+}

@@ -34,16 +34,19 @@ Configuration
 
 - Each platform has its own input directory structure::
 
-    - [platform]
-        - calling_values
-        - submit_values
-        - templates
-        - test_config
+    - [platform]/
+        - calling_values/
+        - submit_values/
+        - stage/
+        - tests.json
+        - [templates]
 
 - calling_values: Per-test configurations for test calling scripts.
 
 - submit_values: Per-test configurations for test job submission scripts, and ``platform.json``, with platform-specific universal submission script settings.
 
-- templates: Templates for submission scripts and calling scripts.
+- stage: Files to copy over to each test directory
 
-- test_config: ``tests.json``, a list of tests to create scripts for, and other files to copy to each upper-level platform directory.
+- tests.json: A set of tests to configure scripts for on this platform.
+
+and then any number of templates specific to this platform.

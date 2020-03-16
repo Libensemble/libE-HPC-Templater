@@ -5,6 +5,7 @@ import shutil
 import argparse
 from jinja2 import Environment, FileSystemLoader
 
+platform_src = "./platforms"
 
 platforms = ["bebop", "summit", "theta", "cori"]
 types = ["calling", "submit"]
@@ -25,7 +26,7 @@ def parse_options():
     return options
 
 
-def determine_source_dirs(options):
+def determine_requests(options):
     """ Determine directories that contain configurations for test templates"""
     if options["all"]:
         req_platforms = platforms
@@ -37,52 +38,42 @@ def determine_source_dirs(options):
     else:
         req_types = [i for i in types if options[i]]
 
-    source_dirs = []
-    for p in req_platforms:
-        for t in req_types:
-            source_dirs.append(os.path.join(p, t + '_values'))
-
-    return source_dirs
+    return req_platforms, req_types
 
 
 def prepare_jinja(templates):
-    """ Setup jinja environment and get current platform templates folder"""
+    """ Setup jinja environment and get current templates folder"""
     file_loader = FileSystemLoader(templates)
     jinja_env = Environment(loader=file_loader, lstrip_blocks=True)
 
     return jinja_env
 
 
-def get_tests_properties(dir):
-    """ Determine a number of test properties from a source directory"""
-    platform = dir.split('/')[0]
-    type = dir.split('_')[0].split('/')[1]
-    templates = os.path.join(platform, "templates")
-    config_source = os.path.join(platform, "test_config")
+def get_tests(platform_dir):
+    """ Determine set of tests to populate templates for"""
+    with open(os.path.join(platform_dir, "tests.json")) as f:
+        tests = json.load(f)
 
-    with open(os.path.join(config_source, "tests.json")) as t:
-        tests = json.load(t)
-
-    return tests, platform, type, templates, config_source
+    return tests.get("tests")
 
 
-def make_platform_dir(platform, test, config_source):
+def make_out_platform_dir(platform, test):
     """ Make a top-level directory labeled by platform and test name"""
-    platform_dir = platform + '_' + test.split('.')[0]
-    if not os.path.isdir(platform_dir):
-        shutil.copytree(config_source, platform_dir,
-                        ignore=shutil.ignore_patterns('tests.json'))
+    out_platform_dir = platform + '_' + test.split('.')[0]
+    os.makedirs(out_platform_dir, exist_ok=True)
 
-    return platform_dir
+    return out_platform_dir
+    # if not os.path.isdir(platform_dir):
+    #     shutil.copytree(config_source, platform_dir,
+    #                     ignore=shutil.ignore_patterns('tests.json'))
 
 
-def make_test_dir(config, platform_dir):
+def make_test_dir(out_platform_dir, config):
     """ Make a lower-level directory labeled by test name"""
-    test_dir = config.split('.')[0]
-    full_dir = os.path.join(platform_dir, test_dir)
-    os.makedirs(full_dir, exist_ok=True)
+    out_test_dir = os.path.join(out_platform_dir, config.split('.')[0])
+    os.makedirs(out_test_dir, exist_ok=True)
 
-    return test_dir, full_dir
+    return out_test_dir
 
 
 def render(values, jinja_env):
@@ -93,27 +84,27 @@ def render(values, jinja_env):
     return template.render(values)
 
 
-def render_calling(dir, config, test, jinja_env, full_dir):
+def render_calling(in_type_dir, config, out_test_dir, test, jinja_env):
     """ Load configs for a calling script, output rendered template"""
-    with open(os.path.join(dir, config), "r") as r:
-        run_values = json.load(r)
+    with open(os.path.join(in_type_dir, config), "r") as r:
+        values = json.load(r)
 
-    with open(os.path.join(full_dir, test), "w") as f:
-        f.write(render(run_values, jinja_env))
+    with open(os.path.join(out_test_dir, test), "w") as f:
+        f.write(render(values, jinja_env))
 
 
-def render_submit(dir, config, test, jinja_env, full_dir, test_dir):
+def render_submit(in_type_dir, config, out_test_dir, test, jinja_env):
     """ Load configs for a job submission script, output rendered template"""
-    with open(os.path.join(dir, config), "r") as r:
-        run_values = json.load(r)
+    with open(os.path.join(in_type_dir, config), "r") as r:
+        values = json.load(r)
 
-    with open(os.path.join(dir, "platform.json")) as p:
+    with open(os.path.join(in_type_dir, "platform.json")) as p:
         platform_values = json.load(p)
 
     single_test = {"test": test}
-    combined = {**run_values, **single_test, **platform_values}
+    combined = {**values, **single_test, **platform_values}
 
-    with open(os.path.join(full_dir, 'submit_' + test_dir + '.sh'), "w") as f:
+    with open(os.path.join(out_test_dir, 'submit_' + config.split('.')[0] + '.sh'), "w") as f:
         f.write(render(combined, jinja_env))
 
 
@@ -121,21 +112,25 @@ is_test = lambda x: x != "platform.json"
 
 
 if __name__ == '__main__':
+    platforms, types = determine_requests(parse_options())
 
-    for dir in determine_source_dirs(parse_options()):
-        tests, platform, type, templates, config_source = get_tests_properties(dir)
-        jinja_env = prepare_jinja(templates)
+    for platform in platforms:
+        in_platform_dir = os.path.join(platform_src, platform)
+        jinja_env = prepare_jinja([in_platform_dir, os.path.join(platform_src, "all")])
 
-        for test in tests.get("tests"):
-            platform_dir = make_platform_dir(platform, test, config_source)
+        for test in get_tests(in_platform_dir):
+            out_platform_dir = make_out_platform_dir(platform, test)
 
-            for config in os.listdir(dir):
-                if is_test(config):
-                    test_dir, full_dir = make_test_dir(config, platform_dir)
+            for type in types:
+                in_type_dir = os.path.join(in_platform_dir, type)
 
-                if type == "calling":
-                    render_calling(dir, config, test, jinja_env, full_dir)
-
-                elif type == "submit":
+                for config in os.listdir(in_type_dir):
                     if is_test(config):
-                        render_submit(dir, config, test, jinja_env, full_dir, test_dir)
+                        out_test_dir = make_test_dir(out_platform_dir, config)
+
+                    if type == "calling":
+                        render_calling(in_type_dir, config, out_test_dir, test, jinja_env)
+
+                    elif type == "submit":
+                        if is_test(config):
+                            render_submit(in_type_dir, config, out_test_dir, test, jinja_env)

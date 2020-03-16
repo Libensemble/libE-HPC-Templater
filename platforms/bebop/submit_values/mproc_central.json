@@ -1,6 +1,0 @@
-{
-	"num_workers": 4,
-	"num_nodes": 2,
-	"cmd_suffix": "$NUM_WORKERS > out.txt 2>&1",
-	"template": "bebop/base_template"
-}
