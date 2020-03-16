@@ -5,7 +5,8 @@ import shutil
 import argparse
 from jinja2 import Environment, FileSystemLoader
 
-platform_src = "./platforms"
+platform_base = "./platforms"
+all_dir = os.path.join(platform_base, "all")
 
 platforms = ["bebop", "summit", "theta", "cori"]
 types = ["calling", "submit"]
@@ -57,15 +58,17 @@ def get_tests(platform_dir):
     return tests.get("tests")
 
 
-def make_out_platform_dir(platform, test):
-    """ Make a top-level directory labeled by platform and test name"""
+def make_out_platform_dir(platform, test, in_platform_dir):
+    """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
-    os.makedirs(out_platform_dir, exist_ok=True)
+    if not os.path.isdir(out_platform_dir):
+        shutil.copytree(os.path.join(all_dir, "stage"), out_platform_dir)
+        in_platform_stage = os.path.join(in_platform_dir, "stage")
+        for file in os.listdir(in_platform_stage):
+            shutil.copyfile(os.path.join(in_platform_stage, file),
+                            os.path.join(out_platform_dir, file))
 
     return out_platform_dir
-    # if not os.path.isdir(platform_dir):
-    #     shutil.copytree(config_source, platform_dir,
-    #                     ignore=shutil.ignore_patterns('tests.json'))
 
 
 def make_test_dir(out_platform_dir, config):
@@ -115,11 +118,11 @@ if __name__ == '__main__':
     platforms, types = determine_requests(parse_options())
 
     for platform in platforms:
-        in_platform_dir = os.path.join(platform_src, platform)
-        jinja_env = prepare_jinja([in_platform_dir, os.path.join(platform_src, "all")])
+        in_platform_dir = os.path.join(platform_base, platform)
+        jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
         for test in get_tests(in_platform_dir):
-            out_platform_dir = make_out_platform_dir(platform, test)
+            out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
 
             for type in types:
                 in_type_dir = os.path.join(in_platform_dir, type)
