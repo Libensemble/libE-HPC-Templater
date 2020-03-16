@@ -9,8 +9,10 @@ https://jinja.palletsprojects.com/en/2.11.x/
 
 ``pip install Jinja2``
 
-Currently supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, and
+Supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, and
 OLCF's Summit.
+
+Currently generates Calling Scripts for libEnsemble's Forces scaling test and platform-specific job-submission scripts for those tests.
 
 Usage
 -----
