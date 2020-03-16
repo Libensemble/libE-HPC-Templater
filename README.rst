@@ -29,21 +29,25 @@ Usage
 
     ``python template_hpc.py --all --calling`` OR ``python template_hpc.py --all --submit``
 
+The files within ``platforms/all/stage`` and ``platforms/[platform]/stage`` are
+copied into each platform-specific output directory.
+
+
 Configuration
 -------------
 
 - Each platform has its own input directory structure::
 
     - [platform]/
-        - calling_values/
-        - submit_values/
+        - calling/
+        - submit/
         - stage/
         - tests.json
         - [templates]
 
-- calling_values: Per-test configurations for test calling scripts.
+- calling: Per-test configurations for test calling scripts.
 
-- submit_values: Per-test configurations for test job submission scripts, and ``platform.json``, with platform-specific universal submission script settings.
+- submit: Per-test configurations for test job submission scripts, and ``platform.json``, with platform-specific universal submission script settings.
 
 - stage: Files to copy over to each test directory
 
