@@ -1,4 +1,4 @@
-for dir in forces_*
+for dir in test_*
 do
   cd $dir
   echo -e "Comparing $dir:"
