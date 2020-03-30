@@ -74,7 +74,7 @@ def make_out_platform_dir(platform, test, in_platform_dir):
 
 def make_test_dir(out_platform_dir, config):
     """ Make a lower-level directory labeled by test name"""
-    out_test_dir = os.path.join(out_platform_dir, config.split('.')[0])
+    out_test_dir = os.path.join(out_platform_dir, "test_" + config.split('.')[0])
     os.makedirs(out_test_dir, exist_ok=True)
 
     return out_test_dir
@@ -107,7 +107,7 @@ def render_submit(values, out_test_dir, test, jinja_env):
         platform_values = json.load(p)
 
     single_test = {"test": test}
-    combined = {**values, **single_test, **platform_values}
+    combined = {**single_test, **platform_values, **values}
 
     with open(os.path.join(out_test_dir, 'submit_' + config.split('.')[0] + '.sh'), "w") as f:
         f.write(render(combined, jinja_env))
