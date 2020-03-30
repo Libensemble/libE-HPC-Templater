@@ -1,0 +1,10 @@
+{
+    "use_balsam": true,
+    "persis_gen": false,
+    "balsam_exctr_args": "auto_resources=True",
+    "mpi_exctr_args": "auto_resources=True, central_mode=False",
+    "num_sim_particles": 1e5,
+    "sim_max": 8,
+    "fail_on_sim": true,
+    "template": "run_libe_forces.py"
+}

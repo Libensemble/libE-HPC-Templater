@@ -107,7 +107,7 @@ def render_submit(values, out_test_dir, test, jinja_env):
         platform_values = json.load(p)
 
     single_test = {"test": test}
-    combined = {**values, **single_test, **platform_values}
+    combined = {**single_test, **platform_values, **values}
 
     with open(os.path.join(out_test_dir, 'submit_' + config.split('.')[0] + '.sh'), "w") as f:
         f.write(render(combined, jinja_env))
