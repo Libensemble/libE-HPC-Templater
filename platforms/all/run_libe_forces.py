@@ -61,8 +61,7 @@ exctr.register_calc(full_path=sim_app, calc_type='sim')
 sim_specs = {'sim_f': run_forces,         # Function whose output is being minimized
              'in': ['x'],                 # Name of input for sim_f
              'out': [('energy', float)],  # Name, type of output from sim_f
-             'user': {'simdir_basename': 'forces',
-                      'keys': ['seed'],
+             'user': {'keys': ['seed'],
                       {%- if cores is defined %} 'cores': {{ cores }}, {% endif %}
                       'sim_particles': {{ num_sim_particles }},
                       'sim_timesteps': 5,
@@ -76,19 +75,13 @@ sim_specs = {'sim_f': run_forces,         # Function whose output is being minim
 
 # State the generating function, its arguments, output, and necessary parameters.
 gen_specs = {'gen_f': gen_f,                  # Generator function
-             'in': ['sim_id'],                # Generator input
+             'in': [],                        # Generator input
              'out': [('x', float, (1,))],     # Name, type and size of data produced (must match sim_specs 'in')
              'user': {'lb': np.array([0]),             # Lower bound for random sample array (1D)
                       'ub': np.array([32767]),         # Upper bound for random sample array (1D)
                       'gen_batch_size': 1000,          # How many random samples to generate in one call
                       }
              }
-
-alloc_specs = {'alloc_f': alloc_f,
-               'out': [('allocated', bool)],
-               'user': {'batch_mode': True,    # If true wait for all sims to process before generate more
-                        'num_active_gens': 1}  # Only one active generator at a time
-               }
 
 if PERSIS_GEN:
     alloc_specs = {'alloc_f': alloc_f, 'out': [('given_back', bool)]}
