@@ -19,11 +19,13 @@ else:
     from libensemble.gen_funcs.sampling import uniform_random_sample as gen_f
     from libensemble.alloc_funcs.give_sim_work_first import give_sim_work_first as alloc_f
 
+
 def test_libe_stats(status):
     with open('libE_stats.txt', 'r') as ls:
         out = ls.readlines()
     assert all([line.endswith(status) for line in out if 'sim' in line]), \
         "Deliberate error status not logged or raised for all sim instances."
+
 
 libE_logger.set_level('INFO')  # INFO is now default
 
