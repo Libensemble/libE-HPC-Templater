@@ -40,7 +40,10 @@ sim_app = os.path.join('..', 'forces.x')
 if not os.path.isfile('../forces.x'):
     if os.path.isfile('../build_forces.sh'):
         import subprocess
-        subprocess.check_call(['../build_forces.sh'])
+        here = os.getcwd()
+        os.chdir('..')  # so build_forces scripts dont have to be modified
+        subprocess.check_call(['./build_forces.sh'])
+        os.chdir(here)
 
 # Normally the sim_input_dir will exist with common input which is copied for each worker. Here it starts empty.
 # Create if no ./sim dir. See libE_specs['sim_input_dir']

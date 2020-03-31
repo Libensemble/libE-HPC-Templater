@@ -41,7 +41,7 @@ module unload xalt
 
 
 #python $EXE $NUM_WORKERS $LIBE_WALLCLOCK > out.txt 2>&1
-python $EXE $NUM_WORKERS > out.txt 2>&1
+python $EXE --comms local --nworkers $NUM_WORKERS > out.txt 2>&1
 
 if [[ $LIBE_PLOTS = "true" ]]; then
   python {{ plot_dir }}plot_libe_calcs_util_v_time.py
