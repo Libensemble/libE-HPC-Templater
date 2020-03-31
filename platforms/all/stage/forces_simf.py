@@ -85,7 +85,7 @@ def run_forces(H, persis_info, sim_specs, libE_info):
                             machinefile=machinefile)
     else:
         task = exctr.submit(calc_type='sim', app_args=args, stdout='out.txt',
-                            stderr='err.txt', wait_on_run=True, hyperthreads=True,
+                            stderr='err.txt', wait_on_run=True,
                             machinefile=machinefile)  # Auto-partition
 
     # Stat file to check for bad runs
