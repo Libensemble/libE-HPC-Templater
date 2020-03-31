@@ -1,1 +1,1 @@
-rm -r sim_* *.npy ensemble.log lib*.txt
+rm -r ensemble *.npy ensemble.log lib*.txt
