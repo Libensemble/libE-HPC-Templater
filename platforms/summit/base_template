@@ -37,7 +37,7 @@ echo -e "LSB_HOSTS is $LSB_HOSTS"
 
 echo -e "LSB_MCPU_HOSTS is $LSB_MCPU_HOSTS"
 
-python $EXE $NUM_WORKERS > out.txt 2>&1
+python $EXE --comms local --nworkers $NUM_WORKERS > out.txt 2>&1
 
 if [[ $LIBE_PLOTS = "true" ]]; then
   python $PLOT_DIR/plot_libe_calcs_util_v_time.py
