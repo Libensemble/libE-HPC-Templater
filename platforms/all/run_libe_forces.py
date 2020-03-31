@@ -34,7 +34,7 @@ nworkers, is_master, libE_specs, _ = parse_args()
 if is_master:
     print('\nRunning with {} workers\n'.format(nworkers))
 
-sim_app = os.path.join('..', 'forces.x')
+sim_app = os.path.abspath('../forces.x')
 
 # Normally would be pre-compiled
 if not os.path.isfile('../forces.x'):
