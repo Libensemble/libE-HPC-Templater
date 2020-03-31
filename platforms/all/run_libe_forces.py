@@ -71,8 +71,8 @@ sim_specs = {'sim_f': run_forces,         # Function whose output is being minim
                       'sim_kill_minutes': 10.0,
                       'particle_variance': 0.2,
                       'kill_rate': 0.5,
-                      {%- if fail_on_sim is defined %} 'fail_on_sim': {{ fail_on_sim }}, {% endif %}
-                      {%- if fail_on_submit is defined %} 'fail_on_submit': {{ fail_on_submit }} {% endif %}}  # Won't occur if 'fail_on_sim' True
+                      'fail_on_sim': {%- if fail_on_sim is defined %} True, {%- else %} False, {%- endif %}
+                      'fail_on_submit': {%- if fail_on_submit is defined %} True, {%- else %} False, {%- endif %}}  # Won't occur if 'fail_on_sim' True
              }
 # end_sim_specs_rst_tag
 
