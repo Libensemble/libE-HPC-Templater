@@ -34,7 +34,7 @@ export LIBE_PLOTS={{ do_plots }}   # Require plot scripts (see at end)
 module load miniconda-3/latest
 
 # Activate conda environment
-conda activate $CONDA_ENV_NAME
+source activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam
 module unload trackdeps
