@@ -45,14 +45,16 @@ export PMI_NO_FORK=1 # Required for python kills on Theta
 export LIBE_PLOTS={{ do_plots }}   # Require plot scripts (see at end)
 export BALSAM_PLOTS={{ do_balsam_plots }} # Require plot scripts (see at end)
 
+module load miniconda-3/latest
+module load balsam/0.3.5.1
+
 # Activate conda environment
-. activate $CONDA_ENV_NAME
+conda activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam
 module unload trackdeps
 module unload darshan
 module unload xalt
-
 
 . balsamactivate $BALSAM_DB_NAME
 

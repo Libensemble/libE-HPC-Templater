@@ -31,14 +31,15 @@ export PMI_NO_FORK=1 # Required for python kills on Theta
 
 export LIBE_PLOTS={{ do_plots }}   # Require plot scripts (see at end)
 
+module load miniconda-3/latest
+
 # Activate conda environment
-. activate $CONDA_ENV_NAME
+conda activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam
 module unload trackdeps
 module unload darshan
 module unload xalt
-
 
 #python $EXE $NUM_WORKERS $LIBE_WALLCLOCK > out.txt 2>&1
 python $EXE --comms local --nworkers $NUM_WORKERS > out.txt 2>&1
