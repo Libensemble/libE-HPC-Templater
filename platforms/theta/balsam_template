@@ -35,7 +35,7 @@ export CONDA_ENV_NAME={{ conda_env_name }}
 export BALSAM_DB_NAME={{ balsam_db_name }}
 
 # Conda location - theta specific
-export PATH=/opt/intel/python/2017.0.035/intelpython35/bin:$PATH
+# export PATH=/opt/intel/python/2017.0.035/intelpython35/bin:$PATH
 export LD_LIBRARY_PATH=~/.conda/envs/$CONDA_ENV_NAME/lib:$LD_LIBRARY_PATH
 
 export PYTHONNOUSERSITE=1 #Ensure environment isolated
@@ -46,7 +46,6 @@ export LIBE_PLOTS={{ do_plots }}   # Require plot scripts (see at end)
 export BALSAM_PLOTS={{ do_balsam_plots }} # Require plot scripts (see at end)
 
 module load miniconda-3/latest
-module load balsam/0.3.5.1
 
 # Activate conda environment
 source activate $CONDA_ENV_NAME
