@@ -36,9 +36,9 @@ export BALSAM_DB_NAME={{ balsam_db_name }}
 
 # Conda location - theta specific
 # export PATH=/opt/intel/python/2017.0.035/intelpython35/bin:$PATH
-export LD_LIBRARY_PATH=~/.conda/envs/$CONDA_ENV_NAME/lib:$LD_LIBRARY_PATH
+# export LD_LIBRARY_PATH=~/.conda/envs/$CONDA_ENV_NAME/lib:$LD_LIBRARY_PATH
 
-export PYTHONNOUSERSITE=1 #Ensure environment isolated
+#export PYTHONNOUSERSITE=1 #Ensure environment isolated
 
 export PMI_NO_FORK=1 # Required for python kills on Theta
 
@@ -55,7 +55,7 @@ module unload trackdeps
 module unload darshan
 module unload xalt
 
-. balsamactivate $BALSAM_DB_NAME
+source balsamactivate $BALSAM_DB_NAME
 
 # Make sure no existing apps/jobs
 balsam rm apps --all --force
@@ -98,4 +98,4 @@ if [[ $BALSAM_PLOTS = "true" ]]; then
   python {{ balsam_plot_dir }}plot_waiting_v_time.py
 fi
 
-. balsamdeactivate
+# source balsamdeactivate
