@@ -3,6 +3,7 @@ import sys
 import json
 import shutil
 import argparse
+import subprocess
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -141,3 +142,5 @@ if __name__ == '__main__':
                     elif type == "submit":
                         if is_test(config):
                             render_submit(values, out_test_dir, test, jinja_env)
+
+            print(out_platform_dir)
