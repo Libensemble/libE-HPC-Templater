@@ -57,7 +57,7 @@ else:
         if os.path.isfile('./build_forces.sh'):
             import subprocess
             subprocess.check_call(['./build_forces.sh'])
-            sim_app = os.path.abspath('./forces.x')
+    sim_app = os.path.abspath('./forces.x')
 
 # Normally the sim_input_dir will exist with common input which is copied for
 # each worker. Here it starts empty.
