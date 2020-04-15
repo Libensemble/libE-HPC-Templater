@@ -5,5 +5,6 @@
     "num_sim_particles": 2.0e4,
     "sim_max": 8,
     "fail_on_sim": true,
+    "mpi_disable_mprobes": true,
     "template": "run_libe_forces.py"
 }

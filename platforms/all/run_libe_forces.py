@@ -3,6 +3,11 @@ import os
 import numpy as np
 from forces_simf import run_forces  # Sim func from current dir
 
+{% if mpi_disable_mprobes is defined %}
+import mpi4py
+mpi4py.rc.recv_mprobe = False
+{% endif %}
+
 # Import libEnsemble modules
 from libensemble.libE import libE
 from libensemble.libE_manager import ManagerException
