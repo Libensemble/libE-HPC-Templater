@@ -114,6 +114,14 @@ def render_submit(values, out_test_dir, test, jinja_env):
         f.write(render(combined, jinja_env))
 
 
+def run_prepare_scripts(out_platform_dir):
+    os.chdir(out_platform_dir)
+    for file in os.listdir('.'):
+        if file.startswith('prepare'):
+            subprocess.call(['./{}'.format(file)])
+    os.chdir('..')
+
+
 is_test = lambda x: x != "platform.json"
 
 
@@ -143,4 +151,4 @@ if __name__ == '__main__':
                         if is_test(config):
                             render_submit(values, out_test_dir, test, jinja_env)
 
-            print(out_platform_dir)
+            run_prepare_scripts(out_platform_dir)
