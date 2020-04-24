@@ -64,8 +64,8 @@ def make_out_platform_dir(platform, test, in_platform_dir):
     """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
     if not os.path.isdir(out_platform_dir):
-        shutil.copytree(os.path.join(all_dir, "stage"), out_platform_dir)
-        in_platform_stage = os.path.join(in_platform_dir, "stage")
+        shutil.copytree(os.path.join(all_dir, "stage", test), out_platform_dir)
+        in_platform_stage = os.path.join(in_platform_dir, "stage", test)
         for file in os.listdir(in_platform_stage):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
