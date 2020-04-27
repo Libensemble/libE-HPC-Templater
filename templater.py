@@ -13,7 +13,6 @@ platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
 
 platforms = ["bebop", "summit", "theta", "cori"]
-# types = ["calling", "submit"]
 tests = ["forces", "warpx"]
 test_templates = {'forces': 'run_libe_forces.py', 'warpx': 'run_libensemble_on_warpx.py'}
 
@@ -53,14 +52,6 @@ def prepare_jinja(templates):
     return jinja_env
 
 
-def get_tests(platform):
-    """ Determine set of tests to populate templates for"""
-    with open("config.json") as f:
-        tests = json.load(f)
-
-    return [i for i in tests[platform]]
-
-
 def make_out_platform_dir(platform, test, in_platform_dir):
     """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
@@ -74,20 +65,13 @@ def make_out_platform_dir(platform, test, in_platform_dir):
     return out_platform_dir
 
 
-def make_test_dir(out_platform_dir, config):
+def make_test_dir(out_platform_dir, type):
     """ Make a lower-level directory labeled by test name"""
-    out_test_dir = os.path.join(out_platform_dir, "test_" + config.split('.')[0])
+    out_test_dir = os.path.join(out_platform_dir, "test_" + type)
     os.makedirs(out_test_dir, exist_ok=True)
 
     return out_test_dir
 
-
-def load_config(in_type_dir, config):
-    """ Load current configuration file"""
-    with open(os.path.join(in_type_dir, config), "r") as r:
-        values = json.load(r)
-
-    return values
 
 def render(values, jinja_env):
     """ Render a template with passed values"""
@@ -95,24 +79,6 @@ def render(values, jinja_env):
     template = jinja_env.get_template(chosen_template)
 
     return template.render(values)
-
-
-def render_calling(values, out_test_dir, test, jinja_env):
-    """ Load configs for a calling script, output rendered template"""
-    with open(os.path.join(out_test_dir, test), "w") as f:
-        f.write(render(values, jinja_env))
-
-
-def render_submit(values, out_test_dir, test, jinja_env):
-    """ Load configs for a job submission script, output rendered template"""
-    with open(os.path.join(in_type_dir, "platform.json")) as p:
-        platform_values = json.load(p)
-
-    single_test = {"test": test}
-    combined = {**single_test, **platform_values, **values}
-
-    with open(os.path.join(out_test_dir, 'submit_' + config.split('.')[0] + '.sh'), "w") as f:
-        f.write(render(combined, jinja_env))
 
 
 def run_prepare_scripts(out_platform_dir):
@@ -123,34 +89,40 @@ def run_prepare_scripts(out_platform_dir):
     os.chdir('..')
 
 
-is_test = lambda x: x != "platform.json"
-
-
 if __name__ == '__main__':
     platforms, tests = determine_requests(parse_options())
+
+    with open("config.json") as f:
+        config = json.load(f)
 
     for platform in platforms:
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
-        for test in get_tests(platform):
-            import ipdb; ipdb.set_trace()
+        for test in [i for i in config[platform]]:
+            in_test_dir = os.path.join(in_platform_dir, test)
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
+            test_types = config[platform][test]
 
-            for type in types:
-                in_type_dir = os.path.join(in_platform_dir, type)
+            with open(os.path.join(in_test_dir, "submit", "platform.json")) as p:
+                platform_values = json.load(p)
 
-                for config in os.listdir(in_type_dir):
-                    if is_test(config):
-                        out_test_dir = make_test_dir(out_platform_dir, config)
+            for type in test_types:
+                out_test_dir = make_test_dir(out_platform_dir, type)
 
-                    values = load_config(in_type_dir, config)
+                with open(os.path.join(in_test_dir, "calling", type + '.json')) as f:
+                    calling_values = json.load(f)
 
-                    if type == "calling":
-                        render_calling(values, out_test_dir, test, jinja_env)
+                with open(os.path.join(in_test_dir, "submit", type + '.json')) as f:
+                    submit_values = json.load(f)
 
-                    elif type == "submit":
-                        if is_test(config):
-                            render_submit(values, out_test_dir, test, jinja_env)
+                single_test = {"test": calling_values['template']}
+                submit_combined = {**single_test, **platform_values, **submit_values}
+
+                with open(os.path.join(out_test_dir, calling_values['template']), "w") as f:
+                    f.write(render(calling_values, jinja_env))
+
+                with open(os.path.join(out_test_dir, 'submit_' + type + '.sh'), "w") as f:
+                    f.write(render(submit_combined, jinja_env))
 
             run_prepare_scripts(out_platform_dir)
