@@ -19,17 +19,17 @@ Usage
 
 - Make all tests for all platforms (bebop, theta, cori, summit):
 
-    ``python template_hpc.py --all``
+    ``python templater.py --all``
 
 - Make all tests for a single platform:
 
-    ``python template_hpc.py --theta``
+    ``python templater.py --theta``
 
 - Add any combination of ``--bebop``, ``--summit``, etc., to make tests for those platforms.
 
 - Make only calling scripts or submission scripts:
 
-    ``python template_hpc.py --all --calling`` OR ``python template_hpc.py --all --submit``
+    ``python templater.py --all --calling`` OR ``python templater.py --all --submit``
 
 The files within ``platforms/all/stage`` and ``platforms/[platform]/stage`` are
 copied into each platform-specific output directory.
