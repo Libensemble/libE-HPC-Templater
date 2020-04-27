@@ -14,15 +14,16 @@ all_dir = os.path.join(platform_base, "all")
 
 platforms = ["bebop", "summit", "theta", "cori"]
 # types = ["calling", "submit"]
-tests = {'forces': 'run_libe_forces.py', 'warpx': 'run_libensemble_on_warpx.py'}
+tests = ["forces", "warpx"]
+test_templates = {'forces': 'run_libe_forces.py', 'warpx': 'run_libensemble_on_warpx.py'}
 
 
 def parse_options():
     """ Return user command-line platform and script type args as dictionary"""
     parser = argparse.ArgumentParser(description="Pass machine names and " + \
-                                                 "script types for templating")
+                                                 "test names for templating")
 
-    for i in platforms + types + ["all", "both"]:
+    for i in platforms + tests + ["all"]:
         parser.add_argument('--' + i, action='store_true')
 
     options = vars(parser.parse_args(sys.argv[1:]))
@@ -36,15 +37,12 @@ def determine_requests(options):
     """ Determine directories that contain configurations for test templates"""
     if options["all"]:
         req_platforms = platforms
+        req_tests = tests
     else:
         req_platforms = [i for i in platforms if options[i]]
+        req_tests = [i for i in tests if options[i]]
 
-    if options["both"] or (not options["calling"] and not options["submit"]):
-        req_types = types
-    else:
-        req_types = [i for i in types if options[i]]
-
-    return req_platforms, req_types
+    return req_platforms, req_tests
 
 
 def prepare_jinja(templates):
@@ -55,20 +53,20 @@ def prepare_jinja(templates):
     return jinja_env
 
 
-def get_tests(platform_dir):
+def get_tests(platform):
     """ Determine set of tests to populate templates for"""
-    with open(os.path.join(platform_dir, "tests.json")) as f:
+    with open("config.json") as f:
         tests = json.load(f)
 
-    return tests.get("tests")
+    return [i for i in tests[platform]]
 
 
 def make_out_platform_dir(platform, test, in_platform_dir):
     """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
     if not os.path.isdir(out_platform_dir):
-        shutil.copytree(os.path.join(all_dir, "stage", test), out_platform_dir)
-        in_platform_stage = os.path.join(in_platform_dir, "stage", test)
+        shutil.copytree(os.path.join(all_dir, test, "stage"), out_platform_dir)
+        in_platform_stage = os.path.join(in_platform_dir, test, "stage")
         for file in os.listdir(in_platform_stage):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
@@ -129,13 +127,14 @@ is_test = lambda x: x != "platform.json"
 
 
 if __name__ == '__main__':
-    platforms, types = determine_requests(parse_options())
+    platforms, tests = determine_requests(parse_options())
 
     for platform in platforms:
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
-        for test in get_tests(in_platform_dir):
+        for test in get_tests(platform):
+            import ipdb; ipdb.set_trace()
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
 
             for type in types:

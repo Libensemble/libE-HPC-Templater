@@ -43,14 +43,14 @@
 	"theta": {
 		"forces": [
 			"mproc_MOM_distrib_4w_8n",
+            "mproc_MOM_central_4w_8n_fail_sim",
+            "mproc_MOM_central_4w_8n_fail_submit",
+            "mproc_MOM_central_128w_128n",
+            "mproc_MOM_central_4w_8n",
 			"MPI_balsam_central_127w_129n",
-			"mproc_MOM_central_4w_8n_fail_sim",
 			"MPI_balsam_distrib_4w_4n",
 			"MPI_balsam_distrib_2w_4n",
-			"mproc_MOM_central_4w_8n_fail_submit",
-			"mproc_MOM_central_128w_128n",
 			"MPI_balsam_distrib_4w_4n_fail_submit",
-			"mproc_MOM_central_4w_8n",
 			"MPI_balsam_central_127w_129n_fail_sim"
 		]
 	}
