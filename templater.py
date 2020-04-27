@@ -14,7 +14,6 @@ all_dir = os.path.join(platform_base, "all")
 
 platforms = ["bebop", "summit", "theta", "cori"]
 tests = ["forces", "warpx"]
-test_templates = {'forces': 'run_libe_forces.py', 'warpx': 'run_libensemble_on_warpx.py'}
 
 
 def parse_options():
