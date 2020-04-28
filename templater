@@ -26,7 +26,7 @@ def parse_options():
 
     options = vars(parser.parse_args(sys.argv[1:]))
     assert any([options[i] for i in platforms + ["all"]]), \
-        "No targets. Specify platform(s) (e.g., --theta --summit) or --all"
+        "No targets. Specify platform(s) (e.g., --theta --summit) or test(s) (e.g., --forces or --all)"
 
     return options
 
@@ -34,11 +34,11 @@ def parse_options():
 def determine_requests(options):
     """ Determine directories that contain configurations for test templates"""
     if options["all"]:
-        req_platforms = platforms
         req_tests = tests
     else:
-        req_platforms = [i for i in platforms if options[i]]
         req_tests = [i for i in tests if options[i]]
+
+    req_platforms = [i for i in platforms if options[i]]
 
     return req_platforms, req_tests
 
@@ -98,7 +98,7 @@ if __name__ == '__main__':
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
-        for test in [i for i in config[platform]]:
+        for test in tests:
             in_test_dir = os.path.join(in_platform_dir, test)
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
             test_types = config[platform][test]
