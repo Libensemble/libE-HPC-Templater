@@ -1,5 +1,5 @@
 {
-    "gen_type": "random",
-    "machine": "summit",
+    "gen_type": "'random'",
+    "machine": "'summit'",
     "template": "run_libensemble_on_warpx.py"
 }

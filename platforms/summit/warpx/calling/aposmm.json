@@ -1,5 +1,5 @@
 {
-    "gen_type": "aposmm",
-    "machine": "summit",
+    "gen_type": "'aposmm'",
+    "machine": "'summit'",
     "template": "run_libensemble_on_warpx.py"
 }
