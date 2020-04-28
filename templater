@@ -16,8 +16,7 @@ platforms = ["bebop", "summit", "theta", "cori"]
 tests = ["forces", "warpx"]
 
 
-def parse_options():
-    """ Return user command-line platform and script type args as dictionary"""
+def get_requested_platforms_tests():
     parser = argparse.ArgumentParser(description="Pass machine names and " + \
                                                  "test names for templating")
 
@@ -25,22 +24,15 @@ def parse_options():
         parser.add_argument('--' + i, action='store_true')
 
     options = vars(parser.parse_args(sys.argv[1:]))
-    assert any([options[i] for i in platforms + ["all"]]), \
-        "No targets. Specify platform(s) (e.g., --theta --summit) or test(s) (e.g., --forces or --all)"
+    assert any([options[i] for i in platforms]), \
+        "No platform targets. Specify platform(s) (e.g., --theta --summit)"
 
-    return options
+    assert any([options[i] for i in tests + ["all"]]), \
+        "No test targets. Specify test(s) (e.g., --forces --warpx) or --all"
 
-
-def determine_requests(options):
-    """ Determine directories that contain configurations for test templates"""
-    if options["all"]:
-        req_tests = tests
-    else:
-        req_tests = [i for i in tests if options[i]]
-
-    req_platforms = [i for i in platforms if options[i]]
-
-    return req_platforms, req_tests
+    platforms = [i for i in platforms if options[i]]
+    tests = [i for i in tests if options[i]]
+    return platforms, tests
 
 
 def prepare_jinja(templates):
@@ -89,10 +81,11 @@ def run_prepare_scripts(out_platform_dir):
 
 
 if __name__ == '__main__':
-    platforms, tests = determine_requests(parse_options())
 
     with open("config.json") as f:
         config = json.load(f)
+
+    platforms, tests = get_requested_platforms_tests()
 
     for platform in platforms:
         in_platform_dir = os.path.join(platform_base, platform)
