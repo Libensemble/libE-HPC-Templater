@@ -15,9 +15,9 @@ nworkers=1 as one worker is for the persistent gen_f.
 """
 
 # Either 'random' or 'aposmm'
-generator_type = 'aposmm'
+generator_type = {{ gen_type }}
 # Either 'local' or 'summit'
-machine = 'local'
+machine = {{ machine }}
 
 import sys
 import numpy as np

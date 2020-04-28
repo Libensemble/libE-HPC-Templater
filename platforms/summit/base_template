@@ -26,6 +26,8 @@ export PLOT_DIR={{ plot_dir }}
 # module load python
 # module load gcc/4.8.5
 
+module unload xalt
+
 # Activate conda environment
 export PYTHONNOUSERSITE=1
 . activate $CONDA_ENV_NAME
