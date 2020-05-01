@@ -24,3 +24,12 @@ summit_specs = {
     'OMP_NUM_THREADS': '1',
     'sim_max': 400  # Maximum number of simulations
 }
+
+
+other_hpc_specs = {
+    'name': 'hpc',
+    'sim_app': os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex',
+    'extra_args': '',  # extra arguments passed to mpirun/mpiexec at execution
+    'OMP_NUM_THREADS': '2',
+    'sim_max': 30  # Maximum number of simulations
+}
