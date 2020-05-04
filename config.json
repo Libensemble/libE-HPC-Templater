@@ -12,7 +12,7 @@
 			"mproc"
 		],
 		"warpx": [
-			"MPI_distrib_aposmm",
+			"MPI_distrib",
 		]
 	},
 	"cori": {
@@ -55,6 +55,10 @@
 			"MPI_balsam_distrib_2w_4n",
 			"MPI_balsam_distrib_4w_4n_fail_submit",
 			"MPI_balsam_central_127w_129n_fail_sim"
+		],
+		"warpx": [
+			"aposmm_MPI_balsam_distrib_128w_256n",
+			"mproc_MOM_central_128w_256n"
 		]
 	}
 }
