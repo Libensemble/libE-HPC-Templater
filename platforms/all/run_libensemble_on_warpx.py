@@ -16,7 +16,7 @@ nworkers=1 as one worker is for the persistent gen_f.
 
 # Either 'random' or 'aposmm'
 generator_type = {{ gen_type }}
-# Either 'local' or 'summit'
+# Either 'local' or 'summit' or 'other_hpc'
 machine = {{ machine }}
 
 import sys
@@ -52,6 +52,8 @@ if machine == 'local':
     machine_specs = all_machine_specs.local_specs
 elif machine == 'aposmm':
     machine_specs = all_machine_specs.summit_specs
+elif machine == 'other_hpc':
+    machine_specs = all_machine_specs.other_hpc_specs
 else:
     print("you shouldn' hit that")
     sys.exit()

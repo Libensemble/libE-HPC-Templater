@@ -19,17 +19,19 @@ local_specs = {
 summit_specs = {
     'name': 'summit',  # Machine name
     'sim_app': os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.CUDA.ex',
+    'cores': 3,
     # extra arguments passed to jsrun at execution
-    'extra_args': '-n 1 -a 1 -g 1 -c 1 --bind=packed:1 --smpiargs="-gpu"',
+    'extra_args': '-a 1 -g 1 -c 1 --bind=packed:1 --smpiargs="-gpu"',
     'OMP_NUM_THREADS': '1',
     'sim_max': 400  # Maximum number of simulations
 }
 
 
 other_hpc_specs = {
-    'name': 'hpc',
+    'name': 'other_hpc',
+    'cores': 3, # Number of cores per simulation
     'sim_app': os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex',
     'extra_args': '',  # extra arguments passed to mpirun/mpiexec at execution
-    'OMP_NUM_THREADS': '2',
-    'sim_max': 30  # Maximum number of simulations
+    'OMP_NUM_THREADS': '1',
+    'sim_max': 32  # Maximum number of simulations
 }
