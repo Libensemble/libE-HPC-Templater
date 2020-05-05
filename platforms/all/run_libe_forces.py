@@ -13,6 +13,7 @@ from libensemble.libE import libE
 from libensemble.libE_manager import ManagerException
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
 from libensemble import libE_logger
+from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 
 USE_BALSAM = {{ use_balsam }}
 PERSIS_GEN = {{ persis_gen }}
@@ -24,58 +25,6 @@ else:
     from libensemble.gen_funcs.sampling import uniform_random_sample as gen_f
     from libensemble.alloc_funcs.give_sim_work_first import give_sim_work_first as alloc_f
 
-
-def test_libe_stats(status):
-    with open('libE_stats.txt', 'r') as ls:
-        out = ls.readlines()
-    assert all([line.endswith(status) for line in out if 'sim' in line]), \
-        "Deliberate error status not logged or raised for all sim instances."
-
-
-def test_ensemble_dir(libE_specs, dir, nworkers, sim_max):
-    if not os.path.isdir(dir):
-        print('Specified ensemble directory {} not found.'.format(dir))
-        return
-
-    if libE_specs.get('sim_dirs_make') == False:
-        print('Typical tests of ensemble directories dont apply without sim_dirs.')
-        return
-
-    if libE_specs.get('use_worker_dirs'):
-        assert len(os.listdir(dir)) == nworkers, \
-            "Number of worker directories ({}) doesn't match nworkers ({})".format(len(os.listdir(dir)), nworkers)
-
-        num_sim_dirs = 0
-        files_found = []
-
-        worker_dirs = [i for i in os.listdir(dir) if i.startswith('worker')]
-        for worker_dir in worker_dirs:
-            sim_dirs = [i for i in os.listdir(os.path.join(dir, worker_dir)) if i.startswith('sim')]
-            num_sim_dirs += len(sim_dirs)
-
-            for sim_dir in sim_dirs:
-                files_found.append(all([i in os.listdir(os.path.join(dir, worker_dir, sim_dir)) for i in ['err.txt', 'forces.stat', 'out.txt']]))
-
-        assert num_sim_dirs == sim_max, \
-            "Number of simulation specific-directories ({}) doesn't match sim_max ({})".format(num_sim_dirs, sim_max)
-
-        assert all(files_found), \
-            "Set of expected files ['err.txt', 'forces.stat', 'out.txt'] not found in each sim_dir."
-
-    else:
-        sim_dirs = os.listdir(dir)
-        assert all([i.startswith('sim') for i in sim_dirs]), \
-            "All directories within ensemble dir not labeled as (or aren't) sim_dirs."
-
-        assert len(sim_dirs) == sim_max, \
-            "Number of simulation specific-directories ({}) doesn't match sim_max ({})".format(len(sim_dirs), sim_max)
-
-        files_found = []
-        for sim_dir in sim_dirs:
-            files_found.append(all([i in os.listdir(os.path.join(dir, sim_dir)) for i in ['err.txt', 'forces.stat', 'out.txt']]))
-
-        assert all(files_found), \
-            "Set of expected files ['err.txt', 'forces.stat', 'out.txt'] not found in each sim_dir."
 
 libE_logger.set_level('INFO')  # INFO is now default
 
@@ -103,11 +52,6 @@ else:
             import subprocess
             subprocess.check_call(['./build_forces.sh'])
     sim_app = os.path.abspath('./forces.x')
-
-# Normally the sim_input_dir will exist with common input which is copied for
-# each worker. Here it starts empty.
-# Create if no ./sim dir. See libE_specs['sim_input_dir']
-os.makedirs('../sim', exist_ok=True)
 
 # Create executor and register sim to it.
 if USE_BALSAM:
@@ -156,7 +100,7 @@ else:
                    }
 
 libE_specs['save_every_k_gens'] = 1000  # Save every K steps
-libE_specs['sim_input_dir'] = '../sim'   # Sim dir to be copied for each worker
+libE_specs['sim_dirs_make'] = True      # Separate each sim into a separate directory
 libE_specs['profile_worker'] = False    # Whether to have libE profile on (default False)
 
 # Maximum number of simulations
@@ -164,8 +108,7 @@ sim_max = {{ sim_max }}
 exit_criteria = {'sim_max': sim_max}
 
 # Create a different random number stream for each worker and the manager
-persis_info = {}
-persis_info = add_unique_random_streams(persis_info, nworkers + 1)
+persis_info = add_unique_random_streams({}, nworkers + 1)
 
 try:
     H, persis_info, flag = libE(sim_specs, gen_specs, exit_criteria,
@@ -175,10 +118,7 @@ try:
 
 except ManagerException:
     if is_master and sim_specs['user']['fail_on_sim']:
-        with open('ensemble.log', 'r') as el:
-            out = el.readlines()
-        assert 'forces_simf.ForcesException\n' in out, \
-            "ForcesException not received by manager or logged."
+        check_log_exception()
         test_libe_stats('Exception occurred\n')
 else:
     if is_master:
