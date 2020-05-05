@@ -12,7 +12,7 @@
 			"mproc"
 		],
 		"warpx": [
-			"MPI_distrib"
+			"MPI_central"
 		]
 	},
 	"cori": {

@@ -1,0 +1,7 @@
+{
+	"num_workers": 4,
+	"num_nodes": 2,
+	"exports": ["export I_MPI_FABRICS=shm:tmi"],
+	"cmd_prefix": "srun --overcommit --ntasks $(($NUM_WORKERS+1)) --nodes=1",
+	"template": "base_template"
+}

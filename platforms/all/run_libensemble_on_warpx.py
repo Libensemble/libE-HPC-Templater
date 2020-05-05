@@ -19,6 +19,17 @@ generator_type = {{ gen_type }}
 # Either 'local' or 'summit' or 'other_hpc'
 machine = {{ machine }}
 
+{% if mpi_disable_mprobes is defined %}
+import mpi4py
+mpi4py.rc.recv_mprobe = False
+{% endif %}
+
+{% if use_balsam is defined %}
+USE_BALSAM = True
+{% else %}
+USE_BALSAM = False
+{% endif %}
+
 import sys
 import numpy as np
 from warpx_simf import run_warpx  # Sim function from current directory
@@ -43,7 +54,13 @@ else:
 from libensemble.tools import parse_args, save_libE_output, \
     add_unique_random_streams
 from libensemble import libE_logger
-from libensemble.executors.mpi_executor import MPIExecutor
+
+if USE_BALSAM:
+    from libensemble.executors.balsam_executor import BalsamMPIExecutor
+    exctr = BalsamMPIExecutor(central_mode=True)
+else:
+    from libensemble.executors.mpi_executor import MPIExecutor
+    exctr = MPIExecutor(central_mode=True)
 
 import all_machine_specs
 
@@ -69,7 +86,6 @@ sim_app = machine_specs['sim_app']
 # that LibEnsemble will vary in order to minimize a single output parameter.
 n = 4
 
-exctr = MPIExecutor(central_mode=True)
 exctr.register_calc(full_path=sim_app, calc_type='sim')
 
 # State the objective function, its arguments, output, and necessary parameters
