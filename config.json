@@ -57,7 +57,7 @@
 			"MPI_balsam_central_127w_129n_fail_sim"
 		],
 		"warpx": [
-			"aposmm_MPI_balsam_distrib_128w_256n",
+			"MPI_balsam_distrib_128w_256n",
 			"mproc_MOM_central_128w_256n"
 		]
 	}
