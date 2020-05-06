@@ -10,49 +10,80 @@ https://jinja.palletsprojects.com/en/2.11.x/
 ``pip install Jinja2``
 
 Supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, and
-OLCF's Summit.
+OLCF's Summit. Specify any specific platform to generate a testing environment
+at runtime with any number of ``--bebop``, ``--theta``, ``--cori``, and ``--summit``.
 
-Currently generates Calling Scripts for libEnsemble's Forces scaling test and platform-specific job-submission scripts for those tests.
+Currently generates testing environments for the Forces and WarpX scaling tests.
+Use ``--forces`` and ``--warpx``.
 
 Usage
 -----
 
-- Make all tests for all platforms (bebop, theta, cori, summit):
-
-    ``python template_hpc.py --all``
-
 - Make all tests for a single platform:
 
-    ``python template_hpc.py --theta``
+    ``./templater.py --theta --all``
 
-- Add any combination of ``--bebop``, ``--summit``, etc., to make tests for those platforms.
+- Make only forces tests:
 
-- Make only calling scripts or submission scripts:
-
-    ``python template_hpc.py --all --calling`` OR ``python template_hpc.py --all --submit``
-
-The files within ``platforms/all/stage`` and ``platforms/[platform]/stage`` are
-copied into each platform-specific output directory.
-
+    ``python templater.py --cori --forces``
 
 Configuration
 -------------
 
-- Each platform has its own input directory structure::
+A list of all tests are found in ``config.json`` in the project root,
+organized by platform, then test type, then test variant. When adding a new test
+variant, make sure the variant name matches the filenames of the associated
+configuration files. For example, Bebop's Forces calling and submission
+template configurations named ``MPI_central.json`` match ``MPI_central`` in
+``config.json``.
 
-    - [platform]/
-        - calling/
-        - submit/
-        - stage/
-        - tests.json
-        - [templates]
+The ``platforms`` directory contains both platform-specific test configurations
+and templates in ``bebop``, ``cori``, ``summit``, and ``theta``, and platform-agnostic
+configurations and templates in ``all``. Each of these directories contains
+templates and directories for each supported test. For instance, ``platforms/summit``
+contains the ``forces`` and ``warpx`` test directories then a template.
 
-- calling: Per-test configurations for test calling scripts.
+A test directory like ``forces`` contains three subdirectories:
+``calling``, ``stage``, and ``submit``. ``calling`` and ``submit`` contain
+configurations for the test variant's calling and batch submission scripts,
+respectively. ``submit`` also contains the ``platform.json`` configuration file
+for submission scripts to specify submission script attributes that are universal
+on a platform. ``stage`` contains test-specific files to copy to each test's
+output directory.
 
-- submit: Per-test configurations for test job submission scripts, and ``platform.json``, with platform-specific universal submission script settings.
+Once a test output directory has been created, the templater will run each
+batch script prefixed with "prepare" in the output directory. This is helpful
+for setting permissions on copied shell scripts or copying additional files around
+if necessary. These scripts should be placed in any ``stage`` directory to be
+copied over.
 
-- stage: Files to copy over to each test directory
+Example
+-------
 
-- tests.json: A set of tests to configure scripts for on this platform.
+Suppose we want to define a new test ``"particles"``, only for Theta, with ``mpi_128-nodes``
+and ``multiprocess_64-nodes`` variants.
 
-and then any number of templates specific to this platform.
+1) Add the following configuration to ``config.json`` under ``"Theta"``::
+
+
+    "particles":[
+        "mpi_128-nodes",
+        "multiprocess_64-nodes"
+    ]
+
+2) Add "particles" to ``tests`` in the templater script.
+
+3) Place calling script and batch-submission script Jinja templates in ``platforms/theta``.
+Create a test directory, ``platforms/theta/particles``.
+
+4) Create ``calling``, ``stage``, and ``submit`` directories in this test directory.
+Place files that should be copied over (not templated) to the output directory in ``stage``.
+
+5) Make configuration files for the calling script, named ``mpi_128-nodes.json``
+and ``multiprocess_64-nodes.json`` and place within ``calling``. Fields can
+template any parameter you wish for the calling scripts, but must also contain
+a ``"template"`` field referencing which template the configuration should populate.
+Do the same for the submission script in ``submit``.
+
+6) For the submission script, any platform-specific parameters that shouldn't be
+different between tests should be placed in a ``platform.json``.

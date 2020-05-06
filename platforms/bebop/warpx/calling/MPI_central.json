@@ -1,0 +1,6 @@
+{
+    "gen_type": "'aposmm'",
+    "machine": "'other_hpc'",
+    "mpi_disable_mprobes": true,
+    "template": "run_libensemble_on_warpx.py"
+}

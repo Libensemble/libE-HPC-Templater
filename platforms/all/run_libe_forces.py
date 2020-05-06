@@ -13,6 +13,7 @@ from libensemble.libE import libE
 from libensemble.libE_manager import ManagerException
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
 from libensemble import libE_logger
+from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 
 USE_BALSAM = {{ use_balsam }}
 PERSIS_GEN = {{ persis_gen }}
@@ -23,13 +24,6 @@ if PERSIS_GEN:
 else:
     from libensemble.gen_funcs.sampling import uniform_random_sample as gen_f
     from libensemble.alloc_funcs.give_sim_work_first import give_sim_work_first as alloc_f
-
-
-def test_libe_stats(status):
-    with open('libE_stats.txt', 'r') as ls:
-        out = ls.readlines()
-    assert all([line.endswith(status) for line in out if 'sim' in line]), \
-        "Deliberate error status not logged or raised for all sim instances."
 
 
 libE_logger.set_level('INFO')  # INFO is now default
@@ -58,11 +52,6 @@ else:
             import subprocess
             subprocess.check_call(['./build_forces.sh'])
     sim_app = os.path.abspath('./forces.x')
-
-# Normally the sim_input_dir will exist with common input which is copied for
-# each worker. Here it starts empty.
-# Create if no ./sim dir. See libE_specs['sim_input_dir']
-os.makedirs('../sim', exist_ok=True)
 
 # Create executor and register sim to it.
 if USE_BALSAM:
@@ -111,17 +100,15 @@ else:
                    }
 
 libE_specs['save_every_k_gens'] = 1000  # Save every K steps
-libE_specs['sim_input_dir'] = '../sim'   # Sim dir to be copied for each worker
+libE_specs['sim_dirs_make'] = True      # Separate each sim into a separate directory
 libE_specs['profile_worker'] = False    # Whether to have libE profile on (default False)
-libE_specs['use_worker_dirs'] = False   # Whether to create separate worker directories (default False)
 
 # Maximum number of simulations
 sim_max = {{ sim_max }}
 exit_criteria = {'sim_max': sim_max}
 
 # Create a different random number stream for each worker and the manager
-persis_info = {}
-persis_info = add_unique_random_streams(persis_info, nworkers + 1)
+persis_info = add_unique_random_streams({}, nworkers + 1)
 
 try:
     H, persis_info, flag = libE(sim_specs, gen_specs, exit_criteria,
@@ -131,13 +118,11 @@ try:
 
 except ManagerException:
     if is_master and sim_specs['user']['fail_on_sim']:
-        with open('ensemble.log', 'r') as el:
-            out = el.readlines()
-        assert 'forces_simf.ForcesException\n' in out, \
-            "ForcesException not received by manager or logged."
+        check_log_exception()
         test_libe_stats('Exception occurred\n')
 else:
     if is_master:
         save_libE_output(H, persis_info, __file__, nworkers)
         if sim_specs['user']['fail_on_submit']:
             test_libe_stats('Task Failed\n')
+        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)

@@ -26,6 +26,8 @@ export PLOT_DIR={{ plot_dir }}
 # module load python
 # module load gcc/4.8.5
 
+module unload xalt
+
 # Activate conda environment
 export PYTHONNOUSERSITE=1
 . activate $CONDA_ENV_NAME
@@ -44,4 +46,3 @@ if [[ $LIBE_PLOTS = "true" ]]; then
   python $PLOT_DIR/plot_libe_runs_util_v_time.py
   python $PLOT_DIR/plot_libE_histogram.py
 fi
-"
