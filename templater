@@ -12,11 +12,11 @@ from jinja2 import Environment, FileSystemLoader
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
 
+platforms = ["bebop", "summit", "theta", "cori"]
+tests = ["forces", "warpx"]
 
-def get_requested_platforms_tests():
 
-    platforms = ["bebop", "summit", "theta", "cori"]
-    tests = ["forces", "warpx"]
+def get_requested_platforms_tests(platforms, tests):
 
     parser = argparse.ArgumentParser(description="Pass machine names and " + \
                                                  "test names for templating")
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     with open("config.json") as f:
         config = json.load(f)
 
-    platforms, tests = get_requested_platforms_tests()
+    platforms, tests = get_requested_platforms_tests(platforms, tests)
 
     for platform in platforms:
         in_platform_dir = os.path.join(platform_base, platform)
