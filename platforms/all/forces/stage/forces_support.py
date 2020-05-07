@@ -6,6 +6,7 @@ def check_log_exception():
         out = el.readlines()
     assert 'forces_simf.ForcesException\n' in out, \
         "ForcesException not received by manager or logged."
+    print('Pass. ensemble.log correctly contains forces_simf.ForcesException.')
 
 
 def test_libe_stats(status):
@@ -13,6 +14,7 @@ def test_libe_stats(status):
         out = ls.readlines()
     assert all([line.endswith(status) for line in out if 'sim' in line]), \
         "Deliberate error status not logged or raised for all sim instances."
+    print('Pass. libE_stats.txt correctly contains {} status for each sim instance.'.format(status[:-1]))
 
 
 def test_ensemble_dir(libE_specs, dir, nworkers, sim_max):
@@ -60,4 +62,4 @@ def test_ensemble_dir(libE_specs, dir, nworkers, sim_max):
         assert all(files_found), \
             "Set of expected files ['err.txt', 'forces.stat', 'out.txt'] not found in each sim_dir."
 
-    print('Output directory {} passed tests.'.format(dir))
+    print('Pass. Output directory {} contains expected files and structure.'.format(dir))
