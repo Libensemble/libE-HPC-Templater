@@ -32,7 +32,9 @@ def get_requested_platforms_tests(platforms, tests):
         "No test targets. Specify test(s) (e.g., --forces --warpx) or --all"
 
     platforms = [i for i in platforms if options[i]]
-    tests = [i for i in tests if options[i]]
+    if not options["all"]:
+        tests = [i for i in tests if options[i]]
+
     return platforms, tests
 
 
