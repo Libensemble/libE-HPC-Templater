@@ -52,6 +52,8 @@ def make_out_platform_dir(platform, test, in_platform_dir):
     if not os.path.isdir(out_platform_dir):
         shutil.copytree(os.path.join(all_dir, test, "stage"), out_platform_dir)
         in_platform_stage = os.path.join(in_platform_dir, test, "stage")
+        if not os.path.isdir(in_platform_stage):
+            return out_platform_dir
         for file in os.listdir(in_platform_stage):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
