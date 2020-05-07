@@ -43,12 +43,12 @@ configurations and templates in ``all``. Each of these directories contains
 templates and directories for each supported test. For instance, ``platforms/summit``
 contains the ``forces`` and ``warpx`` test directories then a template.
 
-A test directory like ``forces`` contains three subdirectories:
-``calling``, ``stage``, and ``submit``. ``calling`` and ``submit`` contain
+A test directory like ``forces`` contains two or three subdirectories:
+``calling``, ``submit``, and optionally ``stage``. ``calling`` and ``submit`` contain
 configurations for the test variant's calling and batch submission scripts,
 respectively. ``submit`` also contains the ``platform.json`` configuration file
 for submission scripts to specify submission script attributes that are universal
-on a platform. ``stage`` contains test-specific files to copy to each test's
+on a platform. ``stage`` can contain test-specific files to copy to each test's
 output directory.
 
 Once a test output directory has been created, the templater will run each
@@ -76,8 +76,9 @@ and ``multiprocess_64-nodes`` variants.
 3) Place calling script and batch-submission script Jinja templates in ``platforms/theta``.
 Create a test directory, ``platforms/theta/particles``.
 
-4) Create ``calling``, ``stage``, and ``submit`` directories in this test directory.
-Place files that should be copied over (not templated) to the output directory in ``stage``.
+4) Create ``calling``, ``submit`` directories in this test directory. If there are
+files that should be copied over (not templated) to the output directory, create
+``stage`` and place those files there.
 
 5) Make configuration files for the calling script, named ``mpi_128-nodes.json``
 and ``multiprocess_64-nodes.json`` and place within ``calling``. Fields can
