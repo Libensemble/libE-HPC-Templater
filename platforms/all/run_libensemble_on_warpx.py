@@ -69,8 +69,10 @@ if machine == 'local':
     machine_specs = all_machine_specs.local_specs
 elif machine == 'aposmm':
     machine_specs = all_machine_specs.summit_specs
-elif machine == 'other_hpc':
-    machine_specs = all_machine_specs.other_hpc_specs
+elif machine == 'other_hpc_small':
+    machine_specs = all_machine_specs.other_hpc_specs_small
+elif machine == 'other_hpc_large':
+    machine_specs = all_machine_specs.other_hpc_specs_large
 else:
     print("you shouldn' hit that")
     sys.exit()
