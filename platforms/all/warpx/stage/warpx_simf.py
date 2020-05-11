@@ -51,6 +51,15 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
                             stdout='out.txt',
                             stderr='err.txt',
                             wait_on_run=True)
+    elif machine_specs['name'] == 'other_hpc_large':
+        task = exctr.submit(calc_type='sim',
+                            num_nodes=2,
+                            num_procs=machine_specs['cores'],
+                            ranks_per_node=16,
+                            app_args=app_args,
+                            stdout='out.txt',
+                            stderr='err.txt',
+                            wait_on_run=True)
     else:
         task = exctr.submit(calc_type='sim',
                             num_procs=machine_specs['cores'],
