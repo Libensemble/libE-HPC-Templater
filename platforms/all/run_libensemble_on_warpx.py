@@ -67,7 +67,7 @@ import all_machine_specs
 # Import machine-specific run parameters
 if machine == 'local':
     machine_specs = all_machine_specs.local_specs
-elif machine == 'aposmm':
+elif machine == 'summit':
     machine_specs = all_machine_specs.summit_specs
 elif machine == 'other_hpc_small':
     machine_specs = all_machine_specs.other_hpc_specs_small
