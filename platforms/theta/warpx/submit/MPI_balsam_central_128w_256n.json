@@ -3,7 +3,7 @@
     "queue": "default",
     "num_workers": 128,
     "wallclock": 35,
-    "workflow": "libe_warpx_workflow",
+    "workflow": "libe_workflow",
     "balsam_num_nodes": 2,
     "balsam_ranks_per_node": 64,
     "template": "balsam_template"

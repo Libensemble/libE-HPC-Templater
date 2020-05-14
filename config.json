@@ -58,7 +58,8 @@
 		],
 		"warpx": [
 			"MPI_balsam_central_128w_256n",
-			"mproc_MOM_central_128w_256n"
+			"mproc_MOM_central_128w_256n",
+			"mproc_MOM_central_4w_8n"
 		]
 	}
 }
