@@ -32,18 +32,17 @@ fi;
 
 srun hostname | sort -u > node_list
 
-if [[ $MANAGER_NODE = "true" ]]; then
-  tail -n +2 node_list > worker_list
-else
-  cp node_list worker_list
-fi
-
 head -n 1 node_list > machinefile.$SLURM_JOBID
 
 if [[ $SUB_NODE_WORKERS = "true" ]]; then
-  awk -v repeat=$WORKERS_PER_NODE '{for(i=0;i<repeat;i++)print}' worker_list >>machinefile.$SLURM_JOBID
+  awk -v repeat=$WORKERS_PER_NODE '{for(i=0;i<repeat;i++)print}' node_list >>machinefile.$SLURM_JOBID
 else
-  awk -v patt="$NODES_PER_WORKER" 'NR % patt == 1' worker_list >> machinefile.$SLURM_JOBID
+  awk -v patt="$NODES_PER_WORKER" 'NR % patt == 1' node_list >> machinefile.$SLURM_JOBID
+fi;
+
+if [[ $USE_NODE_LIST = "false" ]]; then
+  rm node_list
+  wait
 fi;
 
 export SLURM_HOSTFILE=machinefile.$SLURM_JOBID
