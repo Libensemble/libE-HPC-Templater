@@ -21,11 +21,11 @@ Usage
 
 - Make all tests for a single platform:
 
-    ``./templater.py --theta --all``
+    ``./templater --theta --all``
 
 - Make only forces tests:
 
-    ``python templater.py --cori --forces``
+    ``./templater --cori --forces``
 
 Configuration
 -------------
