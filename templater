@@ -96,13 +96,13 @@ if __name__ == '__main__':
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
+        with open(os.path.join(in_platform_dir, "platform.json")) as p:
+            platform_values = json.load(p)
+
         for test in tests:
             in_test_dir = os.path.join(in_platform_dir, test)
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
             test_types = config[platform][test]
-
-            with open(os.path.join(in_test_dir, "submit", "platform.json")) as p:
-                platform_values = json.load(p)
 
             for type in test_types:
                 out_test_dir = make_test_dir(out_platform_dir, type)
