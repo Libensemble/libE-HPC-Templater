@@ -1,5 +1,5 @@
 {
     "num_nodes": 128,
     "num_workers": 128,
-    "template": "base_template"
+    "template": "mproc_template"
 }
