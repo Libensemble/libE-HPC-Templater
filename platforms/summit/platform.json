@@ -1,10 +1,10 @@
 {
 	"job_name": "libe_mproc",
 	"project": "csc314",
-	"do_plots": "true",
-	"plot_dir": "..",
+	"do_plots": "false",
+	"plot_dir": "../../plot_scripts",
     "job_wallclock_minutes": 30,
 	"libe_wallclock": 25,
-    "conda_env_name": "libensemble",
+    "conda_env_name": "libe-gcc",
 	"alloc_flags": "smt1"
 }
