@@ -87,9 +87,6 @@ def run_prepare_scripts(out_platform_dir):
 
 if __name__ == '__main__':
 
-    with open("config.json") as f:
-        config = json.load(f)
-
     platforms, tests = get_requested_platforms_tests(platforms, tests)
 
     for platform in platforms:
@@ -102,16 +99,17 @@ if __name__ == '__main__':
         for test in tests:
             in_test_dir = os.path.join(in_platform_dir, test)
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
-            test_types = config[platform][test]
+
+            test_types = [f.split('.json')[0] for f in os.listdir(in_test_dir) if f.endswith('.json')]
 
             for type in test_types:
                 out_test_dir = make_test_dir(out_platform_dir, type)
 
-                with open(os.path.join(in_test_dir, "calling", type + '.json')) as f:
-                    calling_values = json.load(f)
+                with open(os.path.join(in_test_dir, type + '.json')) as f:
+                    type_config = json.load(f)
 
-                with open(os.path.join(in_test_dir, "submit", type + '.json')) as f:
-                    submit_values = json.load(f)
+                calling_values = type_config["calling"]
+                submit_values = type_config["submit"]
 
                 single_test = {"test": calling_values['template']}
                 submit_combined = {**single_test, **platform_values, **submit_values}
