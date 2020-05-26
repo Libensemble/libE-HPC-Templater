@@ -1,5 +1,0 @@
-{
-    "gen_type": "'aposmm'",
-    "machine": "'other_hpc_large'",
-    "template": "run_libensemble_on_warpx.py"
-}

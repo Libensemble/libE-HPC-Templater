@@ -1,0 +1,19 @@
+{
+    "calling": {
+        "gen_type": "'aposmm'",
+        "machine": "'other_hpc_large'",
+        "use_balsam": true,
+        "template": "run_libensemble_on_warpx.py"
+    },
+
+    "submit": {
+        "cobalt_num_nodes": 256,
+        "queue": "default",
+        "num_workers": 128,
+        "wallclock": 35,
+        "workflow": "libe_workflow",
+        "balsam_num_nodes": 2,
+        "balsam_ranks_per_node": 64,
+        "template": "balsam_template"
+    }
+}
