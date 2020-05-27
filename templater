@@ -7,12 +7,21 @@ import shutil
 import argparse
 import subprocess
 from jinja2 import Environment, FileSystemLoader
-from platforms_tests import platforms, tests
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
 
-def get_requested_platforms_tests(platforms, tests):
+def get_requested_platforms_tests():
+
+    # Discover available platforms within ./platforms
+    platforms = [i for i in os.listdir(platform_base) if i != "all"]
+
+    # Discover available tests within platform directories
+    tests = []
+    for plat in platforms:
+        for file in os.listdir(os.path.join(platform_base, plat)):
+            if os.path.isdir(os.path.join(platform_base, plat, file)) and file not in tests:
+                tests.append(file)
 
     parser = argparse.ArgumentParser(description="Pass machine names and " + \
                                                  "test names for templating")
@@ -47,10 +56,11 @@ def get_test_variants(in_test_dir):
 
 
 def print_not_supported(test, platform, in_test_dir):
-    print('\n{} isn\'t supported for {} since {} does not exist.' \
+    print('\n{} isn\'t supported on {} since {} does not exist.' \
         .format(test, platform, in_test_dir))
     print('You can resolve this by creating the above directory with ' + \
-          'configurations and optionally a stage directory.\n')
+          'configurations and optionally a stage directory.')
+    print('Skipping current iteration.\n')
 
 
 def make_out_platform_dir(platform, test, in_platform_dir):
@@ -81,7 +91,7 @@ def make_test_dir(out_platform_dir, variant):
     out_test_dir = os.path.join(out_platform_dir, "test_" + variant)
     os.makedirs(out_test_dir, exist_ok=True)
 
-    print('--' + out_test_dir.split('/')[-1])
+    print('   --' + out_test_dir.split('/')[-1])
     return out_test_dir
 
 
@@ -108,7 +118,7 @@ def run_prepare_scripts(out_platform_dir):
 
 if __name__ == '__main__':
 
-    req_platforms, req_tests = get_requested_platforms_tests(platforms, tests)
+    req_platforms, req_tests = get_requested_platforms_tests()
 
     for platform in req_platforms:
         in_platform_dir = os.path.join(platform_base, platform)
@@ -124,7 +134,7 @@ if __name__ == '__main__':
                 test_variants = get_test_variants(in_test_dir)
             except FileNotFoundError:
                 print_not_supported(test, platform, in_test_dir)
-                raise
+                continue
 
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
 

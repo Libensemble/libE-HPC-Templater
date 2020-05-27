@@ -16,16 +16,20 @@ at runtime with any number of ``--bebop``, ``--theta``, ``--cori``, and ``--summ
 Currently generates testing environments for the Forces and WarpX scaling tests.
 Use ``--forces`` and ``--warpx``.
 
+Additional options are supported automatically if corresponding
+platform and test directories are created. For instance, adding a platform ``foo``
+with test directory ``foo/bar`` enables `` --foo --bar`` options.
+
 Usage
 -----
 
 - Make all tests for a single platform:
 
-    ``./templater.py --theta --all``
+    ``./templater --theta --all``
 
-- Make only forces tests:
+- Make only forces tests for Cori:
 
-    ``python templater.py --cori --forces``
+    ``./templater --cori --forces``
 
 Configuration
 -------------
