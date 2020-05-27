@@ -46,6 +46,17 @@ def prepare_jinja(templates):
     return jinja_env
 
 
+def get_test_variants(in_test_dir):
+    return [f.split('.json')[0] for f in os.listdir(in_test_dir) if f.endswith('.json')]
+
+
+def print_not_supported(test, platform, in_test_dir):
+    print('\n{} isn\'t supported for {} since {} does not exist.' \
+        .format(test, platform, in_test_dir))
+    print('You can resolve this by creating the above directory with ' + \
+          'configurations and optionally a stage directory.\n')
+
+
 def make_out_platform_dir(platform, test, in_platform_dir):
     """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
@@ -58,14 +69,23 @@ def make_out_platform_dir(platform, test, in_platform_dir):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
 
+    print(out_platform_dir)
     return out_platform_dir
 
 
-def make_test_dir(out_platform_dir, type):
+def get_config_values(in_test_dir, variant):
+    with open(os.path.join(in_test_dir, variant + '.json')) as f:
+        variant_config = json.load(f)
+
+    return variant_config["calling"], variant_config["submit"]
+
+
+def make_test_dir(out_platform_dir, variant):
     """ Make a lower-level directory labeled by test name"""
-    out_test_dir = os.path.join(out_platform_dir, "test_" + type)
+    out_test_dir = os.path.join(out_platform_dir, "test_" + variant)
     os.makedirs(out_test_dir, exist_ok=True)
 
+    print('--' + out_test_dir.split('/')[-1])
     return out_test_dir
 
 
@@ -75,6 +95,11 @@ def render(values, jinja_env):
     template = jinja_env.get_template(chosen_template)
 
     return template.render(values)
+
+
+def write_script(dir, name, values, jinja_env):
+    with open(os.path.join(dir, name), "w") as f:
+        f.write(render(values, jinja_env))
 
 
 def run_prepare_scripts(out_platform_dir):
@@ -89,35 +114,32 @@ if __name__ == '__main__':
 
     platforms, tests = get_requested_platforms_tests(platforms, tests)
 
-    for platform in platforms:
+    for platform in platforms:  # bebop, cori, summit, or theta
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
         with open(os.path.join(in_platform_dir, "platform.json")) as p:
             platform_values = json.load(p)
 
-        for test in tests:
+        for test in tests:  # forces or warpx
             in_test_dir = os.path.join(in_platform_dir, test)
+
+            try:
+                test_variants = get_test_variants(in_test_dir)
+            except FileNotFoundError:
+                print_not_supported(test, platform, in_test_dir)
+                raise
+
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
 
-            test_types = [f.split('.json')[0] for f in os.listdir(in_test_dir) if f.endswith('.json')]
-
-            for type in test_types:
-                out_test_dir = make_test_dir(out_platform_dir, type)
-
-                with open(os.path.join(in_test_dir, type + '.json')) as f:
-                    type_config = json.load(f)
-
-                calling_values = type_config["calling"]
-                submit_values = type_config["submit"]
-
+            for variant in test_variants:  # differentiated by num_nodes, comms, etc.
+                calling_values, submit_values = get_config_values(in_test_dir, variant)
                 single_test = {"test": calling_values['template']}
-                submit_combined = {**single_test, **platform_values, **submit_values}
+                submit_values = {**single_test, **platform_values, **submit_values}
 
-                with open(os.path.join(out_test_dir, calling_values['template']), "w") as f:
-                    f.write(render(calling_values, jinja_env))
+                out_test_dir = make_test_dir(out_platform_dir, variant)
 
-                with open(os.path.join(out_test_dir, 'submit_' + type + '.sh'), "w") as f:
-                    f.write(render(submit_combined, jinja_env))
+                write_script(out_test_dir, calling_values['template'], calling_values, jinja_env)
+                write_script(out_test_dir, 'submit_' + variant + '.sh', submit_values, jinja_env)
 
             run_prepare_scripts(out_platform_dir)
