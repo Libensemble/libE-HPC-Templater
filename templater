@@ -7,14 +7,10 @@ import shutil
 import argparse
 import subprocess
 from jinja2 import Environment, FileSystemLoader
-
+from platforms_tests import platforms, tests
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
-
-platforms = ["bebop", "summit", "theta", "cori"]
-tests = ["forces", "warpx"]
-
 
 def get_requested_platforms_tests(platforms, tests):
 
@@ -112,16 +108,16 @@ def run_prepare_scripts(out_platform_dir):
 
 if __name__ == '__main__':
 
-    platforms, tests = get_requested_platforms_tests(platforms, tests)
+    req_platforms, req_tests = get_requested_platforms_tests(platforms, tests)
 
-    for platform in platforms:  # bebop, cori, summit, or theta
+    for platform in req_platforms:
         in_platform_dir = os.path.join(platform_base, platform)
         jinja_env = prepare_jinja([in_platform_dir, all_dir])
 
         with open(os.path.join(in_platform_dir, "platform.json")) as p:
             platform_values = json.load(p)
 
-        for test in tests:  # forces or warpx
+        for test in req_tests:
             in_test_dir = os.path.join(in_platform_dir, test)
 
             try:
