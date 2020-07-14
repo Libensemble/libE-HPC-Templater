@@ -1,0 +1,13 @@
+{
+    "calling": {
+        "gen_type": "'aposmm'",
+        "machine": "'summit'",
+        "template": "run_libensemble_on_warpx.py"
+    },
+
+    "submit": {
+        "num_nodes": 4,
+        "num_workers": 24,
+        "template": "mproc_template"
+    }
+}

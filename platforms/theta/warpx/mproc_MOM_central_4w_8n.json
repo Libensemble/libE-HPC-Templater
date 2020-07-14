@@ -1,0 +1,14 @@
+{
+    "calling": {
+        "gen_type": "'aposmm'",
+        "machine": "'other_hpc_small'",
+        "template": "run_libensemble_on_warpx.py"
+    },
+
+    "submit": {
+        "cobalt_num_nodes": 8,
+        "queue": "debug-cache-quad",
+        "num_workers": 4,
+        "template": "mproc_MOM_template"
+    }
+}

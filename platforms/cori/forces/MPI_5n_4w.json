@@ -1,0 +1,17 @@
+{
+    "calling": {
+        "use_balsam": false,
+        "persis_gen": false,
+        "mpi_exctr_args": "auto_resources=True, central_mode=True",
+        "num_sim_particles": 2.0e4,
+        "sim_max": 8,
+        "template": "run_libe_forces.py"
+    },
+
+    "submit": {
+        "num_nodes": 5,
+        "num_workers": 4,
+        "cmd_prefix": "srun --overcommit --ntasks $(($NUM_WORKERS+1)) --nodes=1",
+        "template": "base_submit_template"
+    }
+}

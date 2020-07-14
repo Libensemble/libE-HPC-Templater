@@ -1,8 +1,0 @@
-{
-	"job_name": "libE_warpx_test",
-	"job_wallclock_minutes": 30,
-	"node_type": "knlall",
-	"project": "COMPASSOPT",
-	"do_plots": "false",
-	"plot_dir": ".."
-}
