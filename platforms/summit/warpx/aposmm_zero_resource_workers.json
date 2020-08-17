@@ -8,7 +8,7 @@
 
     "submit": {
         "num_nodes": 4,
-        "num_workers": 24,
+        "num_workers": 25,
         "template": "mproc_template"
     }
 }
