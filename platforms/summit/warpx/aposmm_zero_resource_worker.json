@@ -2,7 +2,7 @@
     "calling": {
         "gen_type": "'aposmm'",
         "machine": "'summit'",
-        "zero_resource_workers": true,
+        "zero_resource_workers": 1,
         "template": "run_libensemble_on_warpx.py"
     },
 

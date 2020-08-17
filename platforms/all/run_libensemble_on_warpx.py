@@ -57,10 +57,10 @@ from libensemble import libE_logger
 
 if USE_BALSAM:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
-    exctr = BalsamMPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[1]{% endif %})
+    exctr = BalsamMPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[{{ zero_resource_workers }}]{% endif %})
 else:
     from libensemble.executors.mpi_executor import MPIExecutor
-    exctr = MPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[1]{% endif %})
+    exctr = MPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[{{ zero_resource_workers }}]{% endif %})
 
 import all_machine_specs
 
