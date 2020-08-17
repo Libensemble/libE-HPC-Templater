@@ -26,7 +26,7 @@ else:
     from libensemble.alloc_funcs.give_sim_work_first import give_sim_work_first as alloc_f
 
 
-libE_logger.set_level('INFO')  # INFO is now default
+libE_logger.set_level('DEBUG')  # INFO is now default
 
 nworkers, is_master, libE_specs, _ = parse_args()
 

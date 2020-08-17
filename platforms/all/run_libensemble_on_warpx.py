@@ -77,7 +77,7 @@ else:
     print("you shouldn' hit that")
     sys.exit()
 
-libE_logger.set_level('INFO')
+libE_logger.set_level('DEBUG')
 
 nworkers, is_master, libE_specs, _ = parse_args()
 
