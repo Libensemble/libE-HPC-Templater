@@ -29,10 +29,10 @@ summit_specs = {
 
 other_hpc_specs_small = {
     'name': 'other_hpc_small',
-    'cores': 4, # Number of cores per simulation
+    'cores': 8, # Number of cores per simulation
     'sim_app': os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex',
     'extra_args': '',  # extra arguments passed to mpirun/mpiexec at execution
-    'OMP_NUM_THREADS': '1',
+    'OMP_NUM_THREADS': '2',
     'sim_max': 16  # Maximum number of simulations
 }
 
