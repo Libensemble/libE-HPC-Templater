@@ -103,6 +103,10 @@ libE_specs['save_every_k_gens'] = 1000  # Save every K steps
 libE_specs['sim_dirs_make'] = True      # Separate each sim into a separate directory
 libE_specs['profile_worker'] = False    # Whether to have libE profile on (default False)
 
+# So exception can be caught for evaluation in log files
+if sim_specs['user']['fail_on_sim'] or sim_specs['user']['fail_on_submit']:
+    libE_specs['abort_on_exception'] = False
+
 # Maximum number of simulations
 sim_max = {{ sim_max }}
 exit_criteria = {'sim_max': sim_max}
