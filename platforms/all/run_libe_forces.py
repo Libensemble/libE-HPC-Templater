@@ -129,8 +129,4 @@ else:
         save_libE_output(H, persis_info, __file__, nworkers)
         if sim_specs['user']['fail_on_submit']:
             test_libe_stats('Task Failed\n')
-        elif sim_specs['user']['fail_on_sim']:
-            check_log_exception()
-            test_libe_stats('Exception occurred\n')
-        else:
-            test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
+        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
