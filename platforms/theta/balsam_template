@@ -46,6 +46,7 @@ export LIBE_PLOTS={{ do_plots }}   # Require plot scripts (see at end)
 export BALSAM_PLOTS={{ do_balsam_plots }} # Require plot scripts (see at end)
 
 module load miniconda-3/latest
+module load postgresql/9.6.12
 
 # Activate conda environment
 source activate $CONDA_ENV_NAME
