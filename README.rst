@@ -71,15 +71,12 @@ Example
 Suppose we want to define a new test ``"particles"``, only for Theta, with ``mpi_128-nodes``
 and ``multiprocess_64-nodes`` variants.
 
-
-1) Add ``"particles"`` to ``tests`` in ``platforms_tests.py``.
-
-2) Place Jinja templates for calling scripts and submission scripts in ``platforms/all``
+1) Place Jinja templates for calling scripts and submission scripts in ``platforms/all``
 or ``platforms/theta``.
 
-3) Create a test directory, ``platforms/theta/particles``.
+2) Create a test directory, ``platforms/theta/particles``.
 
-4) Place configuration ``.json`` files to populate templates within this new directory.
+3) Place configuration ``.json`` files to populate templates within this new directory.
 In this case, they'll be named ``mpi_128-nodes.json`` and ``multiprocess_64-nodes.json``.
 They must contain ``"calling"`` and ``"submit"`` keys matching a ``"template"``
 key-value pairs and any number of other key-value pairs.
