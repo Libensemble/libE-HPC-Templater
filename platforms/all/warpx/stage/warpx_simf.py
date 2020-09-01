@@ -30,7 +30,12 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
 
     input_file = sim_specs['user']['input_filename']
     time_limit = sim_specs['user']['sim_kill_minutes'] * 60.0
-    machine_specs = sim_specs['user']['machine_specs']
+    #machine_specs = sim_specs['user']['machine_specs']  # not needed here
+
+    num_procs = sim_specs['user'].get('num_procs', None)
+    num_nodes = sim_specs['user'].get('num_nodes', None)
+    ranks_per_node = sim_specs['user'].get('ranks_per_node', None)
+    e_args = sim_specs['user'].get('e_args', None)
 
     exctr = Executor.executor  # Get Executor
 
@@ -44,29 +49,43 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
     os.environ["OMP_NUM_THREADS"] = machine_specs['OMP_NUM_THREADS']
 
     # Launch the executor to actually run the WarpX simulation
-    if machine_specs['name'] == 'summit':
-        task = exctr.submit(calc_type='sim',
-                            extra_args=machine_specs['extra_args'],
-                            app_args=app_args,
-                            stdout='out.txt',
-                            stderr='err.txt',
-                            wait_on_run=True)
-    elif machine_specs['name'] == 'other_hpc_large':
-        task = exctr.submit(calc_type='sim',
-                            num_nodes=2,
-                            num_procs=machine_specs['cores'],
-                            ranks_per_node=16,
-                            app_args=app_args,
-                            stdout='out.txt',
-                            stderr='err.txt',
-                            wait_on_run=True)
-    else:
-        task = exctr.submit(calc_type='sim',
-                            num_procs=machine_specs['cores'],
-                            app_args=app_args,
-                            stdout='out.txt',
-                            stderr='err.txt',
-                            wait_on_run=True)
+    # Field variables can be declared as None - same as if not provided
+    task = exctr.submit(calc_type='sim',
+                        num_procs=num_procs,
+                        num_nodes=num_nodes,
+                        ranks_per_node=ranks_per_node,
+                        extra_args=e_args,
+                        app_args=app_args,
+                        stdout='out.txt',
+                        stderr='err.txt',
+                        wait_on_run=True)
+
+    #if machine_specs['name'] == 'summit':
+        #task = exctr.submit(calc_type='sim',
+                            #num_procs=num_procs,
+                            #num_nodes=num_nodes,
+                            #ranks_per_node=ranks_per_node,
+                            #extra_args=e_args,
+                            #app_args=app_args,
+                            #stdout='out.txt',
+                            #stderr='err.txt',
+                            #wait_on_run=True)
+    #elif machine_specs['name'] == 'other_hpc_large':
+        #task = exctr.submit(calc_type='sim',
+                            #num_nodes=2,
+                            #num_procs=machine_specs['cores'],
+                            #ranks_per_node=16,
+                            #app_args=app_args,
+                            #stdout='out.txt',
+                            #stderr='err.txt',
+                            #wait_on_run=True)
+    #else:
+        #task = exctr.submit(calc_type='sim',
+                            #num_procs=machine_specs['cores'],
+                            #app_args=app_args,
+                            #stdout='out.txt',
+                            #stderr='err.txt',
+                            #wait_on_run=True)
 
     # Periodically check the status of the simulation
     poll_interval = 1  # secs

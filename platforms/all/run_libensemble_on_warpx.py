@@ -130,7 +130,13 @@ sim_specs = {
         # Run timeouts after 3 mins
         'sim_kill_minutes': 3,
         # machine-specific parameters
-        'machine_specs': machine_specs
+        'machine_specs': machine_specs,
+        # Run parameters
+        {%- if num_procs is defined %} 'num_procs': {{ num_procs }}, {% endif %}
+        {%- if num_nodes is defined %} 'num_nodes': {{ num_nodes }}, {% endif %}
+        {%- if ranks_per_node is defined %} 'ranks_per_node': {{ ranks_per_node }}, {% endif %}
+        {%- if e_args is defined %} 'e_args': {{ e_args }}, {% endif %}
+
     }
 }
 
