@@ -132,6 +132,7 @@ sim_specs = {
         # machine-specific parameters
         'machine_specs': machine_specs,
         # Run parameters
+        'OMP_NUM_THREADS': {{ nthreads }},
         {%+ if num_procs is defined %}'num_procs': {{ num_procs }},{% endif %}
         {%+ if num_nodes is defined %}'num_nodes': {{ num_nodes }},{% endif %}
         {%+ if ranks_per_node is defined %}'ranks_per_node': {{ ranks_per_node }},{% endif %}
@@ -233,7 +234,7 @@ libE_specs['save_every_k_sims'] = 100
 # Sim directory to be copied for each worker
 libE_specs['sim_input_dir'] = 'sim'
 
-sim_max = machine_specs['sim_max']  # Maximum number of simulations
+sim_max = {{ sim_max }}  # Maximum number of simulations
 exit_criteria = {'sim_max': sim_max}  # Exit after running sim_max simulations
 
 # Create a different random number stream for each worker and the manager

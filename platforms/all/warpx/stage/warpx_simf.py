@@ -46,7 +46,7 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
     # Passed to command line in addition to the executable.
     # Here, only input file
     app_args = input_file
-    os.environ["OMP_NUM_THREADS"] = machine_specs['OMP_NUM_THREADS']
+    os.environ["OMP_NUM_THREADS"] = str(sim_specs['user']['OMP_NUM_THREADS'])
 
     # Launch the executor to actually run the WarpX simulation
     # Field variables can be declared as None - same as if not provided
