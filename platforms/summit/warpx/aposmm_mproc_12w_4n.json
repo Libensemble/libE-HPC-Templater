@@ -3,14 +3,14 @@
         "gen_type": "'aposmm'",
         "machine": "'summit'",
         "template": "run_libensemble_on_warpx.py",
-        "e_args": "'-n 12 -a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\"'",
+        "e_args": "'-n 2 -a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\"'",
         "nthreads": "1",
-        "sim_max": 16
+        "sim_max": 48
     },
 
     "submit": {
-        "num_nodes": 8,
-        "num_workers": 4,
+        "num_nodes": 4,
+        "num_workers": 12,
         "template": "mproc_template"
     }
 }
