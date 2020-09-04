@@ -2,7 +2,7 @@
     "calling": {
         "use_balsam": true,
         "persis_gen": false,
-        "balsam_exctr_args": "auto_resources=True",
+        "balsam_exctr_args": "auto_resources=True, central_mode=True",
         "mpi_exctr_args": "auto_resources=True, central_mode=True",
         "num_sim_particles": 1e5,
         "sim_max": 512,
