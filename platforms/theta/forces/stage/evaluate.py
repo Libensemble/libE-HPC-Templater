@@ -17,7 +17,7 @@ while sleeptime < limit:
     time.sleep(30)
     sleeptime += 30
     assert sleeptime < limit, "Expected output not detected by the time limit."
-    if 'LIBE_EVALUATE_ERROR' in os.environ or 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.')
+    if 'LIBE_EVALUATE_ERROR' in os.environ or 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
         print(' done.', end=" ", flush=True)
         break
 
