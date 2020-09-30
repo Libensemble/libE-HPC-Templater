@@ -57,9 +57,11 @@ else:
 if USE_BALSAM:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
     exctr = BalsamMPIExecutor({{ balsam_exctr_args }})  # Use allow_oversubscribe=False to prevent oversubscription
+    os.environ['LIBE_EXECUTOR'] = 'Balsam'
 else:
     from libensemble.executors.mpi_executor import MPIExecutor
     exctr = MPIExecutor({{ mpi_exctr_args }})  # Use allow_oversubscribe=False to prevent oversubscription
+    os.environ['LIBE_EXECUTOR'] = 'MPI'
 exctr.register_calc(full_path=sim_app, calc_type='sim')
 
 # Note: Attributes such as kill_rate are to control forces tests, this would not be a typical parameter.
@@ -124,9 +126,15 @@ except ManagerException:
     if is_master and sim_specs['user']['fail_on_sim']:
         check_log_exception()
         test_libe_stats('Exception occurred\n')
+        os.environ['LIBE_EVALUATE_ERROR'] = 'fail_on_sim'
 else:
     if is_master:
         save_libE_output(H, persis_info, __file__, nworkers)
         if sim_specs['user']['fail_on_submit']:
             test_libe_stats('Task Failed\n')
-        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
+            os.environ['LIBE_EVALUATE_ERROR'] = 'fail_on_submit'
+        # test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
+        test_ensemble_dir('./ensemble', nworkers, sim_max)
+        with open('LIBE_EVALUATE_ENSEMBLE', 'w') as f:
+            for i in ['./ensemble', nworkers, sim_max]:
+                f.write(i + '\n')
