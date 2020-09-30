@@ -57,11 +57,9 @@ else:
 if USE_BALSAM:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
     exctr = BalsamMPIExecutor({{ balsam_exctr_args }})  # Use allow_oversubscribe=False to prevent oversubscription
-    os.environ['LIBE_EXECUTOR'] = 'Balsam'
 else:
     from libensemble.executors.mpi_executor import MPIExecutor
     exctr = MPIExecutor({{ mpi_exctr_args }})  # Use allow_oversubscribe=False to prevent oversubscription
-    os.environ['LIBE_EXECUTOR'] = 'MPI'
 exctr.register_calc(full_path=sim_app, calc_type='sim')
 
 # Note: Attributes such as kill_rate are to control forces tests, this would not be a typical parameter.
