@@ -37,4 +37,4 @@ if 'LIBE_EVALUATE_ERROR' in os.environ:
 if 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
     with open('LIBE_EVALUATE_ENSEMBLE', 'r') as f:
         [dir, nworkers, sim_max] = f.readlines()
-    test_ensemble_dir(dir.strip('\n'), int(nworkers.strip('\n')), int(sim_max.strip('\n'))
+    test_ensemble_dir(dir.strip('\n'), int(nworkers.strip('\n')), int(sim_max.strip('\n')))
