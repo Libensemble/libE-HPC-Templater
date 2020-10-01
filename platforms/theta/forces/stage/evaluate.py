@@ -10,14 +10,15 @@ from forces_support import test_libe_stats, test_ensemble_dir, check_log_excepti
 sleeptime = 0
 limit = 1500
 
-print('Waiting on test completion for up to {} minutes...'.format(limit/60))
+print('Waiting on test completion for up to {} minutes...'.format(limit/60), flush=True)
 
 # Wait for env vars or files set by conclusion of run_libe_forces
 while sleeptime < limit:
     sleep(30)
     sleeptime += 30
     assert sleeptime < limit, "Expected output not detected by the time limit."
-    if 'LIBE_EVALUATE_ERROR' in os.environ or 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
+    # if 'LIBE_EVALUATE_ERROR' in os.environ or 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
+    if any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
         print(' done.', end=" ", flush=True)
         break
 
