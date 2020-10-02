@@ -17,14 +17,12 @@ if os.environ.get('BALSAM_DB_PATH'):
     os.chdir(glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')[0])
 
 # Wait for env vars or files set by conclusion of run_libe_forces
-while sleeptime < limit:
+while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
     sleep(30)
     sleeptime += 30
     assert sleeptime < limit, "Expected output not detected by the time limit."
-    # if 'LIBE_EVALUATE_ERROR' in os.environ or 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
-    if any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
-        print(' done.', end=" ", flush=True)
-        break
+
+print(' done.', end=" ", flush=True)
 
 # Evaluate output files based on type of error (if any)
 if 'FAIL_ON_SIM' in os.listdir('.'):
