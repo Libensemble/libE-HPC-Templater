@@ -6,10 +6,28 @@ import json
 import shutil
 import argparse
 import subprocess
+from instructions import instructions
 from jinja2 import Environment, FileSystemLoader
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
+
+def display_instructions(platforms, tests):
+    print("\n", "*"*10, "libEnsemble Scaling Tests Templater", "*"*10)
+    print("\nSelected Platforms: " + ", ".join([i.title() for i in platforms]))
+    print("Selected Tests: " + ", ".join([i.title() for i in tests]), "\n")
+    print("NOTICE:\nMany of these Platform-Test combinations may require " +
+          "additional\nPython, module, or application builds or adjustments before " +
+          "the\ntemplater's produced tests will function. These adjustments "+
+          "can\nbe made on a test-by-test basis after templating, but we "+
+          "recommend\nperforming the following steps ahead of time:\n")
+
+    for platform in platforms:
+        for test in tests:
+            pair = (platform, test)
+            label = "{} on {}".format(test.title(), platform.title())
+            print(label, "\n", "-"*(len(label)), "\n")
+            print(instructions[pair])
 
 def get_requested_platforms_tests():
 
@@ -119,6 +137,7 @@ def run_prepare_scripts(out_platform_dir):
 if __name__ == '__main__':
 
     req_platforms, req_tests = get_requested_platforms_tests()
+    display_instructions(req_platforms, req_tests)
 
     for platform in req_platforms:
         in_platform_dir = os.path.join(platform_base, platform)
