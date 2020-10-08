@@ -29,6 +29,11 @@ def display_instructions(platforms, tests):
             print(label, "\n", "-"*(len(label)), "\n")
             print(instructions[pair])
 
+    exit = input("(c)ontinue with templating, or any other key to exit: ")
+    if exit.upper() != 'C':
+        print("Exiting")
+        sys.exit()
+
 def get_requested_platforms_tests():
 
     # Discover available platforms within ./platforms
@@ -93,7 +98,7 @@ def make_out_platform_dir(platform, test, in_platform_dir):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
 
-    print(out_platform_dir)
+    print("\n" + out_platform_dir)
     return out_platform_dir
 
 
