@@ -94,6 +94,11 @@ def make_out_platform_dir(platform, test, in_platform_dir):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
 
+    else:
+        print("\nDirectory for {} on {} already exists.".format(test.title(), platform.title()))
+        print("Which of the following test directories should be overwritten? Skip with any non-integer:")
+        sys.exit()
+
     print("\n" + out_platform_dir)
     return out_platform_dir
 
