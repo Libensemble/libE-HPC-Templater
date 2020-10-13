@@ -4,22 +4,29 @@
 check_warpx_built = "- Make sure WarpX is built, and the path in ./platforms/all/warpx/stage/all_machine_specs.py matches.\n"
 check_conda_env = "- Make sure your Conda environment matches in ./platforms/PLATFORM/platform.json\n"
 check_any_adjust = "- Optionally make test-specific adjustments to the .json files in ./platforms/PLATFORM/TEST\n"
+check_balsam = "- If testing with Balsam, install via pip [pip install balsam-flow]\n" + \
+               "- Then, initalize a database with [balsam init ~/my_workflow]\n" + \
+               "- Make sure this database matches in ./platforms/PLATFORM/platform.json\n"
 
+base_warpx = check_warpx_built + check_conda_env + check_any_adjust
+base_forces = check_conda_env + check_any_adjust
 # Add instructions for each by appending additional strings
 
 instructions = {
-    ('summit', 'warpx'): check_warpx_built + check_conda_env + check_any_adjust,
-    ('summit', 'forces'): check_conda_env + check_any_adjust,
-    ('bebop', 'warpx'): check_warpx_built + check_conda_env + check_any_adjust,
-    ('bebop', 'forces'): check_conda_env + check_any_adjust,
-    ('cori', 'warpx'): check_warpx_built + check_conda_env + check_any_adjust,
-    ('cori', 'forces'): check_conda_env + check_any_adjust,
-    ('theta', 'warpx'): check_warpx_built + check_conda_env + check_any_adjust,
-    ('theta', 'forces'): check_conda_env + check_any_adjust,
+    ('summit', 'warpx'): base_warpx,
+    ('summit', 'forces'): base_forces,
+    ('bebop', 'warpx'): base_warpx,
+    ('bebop', 'forces'): base_forces,
+    ('cori', 'warpx'): base_warpx,
+    ('cori', 'forces'): base_forces,
+    ('theta', 'warpx'): base_warpx + check_balsam,
+    ('theta', 'forces'): base_forces + check_balsam
 }
 
 notice = "NOTICE:\nMany of the templater's produced tests may require " + \
       "additional\nPython, module, or application builds and adjustments before " + \
       "they will\nfunction. The following adjustments " + \
       "can be made on a test-by-test basis\nafter templating, but we " + \
-      "recommend performing them ahead of time:\n"
+      "recommend performing them prior:\n"
+
+see_docs = "Platform documentation and guides: https://libensemble.readthedocs.io/en/develop/platforms/platforms_index.html#instructions-for-specific-platforms\n"

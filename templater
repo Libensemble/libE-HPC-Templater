@@ -6,8 +6,8 @@ import json
 import shutil
 import argparse
 import subprocess
-from instructions import instructions, notice
 from jinja2 import Environment, FileSystemLoader
+from instructions import instructions, notice, see_docs
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
@@ -25,7 +25,9 @@ def display_instructions(platforms, tests):
             print(label, "\n", "-"*(len(label)), "\n")
             print(instructions[pair].replace('PLATFORM', platform).replace('TEST', test))
 
-    exit = input("(c)ontinue with templating, or any other key to exit: ")
+    print(see_docs)
+
+    exit = input("(C)ontinue with templating, or any other key to exit: ")
     if exit.upper() != 'C':
         print("Exiting")
         sys.exit()
@@ -85,37 +87,55 @@ def print_not_supported(test, platform, in_test_dir):
 def check_existing_out_platform_dir(platform, test, test_variants):
     out_platform_dir = platform + '_' + test.split('.')[0]
     if os.path.isdir(out_platform_dir):
-        print("\nDirectory for {} on {} already exists.".format(test.title(), platform.title()))
+        print("\nWARNING: Directory for {} on {} already exists.".format(test.title(), platform.title()))
+        print("You can delete the previous directory and it's contents," + \
+              " choose to overwrite specific subdirectories, or skip.")
+        print("Skipping transitions to setting up the next test type if" + \
+              " multiples were chosen. E.g. Forces -> WarpX. If no selected" + \
+              " test types remain, this routine quits.")
         int_tv_dict = {}
-        input_prompt = "Which of the following test directories should be " + \
-                                "overwritten? Skip with any non-integer.\n"
 
-        for i, tv in enumerate(test_variants):
-            int_tv_dict[i] = tv
-            input_prompt += ("{}) ./{}/{}\n".format(i, out_platform_dir, tv))
+        reset_prompt = "\n(D)elete previous ./{}, or (O)verwrite specific test".format(out_platform_dir) + \
+                       " directories? Any other key to skip."
+        overwrite_prompt = "\nWhich of the following test directories should be " + \
+                           "overwritten? (e.g. 145). Skip with any non-integer.\n"
 
-        which_overwrite = input(input_prompt)
+        which_reset = input(reset_prompt)
+        if which_reset.upper() == 'D':
+            print('Removing ./{}'.format(out_platform_dir))
+            shutil.rmtree(out_platform_dir)
+            return test_variants
 
-        if not which_overwrite.isnumeric():
-            print("Exiting")
-            sys.exit()
+        elif which_reset.upper() == 'O':
+            for i, tv in enumerate(test_variants):
+                int_tv_dict[i] = tv
+                overwrite_prompt += ("{}) ./{}/test_{}\n".format(i, out_platform_dir, tv))
 
-    else:
-        return test_variants
+            which_overwrite = input(overwrite_prompt)
+
+            if not which_overwrite.isnumeric():
+                return test_variants
+
+            test_variants = [int_tv_dict[int(i)] for i in list(which_overwrite)]
+            print('\n Writing:')
+
+    return test_variants
 
 
 def make_out_platform_dir(platform, test, in_platform_dir):
     """ Make a top-level directory labeled by platform and test name. Stage in files."""
     out_platform_dir = platform + '_' + test.split('.')[0]
-    shutil.copytree(os.path.join(all_dir, test, "stage"), out_platform_dir)
-    in_platform_stage = os.path.join(in_platform_dir, test, "stage")
-    if not os.path.isdir(in_platform_stage):
-        return out_platform_dir
-    for file in os.listdir(in_platform_stage):
-        shutil.copy2(os.path.join(in_platform_stage, file),
-                     os.path.join(out_platform_dir, file))
+    if not os.path.isdir(out_platform_dir):
+        shutil.copytree(os.path.join(all_dir, test, "stage"), out_platform_dir)
+        in_platform_stage = os.path.join(in_platform_dir, test, "stage")
+        if not os.path.isdir(in_platform_stage):
+            return out_platform_dir
+        for file in os.listdir(in_platform_stage):
+            shutil.copy2(os.path.join(in_platform_stage, file),
+                         os.path.join(out_platform_dir, file))
 
-    print("\n" + out_platform_dir)
+        print("\n Writing: ./" + out_platform_dir)
+
     return out_platform_dir
 
 
