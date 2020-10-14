@@ -15,8 +15,8 @@ base_forces = check_conda_env + check_any_adjust
 instructions = {
     ('summit', 'warpx'): base_warpx,
     ('summit', 'forces'): base_forces,
-    ('bebop', 'warpx'): base_warpx,
-    ('bebop', 'forces'): base_forces,
+    ('bebop', 'warpx'): check_warpx_built + check_any_adjust,
+    ('bebop', 'forces'): check_any_adjust,
     ('cori', 'warpx'): base_warpx,
     ('cori', 'forces'): base_forces,
     ('theta', 'warpx'): base_warpx + check_balsam,
