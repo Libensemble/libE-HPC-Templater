@@ -1,0 +1,18 @@
+{
+	"calling": {
+		"use_balsam": false,
+		"persis_gen": false,
+		"mpi_exctr_args": "auto_resources=True, central_mode=True",
+		"num_sim_particles": 2.0e4,
+		"sim_max": 8,
+		"mpi_disable_mprobes": true,
+		"template": "run_libe_forces.py"
+	},
+
+	"submit": {
+		"num_workers": 4,
+		"num_nodes": 5,
+		"cmd_prefix": "mpirun -np $(($NUM_WORKERS+1)) -ppn $(($NUM_WORKERS+1))",
+		"template": "base_submit_template"
+	}
+}

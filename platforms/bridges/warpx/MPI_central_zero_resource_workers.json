@@ -1,0 +1,17 @@
+{
+    "calling": {
+        "gen_type": "'aposmm'",
+        "machine": "'other_hpc_small'",
+        "mpi_disable_mprobes": true,
+        "zero_resource_workers": 1,
+        "template": "run_libensemble_on_warpx.py"
+    },
+
+    "submit": {
+    	"num_workers": 5,
+    	"num_nodes": 2,
+    	"exports": ["export I_MPI_FABRICS=shm:tmi"],
+    	"cmd_prefix": "mpirun -np $(($NUM_WORKERS+1)) -ppn $(($NUM_WORKERS+1))",
+    	"template": "base_submit_template"
+    }
+}

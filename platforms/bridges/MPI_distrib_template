@@ -1,0 +1,64 @@
+#!/bin/bash
+#SBATCH -J {{ job_name }}
+#SBATCH -N {{ num_nodes }}
+#SBATCH -p {{ node_type }}
+#SBATCH -o tlib.%j.%N.out
+#SBATCH -e tlib.%j.%N.error
+#SBATCH -t 00:{{ job_wallclock_minutes }}:00
+#SBATCH -A {{ project }}
+
+export EXE={{ test }}
+export NUM_WORKERS={{ num_workers }}
+
+{% if exports is defined %}
+    {%- for line in exports %}
+        {{- line }}
+    {% endfor %}
+{% endif %}
+
+if [[ $MANAGER_NODE = "true" ]]; then
+  WORKER_NODES=$(($SLURM_NNODES-1))
+else
+  WORKER_NODES=$SLURM_NNODES
+fi
+
+if [[ $NUM_WORKERS -ge $WORKER_NODES ]]; then
+  SUB_NODE_WORKERS=true
+  WORKERS_PER_NODE=$(($NUM_WORKERS/$WORKER_NODES))
+else
+  SUB_NODE_WORKERS=false
+  NODES_PER_WORKER=$(($WORKER_NODES/$NUM_WORKERS))
+fi;
+
+srun hostname | sort -u > node_list
+
+head -n 1 node_list > machinefile.$SLURM_JOBID
+
+if [[ $SUB_NODE_WORKERS = "true" ]]; then
+  awk -v repeat=$WORKERS_PER_NODE '{for(i=0;i<repeat;i++)print}' node_list >>machinefile.$SLURM_JOBID
+else
+  awk -v patt="$NODES_PER_WORKER" 'NR % patt == 1' node_list >> machinefile.$SLURM_JOBID
+fi;
+
+if [[ $USE_NODE_LIST = "false" ]]; then
+  rm node_list
+  wait
+fi;
+
+export SLURM_HOSTFILE=machinefile.$SLURM_JOBID
+
+cmd="{{ cmd_prefix }} python $EXE {{ cmd_suffix }}"
+
+cd $SLURM_SUBMIT_DIR
+echo -e "Slurm job ID: $SLURM_JOBID"
+echo -e "Master process running on: $HOSTNAME"
+echo -e "Directory is:  $PWD"
+echo -e "Conda env is: $CONDA_DEFAULT_ENV"
+echo -e "Slurm nodelist is: $SLURM_NODELIST"
+echo The command is: $cmd
+echo End PBS script information.
+echo All further output is from the process being run and not the pbs script.\n\n $cmd
+
+$cmd
+
+echo Finished at: `date`
