@@ -27,9 +27,15 @@ Usage
 
     ``./templater --theta --all``
 
-- Make only forces tests for Cori:
+- Make only Forces tests for Cori:
 
     ``./templater --cori --forces``
+
+Users are presented with reminders on how they may need to customize or prepare
+their working environment or test configurations prior to templating. In the
+event that previous templated tests are detected, the templater can assist the
+user with either removing the previous templated test directory, or overwriting
+specific test cases.
 
 Configuration
 -------------
@@ -94,5 +100,7 @@ For example::
         }
     }
 
-6) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
+4) Append reminders and instructions for this test to ``instructions`` in ``strings.py``
+
+5) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
 within a new directory ``stage`` inside the above test directory.
