@@ -20,7 +20,9 @@ instructions = {
     ('cori', 'warpx'): base_warpx,
     ('cori', 'forces'): base_forces,
     ('theta', 'warpx'): base_warpx + check_balsam,
-    ('theta', 'forces'): base_forces + check_balsam
+    ('theta', 'forces'): base_forces + check_balsam,
+    ('bridges', 'warpx'): base_warpx,
+    ('bridges', 'forces'): base_forces
 }
 
 notice = "NOTICE:\nMany of the templater's produced tests may require " + \
