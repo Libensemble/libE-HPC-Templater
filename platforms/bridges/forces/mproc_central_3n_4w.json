@@ -1,7 +1,5 @@
 {
     "calling": {
-        "use_balsam": false,
-        "persis_gen": false,
         "mpi_exctr_args": "auto_resources=True, central_mode=True",
         "num_sim_particles": 2.0e4,
         "sim_max": 8,
@@ -9,7 +7,6 @@
     },
 
     "submit": {
-    	"num_workers": 4,
     	"num_nodes": 3,
     	"cmd_suffix": "--comms local --nworkers $NUM_WORKERS > out.txt 2>&1",
     	"template": "base_submit_template"
