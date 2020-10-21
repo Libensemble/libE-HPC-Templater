@@ -141,7 +141,8 @@ if __name__ == '__main__':
             for variant in test_variants:  # differentiated by num_nodes, comms, etc.
                 calling_values, submit_values = get_config_values(in_test_dir, variant)
                 single_test = {"test": calling_values['template']}
-                submit_values = {**single_test, **platform_values, **submit_values}
+                submit_values = {**single_test, **platform_values["submit"], **submit_values}
+                calling_values = {**platform_values["calling"], **calling_values}
 
                 out_test_dir = make_test_dir(out_platform_dir, variant)
 

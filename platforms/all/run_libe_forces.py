@@ -15,8 +15,17 @@ from libensemble.tools import parse_args, save_libE_output, add_unique_random_st
 from libensemble import libE_logger
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 
+{% if use_balsam is defined %}
 USE_BALSAM = {{ use_balsam }}
+{% else %}
+USE_BALSAM = False
+{% endif %}
+
+{% if persis_gen is defined %}
 PERSIS_GEN = {{ persis_gen }}
+{% else %}
+PERSIS_GEN = False
+{% endif %}
 
 if PERSIS_GEN:
     from libensemble.gen_funcs.persistent_uniform_sampling import persistent_uniform as gen_f
