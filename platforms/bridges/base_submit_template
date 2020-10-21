@@ -1,0 +1,42 @@
+#!/bin/bash
+#SBATCH -J {{ job_name }}
+#SBATCH -N {{ num_nodes }}
+#SBATCH -p {{ node_type }}
+#SBATCH -o tlib.%j.%N.out
+#SBATCH -e tlib.%j.%N.error
+#SBATCH -t 00:{{ job_wallclock_minutes }}:00
+#SBATCH -A {{ project }}
+
+export EXE={{ test }}
+export NUM_WORKERS={{ num_workers }}
+
+{% if exports is defined %}
+    {%- for line in exports %}
+        {{- line }}
+    {% endfor %}
+{% endif %}
+
+export LIBE_PLOTS={{ do_plots }}
+export PLOT_DIR={{ plot_dir }}
+
+cmd="{{ cmd_prefix }} python $EXE {{ cmd_suffix }}"
+
+cd $SLURM_SUBMIT_DIR
+echo -e "Slurm job ID: $SLURM_JOBID"
+echo -e "Master process running on: $HOSTNAME"
+echo -e "Directory is:  $PWD"
+echo -e "Conda env is: $CONDA_DEFAULT_ENV"
+echo -e "Slurm nodelist is: $SLURM_NODELIST"
+echo The command is: $cmd
+echo End PBS script information.
+echo All further output is from the process being run and not the pbs script.\n\n $cmd
+
+$cmd
+
+if [[ $LIBE_PLOTS = "true" ]]; then
+  python $PLOT_DIR/plot_libe_calcs_util_v_time.py
+  python $PLOT_DIR/plot_libe_runs_util_v_time.py
+  python $PLOT_DIR/plot_libE_histogram.py
+fi
+
+echo Finished at: `date`
