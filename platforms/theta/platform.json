@@ -1,6 +1,7 @@
 {
 	"calling": {
         "nthreads": "1",
+		"persis_gen": false
 	},
 
 	"submit": {

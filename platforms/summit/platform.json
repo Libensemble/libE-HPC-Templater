@@ -1,6 +1,7 @@
 {
 	"calling": {
-		"NOT_USED": "not used"
+		"mpi_exctr_args": "auto_resources=True, central_mode=True",
+		"machine": "'summit'"
 	},
 
 	"submit": {

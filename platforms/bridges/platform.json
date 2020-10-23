@@ -1,6 +1,7 @@
 {
 	"calling": {
-		"NOT_USED": "not used"
+		"mpi_exctr_args": "auto_resources=True, central_mode=True",
+		"num_sim_particles": 2.0e4
 	},
 
 	"submit": {
