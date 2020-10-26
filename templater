@@ -93,15 +93,13 @@ def check_existing_out_platform_dir(platform, test, test_variants, do_reset):
     out_platform_dir = platform + '_' + test.split('.')[0]
     if os.path.isdir(out_platform_dir) and do_reset:
         print("\nWARNING: Directory for {} on {} already exists.".format(test.title(), platform.title()))
-        print("You can delete the previous directory and it's contents or" + \
-              " choose to overwrite specific subdirectories.")
-        int_tv_dict = {}
 
         reset_prompt = "\n(D)elete previous ./{}, or (O)verwrite specific test".format(out_platform_dir) + \
                        " directories? Any other key to exit: "
-        overwrite_prompt = "\nWhich of the following test directories should be " + \
-                           "overwritten? (e.g. 145). Skip with any non-integer.\n"
+        overwrite_prompt = "\nWhich test directories to overwrite? (e.g. 145)." + \
+                           " Skip with any non-integer.\n"
 
+        int_tv_dict = {}
         which_reset = input(reset_prompt)
         if which_reset.upper() == 'D':
             print('Removing ./{}'.format(out_platform_dir))
@@ -113,15 +111,13 @@ def check_existing_out_platform_dir(platform, test, test_variants, do_reset):
                 int_tv_dict[i] = tv
                 overwrite_prompt += ("{}) ./{}/test_{}\n".format(i, out_platform_dir, tv))
 
+            overwrite_prompt += "Choices: "
             which_overwrite = input(overwrite_prompt)
 
             if not which_overwrite.isnumeric():
-                return test_variants
+                sys.exit()
 
             test_variants = [int_tv_dict[int(i)] for i in list(which_overwrite)]
-
-        else:
-            sys.exit()
 
     return test_variants
 
