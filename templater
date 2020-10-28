@@ -50,6 +50,7 @@ def get_requested_platforms_tests():
         parser.add_argument('--' + i, action='store_true')
 
     parser.add_argument('--reset', action='store_true')
+    parser.add_argument('--skip_instructions', action='store_true')
 
     options = vars(parser.parse_args(sys.argv[1:]))
     assert any([options[i] for i in platforms]), \
@@ -63,8 +64,9 @@ def get_requested_platforms_tests():
         tests = [i for i in tests if options[i]]
 
     reset = options["reset"]
+    skip_instructions = options["skip_instructions"]
 
-    return platforms, tests, reset
+    return platforms, tests, reset, skip_instructions
 
 
 def prepare_jinja(templates):
@@ -180,8 +182,10 @@ def run_prepare_scripts(out_platform_dir):
 
 if __name__ == '__main__':
 
-    req_platforms, req_tests, do_reset = get_requested_platforms_tests()
-    display_instructions(req_platforms, req_tests)
+    req_platforms, req_tests, do_reset, skip_instructions = get_requested_platforms_tests()
+
+    if not skip_instructions:
+        display_instructions(req_platforms, req_tests)
 
     for platform in req_platforms:
         in_platform_dir = os.path.join(platform_base, platform)
