@@ -2,7 +2,6 @@
 	"calling": {
 		"machine": "'other_hpc_small'",
 		"nthreads": "1",
-		"sim_max": "8"
 	},
 
 	"submit": {
@@ -12,6 +11,5 @@
 		"project": "COMPASSOPT",
 		"do_plots": "false",
 		"plot_dir": "..",
-		"num_nodes": 2
 	}
 }

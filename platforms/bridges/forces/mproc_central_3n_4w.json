@@ -6,6 +6,7 @@
 
     "submit": {
     	"num_nodes": 3,
+        "num_workers": 4,
     	"cmd_suffix": "--comms local --nworkers $NUM_WORKERS > out.txt 2>&1",
     	"template": "base_submit_template"
     }

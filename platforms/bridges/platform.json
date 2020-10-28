@@ -8,7 +8,6 @@
 		"job_name": "libE_test",
 		"job_wallclock_minutes": 20,
 		"node_type": "RM",
-		"num_workers": 4,
 		"project": "msz3a9p",
 		"do_plots": "false",
 		"plot_dir": ".."

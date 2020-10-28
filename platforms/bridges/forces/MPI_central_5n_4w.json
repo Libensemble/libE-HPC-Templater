@@ -7,6 +7,7 @@
 
 	"submit": {
 		"num_nodes": 5,
+		"num_workers": 4,
 		"cmd_prefix": "mpirun -np $(($NUM_WORKERS+1)) -ppn $(($NUM_WORKERS+1))",
 		"template": "base_submit_template"
 	}
