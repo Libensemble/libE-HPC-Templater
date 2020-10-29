@@ -145,5 +145,5 @@ else:
         # test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
         test_ensemble_dir('./ensemble', nworkers, sim_max)
         with open('LIBE_EVALUATE_ENSEMBLE', 'w') as f:
-            for i in ['./ensemble', nworkers, sim_max]:
+            for i in ['./ensemble', str(nworkers), str(sim_max)]:
                 f.write(i + '\n')
