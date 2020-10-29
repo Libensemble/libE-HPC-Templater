@@ -7,16 +7,36 @@ import shutil
 import argparse
 import subprocess
 from jinja2 import Environment, FileSystemLoader
+from strings import instructions, notice, see_docs
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
 
-def get_requested_platforms_tests():
+def display_instructions(platforms, tests):
+    """Display initial reminders and instructions"""
+    print("\n", "*"*10, "libEnsemble Scaling Tests Templater", "*"*10)
+    print("\nSelected Platforms: " + ", ".join([i.title() for i in platforms]))
+    print("Selected Tests: " + ", ".join([i.title() for i in tests]), "\n")
+    print(notice)
 
-    # Discover available platforms within ./platforms
+    for platform in platforms:
+        for test in tests:
+            pair = (platform, test)
+            label = "{} on {}".format(test.title(), platform.title())
+            print(label, "\n", "-"*(len(label)), "\n")
+            print(instructions[pair].replace('PLATFORM', platform).replace('TEST', test))
+
+    print(see_docs)
+
+    exit = input("(C)ontinue with templating, or any other key to exit: ")
+    if exit.upper() != 'C':
+        print("Exiting")
+        sys.exit()
+
+def get_requested_platforms_tests():
+    """Parse requested platforms, tests, and other options"""
     platforms = [i for i in os.listdir(platform_base) if i != "all"]
 
-    # Discover available tests within platform directories
     tests = []
     for plat in platforms:
         for file in os.listdir(os.path.join(platform_base, plat)):
@@ -29,6 +49,9 @@ def get_requested_platforms_tests():
     for i in platforms + tests + ["all"]:
         parser.add_argument('--' + i, action='store_true')
 
+    parser.add_argument('--reset', action='store_true')
+    parser.add_argument('--skip_instructions', action='store_true')
+
     options = vars(parser.parse_args(sys.argv[1:]))
     assert any([options[i] for i in platforms]), \
         "No platform targets. Specify platform(s) (e.g., --theta --summit)"
@@ -40,7 +63,10 @@ def get_requested_platforms_tests():
     if not options["all"]:
         tests = [i for i in tests if options[i]]
 
-    return platforms, tests
+    reset = options["reset"]
+    skip_instructions = options["skip_instructions"]
+
+    return platforms, tests, reset, skip_instructions
 
 
 def prepare_jinja(templates):
@@ -52,6 +78,7 @@ def prepare_jinja(templates):
 
 
 def get_test_variants(in_test_dir):
+    """Parse test variants from .json configurations"""
     return [f.split('.json')[0] for f in os.listdir(in_test_dir) if f.endswith('.json')]
 
 
@@ -61,6 +88,40 @@ def print_not_supported(test, platform, in_test_dir):
     print('You can resolve this by creating the above directory with ' + \
           'configurations and optionally a stage directory.')
     print('Skipping current iteration.\n')
+
+
+def check_existing_out_platform_dir(platform, test, test_variants, do_reset):
+    """If pre-existing output and user specifies, reset tests"""
+    out_platform_dir = platform + '_' + test.split('.')[0]
+    if os.path.isdir(out_platform_dir) and do_reset:
+        print("\nWARNING: Directory for {} on {} already exists.".format(test.title(), platform.title()))
+
+        reset_prompt = "\n(D)elete previous ./{}, or (O)verwrite specific test".format(out_platform_dir) + \
+                       " directories? Any other key to exit: "
+        overwrite_prompt = "\nWhich test directories to overwrite? (e.g. 145)." + \
+                           " Skip with any non-integer.\n"
+
+        int_tv_dict = {}
+        which_reset = input(reset_prompt)
+        if which_reset.upper() == 'D':
+            print('Removing ./{}'.format(out_platform_dir))
+            shutil.rmtree(out_platform_dir)
+            return test_variants
+
+        elif which_reset.upper() == 'O':
+            for i, tv in enumerate(test_variants):
+                int_tv_dict[i] = tv
+                overwrite_prompt += ("{}) ./{}/test_{}\n".format(i, out_platform_dir, tv))
+
+            overwrite_prompt += "Choices: "
+            which_overwrite = input(overwrite_prompt)
+
+            if not which_overwrite.isnumeric():
+                sys.exit()
+
+            test_variants = [int_tv_dict[int(i)] for i in list(which_overwrite)]
+
+    return test_variants
 
 
 def make_out_platform_dir(platform, test, in_platform_dir):
@@ -75,11 +136,12 @@ def make_out_platform_dir(platform, test, in_platform_dir):
             shutil.copy2(os.path.join(in_platform_stage, file),
                          os.path.join(out_platform_dir, file))
 
-    print(out_platform_dir)
+    print("\n Writing: ./" + out_platform_dir)
     return out_platform_dir
 
 
 def get_config_values(in_test_dir, variant):
+    """Get parameters from test variant config file"""
     with open(os.path.join(in_test_dir, variant + '.json')) as f:
         variant_config = json.load(f)
 
@@ -104,11 +166,13 @@ def render(values, jinja_env):
 
 
 def write_script(dir, name, values, jinja_env):
+    """Write a rendered Jinja template"""
     with open(os.path.join(dir, name), "w") as f:
         f.write(render(values, jinja_env))
 
 
 def run_prepare_scripts(out_platform_dir):
+    """Execute each additional shell script prepended with 'prepare' """
     os.chdir(out_platform_dir)
     for file in os.listdir('.'):
         if file.startswith('prepare'):
@@ -118,7 +182,10 @@ def run_prepare_scripts(out_platform_dir):
 
 if __name__ == '__main__':
 
-    req_platforms, req_tests = get_requested_platforms_tests()
+    req_platforms, req_tests, do_reset, skip_instructions = get_requested_platforms_tests()
+
+    if not skip_instructions:
+        display_instructions(req_platforms, req_tests)
 
     for platform in req_platforms:
         in_platform_dir = os.path.join(platform_base, platform)
@@ -136,6 +203,7 @@ if __name__ == '__main__':
                 print_not_supported(test, platform, in_test_dir)
                 continue
 
+            test_variants = check_existing_out_platform_dir(platform, test, test_variants, do_reset)
             out_platform_dir = make_out_platform_dir(platform, test, in_platform_dir)
 
             for variant in test_variants:  # differentiated by num_nodes, comms, etc.

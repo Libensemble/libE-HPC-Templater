@@ -25,11 +25,46 @@ Usage
 
 - Make all tests for a single platform:
 
-    ``./templater --theta --all``
+    ``$ ./templater --theta --all``
 
-- Make only forces tests for Cori:
+- Make only Forces tests for Cori:
 
-    ``./templater --cori --forces``
+    ``$ ./templater --cori --forces``
+
+Users are presented with reminders on how they may need to customize or prepare
+their working environment or test configurations prior to templating. These instructions
+and reminders can be skipped by providing the ``--skip_instructions`` argument. In the
+event that previous templated tests are detected and the ``--reset`` argument is
+provided, the templater can assist the user with either removing the previous
+templated test directory, or overwriting specific test cases::
+
+    $ ls
+    summit_warpx/
+
+    $ ./templater --summit --warpx --reset
+
+    ...
+
+    WARNING: Directory for Warpx on Summit already exists.
+
+    (D)elete previous ./summit_warpx, or (O)verwrite specific test directories? Any other key to exit: o
+
+    Which test directories to overwrite? (e.g. 145). Skip with any non-integer.
+    0) ./summit_warpx/test_aposmm_mproc_zrw_13w_4n_portopts
+    1) ./summit_warpx/test_aposmm_mproc_24w_4n
+    2) ./summit_warpx/test_aposmm_mproc_4w_8n
+    3) ./summit_warpx/test_aposmm_mproc_12w_4n
+    4) ./summit_warpx/test_aposmm_mproc_4w_8n_portops
+    5) ./summit_warpx/test_aposmm_mproc_zrw_65w_128n_portops
+    6) ./summit_warpx/test_aposmm_mproc_zrw_25w_4n
+    7) ./summit_warpx/test_aposmm_mproc_12w_4n_portopts
+    8) ./summit_warpx/test_aposmm_mproc_4w_4n
+    Choices: 145
+
+     Writing: ./summit_warpx
+       --test_aposmm_mproc_24w_4n
+       --test_aposmm_mproc_4w_8n_portops
+       --test_aposmm_mproc_zrw_65w_128n_portops
 
 Configuration
 -------------
@@ -94,5 +129,7 @@ For example::
         }
     }
 
-6) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
+4) Append reminders and instructions for this test to ``instructions`` in ``strings.py``
+
+5) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
 within a new directory ``stage`` inside the above test directory.
