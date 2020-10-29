@@ -1,10 +1,17 @@
 {
-    "job_wallclock_minutes": 40,
-	"project": "CSC250STMS07",
-	"do_plots": "false",
-    "do_balsam_plots": "false",
-	"plot_dir": "../../../",
-    "balsam_plot_dir": "../../../",
-    "balsam_db_name": "dbase_pg_forces_large",
-    "conda_env_name": "balsam_dbindel_with_deap"
+	"calling": {
+        "nthreads": "1",
+		"persis_gen": false
+	},
+
+	"submit": {
+        "job_wallclock_minutes": 40,
+	    "project": "CSC250STMS07",
+    	"do_plots": "false",
+        "do_balsam_plots": "false",
+    	"plot_dir": "../../../",
+        "balsam_plot_dir": "../../../",
+        "balsam_db_name": "dbase_pg_forces_large",
+        "conda_env_name": "balsam_dbindel_with_deap"
+    }
 }

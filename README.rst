@@ -1,7 +1,7 @@
 libE-templater
 ==============
 
-Generate libEnsemble testing scripts from templates for a variety of HPC platforms.
+Generate libEnsemble testing environments from templates for a variety of HPC platforms.
 
 Requires Jinja:
 
@@ -9,9 +9,9 @@ https://jinja.palletsprojects.com/en/2.11.x/
 
 ``pip install Jinja2``
 
-Supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, and
-OLCF's Summit. Specify any specific platform to generate a testing environment
-at runtime with any number of ``--bebop``, ``--theta``, ``--cori``, and ``--summit``.
+Supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, OLCF's Summit, and PSC's Bridges.
+Specify any specific platform to generate a testing environment
+at runtime with any number of ``--bebop``, ``--theta``, ``--cori``, ``--summit``, and ``--bridges``.
 
 Currently generates testing environments for the Forces and WarpX scaling tests.
 Use ``--forces`` and ``--warpx``.
@@ -66,16 +66,16 @@ templated test directory, or overwriting specific test cases::
        --test_aposmm_mproc_4w_8n_portops
        --test_aposmm_mproc_zrw_65w_128n_portops
 
-Configuration
--------------
+Utility Structure
+-----------------
 
 The ``platforms`` directory contains platform-specific test configurations
-and templates in ``bebop``, ``cori``, ``summit``, and ``theta``, and platform-agnostic
+and templates in directories named after each platform and platform-agnostic
 configurations and templates in ``all``. Each of these directories contains
 sub-directories, templates, and configurations for each supported test. For example,
 ``platforms/bebop`` contains ``forces`` and ``warpx`` directories that match both supported tests,
 two different templates for submission scripts (used by both tests), and ``platform.json``,
-containing platform-specific submission script parameters.
+containing parameters universal to tests on that platform.
 
 As an example, ``platforms/bebop/forces`` contains both a ``stage`` directory
 and multiple ``.json`` files. Each ``.json`` file corresponds to a variant of ``forces``,
@@ -96,12 +96,24 @@ with different numbers of nodes, comm-types, etc. that can be tested on ``bebop`
 
 Once a test output directory has been created, the templater will run each
 batch script prefixed with "prepare" in the output directory. This is helpful
-for setting permissions on copied shell scripts or copying additional files around
-if necessary. These scripts should be placed in any ``stage`` directory to be
-copied over.
+for setting permissions on shell scripts or copying files to variant directories.
+These scripts should be placed in any ``stage`` directory to be copied over.
 
-Example
--------
+Adjusting Tests
+---------------
+
+Calling scripts and batch submission scripts are templated by parameters in test-specific
+``.json`` files and platform-specific ``platform.json`` files. Each file contains
+``"calling"`` and ``"submit"`` labels, corresponding to Jinja fields in the calling script
+and batch submission script templates respectively.
+
+Note the following about ``platform.json``:
+
+    1) Parameters specified in ``platform.json`` don't have to be universal for all test types. For instance, ``"nthreads": 1`` can be included and templated for each WarpX test, but doesn't have to appear in Forces templates.
+    2) Parameters in ``platform.json`` can also appear in test-specific configurations. Test configurations will override values from ``platform.json``.
+
+New Test Example
+----------------
 
 Suppose we want to define a new test ``"particles"``, only for Theta, with ``mpi_128-nodes``
 and ``multiprocess_64-nodes`` variants.

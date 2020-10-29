@@ -1,8 +1,15 @@
 {
-	"job_name": "libE_test",
-	"job_wallclock_minutes": 20,
-	"node_type": "RM",
-	"project": "msz3a9p",
-	"do_plots": "false",
-	"plot_dir": ".."
+	"calling": {
+		"mpi_exctr_args": "auto_resources=True, central_mode=True",
+		"num_sim_particles": 2.0e4
+	},
+
+	"submit": {
+		"job_name": "libE_test",
+		"job_wallclock_minutes": 20,
+		"node_type": "RM",
+		"project": "msz3a9p",
+		"do_plots": "false",
+		"plot_dir": ".."
+	}
 }

@@ -7,8 +7,8 @@
     },
 
     "submit": {
-    	"num_workers": 4,
     	"num_nodes": 2,
+        "num_workers": 4,
     	"exports": ["export I_MPI_FABRICS=shm:tmi"],
     	"cmd_prefix": "mpirun -np $(($NUM_WORKERS+1)) -ppn $(($NUM_WORKERS+1))",
     	"template": "base_submit_template"
