@@ -1,8 +1,15 @@
 {
-	"job_name": "libE_test",
-	"job_wallclock_minutes": 30,
-	"node_type": "knlall",
-	"project": "COMPASSOPT",
-	"do_plots": "false",
-	"plot_dir": ".."
+	"calling": {
+		"machine": "'other_hpc_small'",
+		"nthreads": "1",
+	},
+
+	"submit": {
+		"job_name": "libE_test",
+		"job_wallclock_minutes": 30,
+		"node_type": "knlall",
+		"project": "COMPASSOPT",
+		"do_plots": "false",
+		"plot_dir": "..",
+	}
 }

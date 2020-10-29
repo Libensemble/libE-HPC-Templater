@@ -1,7 +1,6 @@
 {
     "calling": {
         "gen_type": "'aposmm'",
-        "machine": "'summit'",
         "zero_resource_workers": 1,
         "template": "run_libensemble_on_warpx.py",
         "e_args": "'-n 1 -a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\"'",

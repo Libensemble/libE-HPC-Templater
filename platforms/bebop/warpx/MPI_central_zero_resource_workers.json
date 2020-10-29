@@ -1,10 +1,8 @@
 {
     "calling": {
         "gen_type": "'aposmm'",
-        "machine": "'other_hpc_small'",
         "mpi_disable_mprobes": true,
         "zero_resource_workers": 1,
-        "nthreads": "1",
         "sim_max": 16,
         "template": "run_libensemble_on_warpx.py"
     },
