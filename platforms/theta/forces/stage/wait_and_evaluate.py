@@ -21,12 +21,14 @@ if os.environ.get('BALSAM_DB_PATH'):
         sleep(5)
         sleeptime += 5
         assert sleeptime < limit, "Expected output not detected by the time limit."
+    print('Changing to Balsam job directory')
     os.chdir(get_Balsam_job_dirs()[0])
 
 # Wait for env vars or files set by conclusion of run_libe_forces
 while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
-    sleep(30)
-    sleeptime += 30
+    sleep(10)
+    sleeptime += 10
+    print(os.listdir('.'))
     assert sleeptime < limit, "Expected output not detected by the time limit."
 
 print(' done.', end=" ", flush=True)
