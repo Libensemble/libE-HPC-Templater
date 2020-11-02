@@ -28,7 +28,12 @@ if os.environ.get('BALSAM_DB_PATH'):
 while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
     sleep(10)
     sleeptime += 10
-    print(os.listdir('.'))
+    for i in glob.glob('./*.output') + glob.glob('./*.error') + ['out.txt']:
+        if i in os.listdir('.'):
+            with open(i, 'r') as f:
+                lines = f.readlines()
+            print(i)
+            print(lines)
     assert sleeptime < limit, "Expected output not detected by the time limit."
 
 print(' done.', end=" ", flush=True)
