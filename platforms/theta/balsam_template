@@ -57,8 +57,7 @@ module unload trackdeps
 module unload darshan
 module unload xalt
 
-# source balsamactivate $BALSAM_DB_NAME
-source $CONDA_ENV_NAME/bin/activate
+source balsamactivate $BALSAM_DB_NAME
 
 # Make sure no existing apps/jobs
 balsam rm apps --all --force
