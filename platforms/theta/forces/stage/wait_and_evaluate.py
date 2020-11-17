@@ -37,7 +37,8 @@ while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON
             with open(i, 'r') as f:
                 lines = f.readlines()
             print(i)
-            print(lines)
+            for line in lines:
+                print(line)
             if 'Traceback (most recent call last):\n' in lines:
                 fail_detected = True
 
