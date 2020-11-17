@@ -49,7 +49,8 @@ module load miniconda-3/latest
 module load postgresql/9.6.12
 
 # Activate conda environment
-source activate $CONDA_ENV_NAME
+# source activate $CONDA_ENV_NAME
+conda activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam
 module unload trackdeps
