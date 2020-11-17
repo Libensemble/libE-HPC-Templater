@@ -57,9 +57,9 @@ def test_ensemble_dir(dir, nworkers, sim_max):
 
     files_found = []
     for sim_dir in sim_dirs:
-        files_found.append(all([i in os.listdir(os.path.join(dir, sim_dir)) for i in ['err.txt', 'forces.stat', 'out.txt']]))
+        files_found.append('forces.stat' in os.listdir(os.path.join(dir, sim_dir)))
 
     assert all(files_found), \
-        "Set of expected files ['err.txt', 'forces.stat', 'out.txt'] not found in each sim_dir."
+        "forces.stat not found in each sim_dir."
 
     print('Pass. Output directory {} contains expected files and structure.'.format(dir))
