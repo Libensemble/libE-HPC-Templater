@@ -21,10 +21,6 @@ export NUM_WORKERS={{ num_workers }} # Can be passed as argument to calling scri
 # Name of Conda environment
 export CONDA_ENV_NAME={{ conda_env_name }}
 
-# Conda location - theta specific
-export PATH=/opt/intel/python/2017.0.035/intelpython35/bin:$PATH
-export LD_LIBRARY_PATH=~/.conda/envs/balsam/lib:$LD_LIBRARY_PATH
-
 export PYTHONNOUSERSITE=1 #Ensure environment isolated
 
 export PMI_NO_FORK=1 # Required for python kills on Theta
