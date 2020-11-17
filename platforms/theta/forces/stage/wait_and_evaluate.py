@@ -43,7 +43,7 @@ while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON
                 fail_detected = True
 
     if fail_detected:
-        break
+        sys.exit("Exception detected in job output. Aborting.")
     assert sleeptime < limit, "Expected output not detected by the time limit."
 
 print(' done.', end=" ", flush=True)
