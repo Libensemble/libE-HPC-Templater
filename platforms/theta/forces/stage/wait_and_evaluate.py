@@ -3,6 +3,7 @@
 #   succeeds regardless of if the job succeeds. For ECP-CI.
 
 import os
+import sys
 import glob
 from time import sleep
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
