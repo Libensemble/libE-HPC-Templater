@@ -11,7 +11,7 @@
         "do_balsam_plots": "false",
     	"plot_dir": "../../../",
         "balsam_plot_dir": "../../../",
-        "balsam_db_name": "dbase_pg_forces_large",
-        "conda_env_name": "balsam_dbindel_with_deap"
+        "balsam_db_name": "0.7.1",
+        "conda_env_name": "again"
     }
 }
