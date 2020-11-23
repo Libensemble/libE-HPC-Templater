@@ -130,19 +130,17 @@ try:
 
 except ManagerException:
     if is_master and sim_specs['user']['fail_on_sim']:
+        open('FAIL_ON_SIM', 'w')
         check_log_exception()
         test_libe_stats('Exception occurred\n')
-        open('FAIL_ON_SIM', 'w')
-        # os.environ['LIBE_EVALUATE_ERROR'] = 'fail_on_sim'
 else:
     if is_master:
         save_libE_output(H, persis_info, __file__, nworkers)
         if sim_specs['user']['fail_on_submit']:
-            test_libe_stats('Task Failed\n')
             open('FAIL_ON_SUBMIT', 'w')
-            # os.environ['LIBE_EVALUATE_ERROR'] = 'fail_on_submit'
-        # test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
-        test_ensemble_dir('./ensemble', nworkers, sim_max)
+            test_libe_stats('Task Failed\n')
+
         with open('LIBE_EVALUATE_ENSEMBLE', 'w') as f:
             for i in ['./ensemble', str(nworkers), str(sim_max)]:
                 f.write(i + '\n')
+        test_ensemble_dir('./ensemble', nworkers, sim_max)
