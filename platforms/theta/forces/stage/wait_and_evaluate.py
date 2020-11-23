@@ -10,7 +10,7 @@ from forces_support import test_libe_stats, test_ensemble_dir, check_log_excepti
 
 sleeptime = 0
 limit = 3000
-outfile = 'out.txt'
+outfile = 'job_run_libe_forces.out'
 
 def get_Balsam_job_dirs():
     return glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')
@@ -19,7 +19,6 @@ print('Waiting on test completion for up to {} minutes...'.format(limit/60), flu
 
 # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
 if os.environ.get('BALSAM_DB_PATH'):
-    outfile = 'job_run_libe_forces.out'
     while not len(get_Balsam_job_dirs()):
         sleep(5)
         sleeptime += 5
