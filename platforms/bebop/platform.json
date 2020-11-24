@@ -1,7 +1,7 @@
 {
 	"calling": {
 		"machine": "'other_hpc_small'",
-		"nthreads": "1",
+		"nthreads": "1"
 	},
 
 	"submit": {
@@ -10,6 +10,6 @@
 		"node_type": "knlall",
 		"project": "COMPASSOPT",
 		"do_plots": "false",
-		"plot_dir": "..",
+		"plot_dir": ".."
 	}
 }
