@@ -27,6 +27,12 @@ PERSIS_GEN = {{ persis_gen }}
 PERSIS_GEN = False
 {% endif %}
 
+{% if fail_on_submit is defined %}
+FAIL_ON_SUBMIT = {{ fail_on_submit }}
+{% else %}
+FAIL_ON_SUBMIT = False
+{% endif %}
+
 if PERSIS_GEN:
     from libensemble.gen_funcs.persistent_uniform_sampling import persistent_uniform as gen_f
     from libensemble.alloc_funcs.start_only_persistent import only_persistent_gens as alloc_f
@@ -84,8 +90,7 @@ sim_specs = {'sim_f': run_forces,         # Function whose output is being minim
                       'sim_kill_minutes': 10.0,
                       'particle_variance': 0.2,
                       'kill_rate': 0.5,
-                      'fail_on_sim': {%- if fail_on_sim is defined %} True, {%- else %} False, {%- endif %}
-                      'fail_on_submit': {%- if fail_on_submit is defined %} True, {%- else %} False, {%- endif %}}  # Won't occur if 'fail_on_sim' True
+                      'fail_on_sim': {%- if fail_on_sim is defined %} True {%- else %} False {%- endif %}}
              }
 # end_sim_specs_rst_tag
 
@@ -111,8 +116,14 @@ else:
 libE_specs['save_every_k_gens'] = 1000  # Save every K steps
 libE_specs['sim_dirs_make'] = True      # Separate each sim into a separate directory
 
+if FAIL_ON_SUBMIT:
+    try:
+        os.remove(sim_app)
+    except FileNotFoundError:
+        pass
+
 # So exception can be caught for evaluation in log files
-if sim_specs['user']['fail_on_sim'] or sim_specs['user']['fail_on_submit']:
+if sim_specs['user']['fail_on_sim'] or FAIL_ON_SUBMIT:
     libE_specs['abort_on_exception'] = False
 
 # Maximum number of simulations
