@@ -16,8 +16,6 @@ nworkers=1 as one worker is for the persistent gen_f.
 
 # Either 'random' or 'aposmm'
 generator_type = {{ gen_type }}
-# Either 'local' or 'summit' or 'other_hpc'
-machine = {{ machine }}
 
 {% if mpi_disable_mprobes is defined %}
 import mpi4py
