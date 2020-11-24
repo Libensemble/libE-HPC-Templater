@@ -2,20 +2,19 @@
     "calling": {
         "use_balsam": true,
         "balsam_exctr_args": "auto_resources=True, central_mode=True",
-        "mpi_exctr_args": "auto_resources=True, central_mode=False",
         "num_sim_particles": 1e5,
-        "sim_max": 8,
+        "sim_max": 512,
         "template": "run_libe_forces.py"
     },
 
     "submit": {
-        "cobalt_num_nodes": 5,
-        "queue": "debug-flat-quad",
-        "num_workers": 4,
+        "cobalt_num_nodes": 129,
+        "num_workers": 127,
+        "queue": "default",
         "wallclock": 25,
         "workflow": "libe_workflow",
-        "balsam_num_nodes": 1,
-        "balsam_ranks_per_node": 5,
+        "balsam_num_nodes": 2,
+        "balsam_ranks_per_node": 64,
         "template": "balsam_template"
     }
 }
