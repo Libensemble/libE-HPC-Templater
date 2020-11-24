@@ -75,8 +75,6 @@ def run_forces(H, persis_info, sim_specs, libE_info):
     # task = exctr.submit(calc_type='sim', num_procs=cores, app_args=args, stdout='out.txt', stderr='err.txt')
 
     machinefile = None
-    if sim_specs['user']['fail_on_submit']:
-        machinefile = 'fail'
 
     # Machinefile only used here for exception testing
     if cores:
