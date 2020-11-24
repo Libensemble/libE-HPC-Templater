@@ -2,6 +2,7 @@
     "calling": {
         "gen_type": "'aposmm'",
         "sim_max": 16,
+        "num_procs": 32,
         "template": "run_libensemble_on_warpx.py"
     },
 

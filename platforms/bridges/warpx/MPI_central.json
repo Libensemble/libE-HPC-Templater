@@ -2,6 +2,7 @@
     "calling": {
         "gen_type": "'aposmm'",
         "mpi_disable_mprobes": true,
+        "num_procs": 8,
         "template": "run_libensemble_on_warpx.py"
     },
 

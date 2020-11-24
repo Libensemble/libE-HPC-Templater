@@ -3,6 +3,7 @@
         "gen_type": "'aposmm'",
         "use_balsam": true,
         "sim_max": 256,
+        "num_procs": 32,
         "template": "run_libensemble_on_warpx.py"
     },
 
