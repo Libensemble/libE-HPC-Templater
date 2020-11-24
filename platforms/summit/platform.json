@@ -1,7 +1,9 @@
 {
 	"calling": {
 		"mpi_exctr_args": "auto_resources=True, central_mode=True",
-		"machine": "'summit'"
+		"sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'",
+		"sim_kill_minutes": 5,
+		"nthreads": 4
 	},
 
 	"submit": {
