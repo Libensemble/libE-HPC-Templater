@@ -17,7 +17,7 @@ def test_libe_stats(status):
     print('Pass. libE_stats.txt correctly contains {} status for each sim instance.'.format(status[:-1]))
 
 
-def test_ensemble_dir(dir, nworkers, sim_max):
+def test_ensemble_dir(dir, nworkers, sim_max, is_failure):
     if not os.path.isdir(dir):
         print('Specified ensemble directory {} not found.'.format(dir))
         return
@@ -29,11 +29,22 @@ def test_ensemble_dir(dir, nworkers, sim_max):
     assert len(sim_dirs) == sim_max, \
         "Number of simulation specific-directories ({}) doesn't match sim_max ({})".format(len(sim_dirs), sim_max)
 
-    files_found = []
-    for sim_dir in sim_dirs:
-        files_found.append('forces.stat' in os.listdir(os.path.join(dir, sim_dir)))
+    if not is_failure:
+        stat_files_found = []
+        stat_files_have_content = []
 
-    assert all(files_found), \
-        "forces.stat not found in each sim_dir."
+        for sim_dir in sim_dirs:
+            is_found = 'forces.stat' in os.listdir(os.path.join(dir, sim_dir))
+            stat_files_found.append(is_found)
+            if is_found:
+                with open(os.path.join(dir, sim_dir, 'forces.stat')) as f:
+                    lines = f.readlines()
+                stat_files_have_content.append(len(lines))
+
+        assert all(stat_files_found), \
+            "forces.stat not found in each sim_dir."
+
+        assert all(stat_files_have_content), \
+            "some forces.stat was empty following a sim_f routine."
 
     print('Pass. Output directory {} contains expected files and structure.'.format(dir))

@@ -125,6 +125,9 @@ if FAIL_ON_SUBMIT:
 # So exception can be caught for evaluation in log files
 if sim_specs['user']['fail_on_sim'] or FAIL_ON_SUBMIT:
     libE_specs['abort_on_exception'] = False
+    is_failure = True
+else:
+    is_failure = False
 
 # Maximum number of simulations
 sim_max = {{ sim_max }}
@@ -154,4 +157,4 @@ else:
         with open('LIBE_EVALUATE_ENSEMBLE', 'w') as f:
             for i in ['./ensemble', str(nworkers), str(sim_max)]:
                 f.write(i + '\n')
-        test_ensemble_dir('./ensemble', nworkers, sim_max)
+        test_ensemble_dir('./ensemble', nworkers, sim_max, is_failure)
