@@ -147,7 +147,7 @@ except ManagerException:
 else:
     if is_master:
         save_libE_output(H, persis_info, __file__, nworkers)
-        if sim_specs['user']['fail_on_submit']:
+        if FAIL_ON_SUBMIT:
             open('FAIL_ON_SUBMIT', 'w')
             test_libe_stats('Task Failed\n')
 

@@ -4,7 +4,7 @@ import subprocess
 from time import sleep
 
 sleeptime = 0
-limit = 3000
+limit = 3600
 queue = sys.argv[1]
 user = "csc250stms07"
 
