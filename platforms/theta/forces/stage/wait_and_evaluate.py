@@ -10,7 +10,7 @@ from forces_support import test_libe_stats, test_ensemble_dir, check_log_excepti
 
 sleeptime = 0
 limit = 3000
-outfile = 'job_run_libe_forces.out'
+outfiles = ['job_run_libe_forces.out']
 
 def get_Balsam_job_dirs():
     return glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')
@@ -27,19 +27,22 @@ if os.environ.get('BALSAM_DB_PATH'):
     os.chdir(get_Balsam_job_dirs()[0])
 
 fail_detected = False
+old_lines = 'nothing'
 
 # Wait for env vars or files set by conclusion of run_libe_forces
 while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
     sleep(10)
     sleeptime += 10
-    for i in glob.glob('./*.output') + glob.glob('./*.error') + [outfile]:
+    for i in glob.glob('./*.output') + glob.glob('./*.error') + outfiles:
         if i in os.listdir('.'):
             with open(i, 'r') as f:
                 lines = f.readlines()
-            print(i)
-            for line in lines:
-                print(line)
-            if 'Traceback (most recent call last):\n' in lines:
+            if lines != old_lines:
+                print(i)
+                for line in lines:
+                    print(line)
+                old_lines = lines
+            if 'Traceback (most recent call last):\n' in lines and 'fail' not in os.environ.get('TEST_TYPE').split('_'):
                 fail_detected = True
 
     if fail_detected:
