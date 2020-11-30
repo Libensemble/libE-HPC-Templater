@@ -16,8 +16,6 @@ nworkers=1 as one worker is for the persistent gen_f.
 
 # Either 'random' or 'aposmm'
 generator_type = {{ gen_type }}
-# Either 'local' or 'summit' or 'other_hpc'
-machine = {{ machine }}
 
 {% if mpi_disable_mprobes is defined %}
 import mpi4py
@@ -31,6 +29,7 @@ USE_BALSAM = False
 {% endif %}
 
 import sys
+import os
 import numpy as np
 from warpx_simf import run_warpx  # Sim function from current directory
 
@@ -62,27 +61,12 @@ else:
     from libensemble.executors.mpi_executor import MPIExecutor
     exctr = MPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[{{ zero_resource_workers }}]{% endif %})
 
-import all_machine_specs
-
-# Import machine-specific run parameters
-if machine == 'local':
-    machine_specs = all_machine_specs.local_specs
-elif machine == 'summit':
-    machine_specs = all_machine_specs.summit_specs
-elif machine == 'other_hpc_small':
-    machine_specs = all_machine_specs.other_hpc_specs_small
-elif machine == 'other_hpc_large':
-    machine_specs = all_machine_specs.other_hpc_specs_large
-else:
-    print("you shouldn' hit that")
-    sys.exit()
-
 libE_logger.set_level('DEBUG')
 
 nworkers, is_master, libE_specs, _ = parse_args()
 
 # Set to full path of warp executable
-sim_app = machine_specs['sim_app']
+sim_app = os.path.abspath({{ sim_app }})
 
 # Problem dimension. This is the number of input parameters exposed,
 # that LibEnsemble will vary in order to minimize a single output parameter.
@@ -128,9 +112,7 @@ sim_specs = {
         # name of input file
         'input_filename': 'inputs',
         # Run timeouts after 3 mins
-        'sim_kill_minutes': 3,
-        # machine-specific parameters
-        'machine_specs': machine_specs,
+        'sim_kill_minutes': {{ sim_kill_minutes }},
         # Run parameters
         'OMP_NUM_THREADS': {{ nthreads }},
         {%+ if num_procs is defined %}'num_procs': {{ num_procs }},{% endif %}

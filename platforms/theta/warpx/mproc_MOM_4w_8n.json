@@ -1,8 +1,8 @@
 {
     "calling": {
         "gen_type": "'aposmm'",
-        "machine": "'other_hpc_small'",
         "sim_max": 16,
+        "num_procs": 8,
         "template": "run_libensemble_on_warpx.py"
     },
 

@@ -1,7 +1,8 @@
 {
 	"calling": {
-		"machine": "'other_hpc_small'",
-		"nthreads": "1"
+		"nthreads": 1,
+		"sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'",
+		"sim_kill_minutes": 5
 	},
 
 	"submit": {
