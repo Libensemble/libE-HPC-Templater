@@ -18,9 +18,7 @@ def test_libe_stats(status):
 
 
 def test_ensemble_dir(dir, nworkers, sim_max, is_failure):
-    if not os.path.isdir(dir):
-        print('Specified ensemble directory {} not found.'.format(dir))
-        return
+    assert os.path.isdir(dir), 'Specified ensemble directory {} not found.'.format(dir)
 
     sim_dirs = os.listdir(dir)
     assert all([i.startswith('sim') for i in sim_dirs]), \
