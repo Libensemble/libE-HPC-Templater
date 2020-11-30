@@ -50,7 +50,6 @@ module load postgresql/9.6.12
 
 # Activate conda environment
 # source activate $CONDA_ENV_NAME
-# Run from test directory, but env is in base job directory
 conda activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam

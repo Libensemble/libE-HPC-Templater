@@ -1,7 +1,7 @@
 # THIS LOOKS UGLY AND SET UP IN AN UNNECESSARY WAY. In theory, it should be easier
 #  this way to add additional system-test-specific descriptive lines for each pair.
 
-check_warpx_built = "- Make sure WarpX is built, and the path in ./platforms/all/warpx/stage/all_machine_specs.py matches.\n"
+check_warpx_built = "- Make sure WarpX is built, and the paths match in ./platforms/PLATFORM/platform.json\n"
 check_conda_env = "- Make sure your Conda environment matches in ./platforms/PLATFORM/platform.json\n"
 check_any_adjust = "- Optionally make test-specific adjustments to the .json files in ./platforms/PLATFORM/TEST\n"
 check_balsam = "- If testing with Balsam, install via pip [pip install balsam-flow]\n" + \

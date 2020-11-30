@@ -31,8 +31,6 @@ module load miniconda-3/latest
 
 # Activate conda environment
 # source activate $CONDA_ENV_NAME
-# source $CONDA_ENV_NAME/bin/activate
-# Run from test directory, but env is in base job directory
 conda activate $CONDA_ENV_NAME
 
 # Unload Theta modules that may interfere with Balsam
