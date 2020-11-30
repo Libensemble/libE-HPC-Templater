@@ -1,7 +1,7 @@
 {
 	"calling": {
         "nthreads": "1",
-		"sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'",
+		"sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.mic-knl.TPROF.MPI.OMP.ex'",
 		"persis_gen": false,
 		"sim_kill_minutes": 5,
 		"nthreads": 2
