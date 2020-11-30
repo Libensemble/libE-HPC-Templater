@@ -125,6 +125,9 @@ if FAIL_ON_SUBMIT:
 # So exception can be caught for evaluation in log files
 if sim_specs['user']['fail_on_sim'] or FAIL_ON_SUBMIT:
     libE_specs['abort_on_exception'] = False
+    is_failure = True
+else:
+    is_failure = False
 
 # Maximum number of simulations
 sim_max = {{ sim_max }}
@@ -148,4 +151,4 @@ else:
         save_libE_output(H, persis_info, __file__, nworkers)
         if sim_specs['user']['fail_on_submit']:
             test_libe_stats('Task Failed\n')
-        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max)
+        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max, is_failure)
