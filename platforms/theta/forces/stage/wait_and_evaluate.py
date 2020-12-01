@@ -50,7 +50,7 @@ while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON
     if fail_detected:
         sys.exit("Exception detected in job output. Aborting.")
     assert sleeptime < limit, "Expected output not detected by the time limit."
-    assert user_in_queue(user),
+    assert user_in_queue(user), "User and job not actually in queue."
 
 print(' done.', end=" ", flush=True)
 
