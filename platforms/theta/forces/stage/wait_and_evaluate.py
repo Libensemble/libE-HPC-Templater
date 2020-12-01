@@ -7,10 +7,12 @@ import sys
 import glob
 from time import sleep
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
+from wait_on_queue import user_in_queue
 
 sleeptime = 0
 limit = 3000
 outfiles = ['job_run_libe_forces.out']
+user = "csc250stms07"
 
 def get_Balsam_job_dirs():
     return glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')
@@ -31,8 +33,8 @@ old_lines = 'nothing'
 
 # Wait for env vars or files set by conclusion of run_libe_forces
 while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']]):
-    sleep(10)
-    sleeptime += 10
+    sleep(20)
+    sleeptime += 20
     for i in glob.glob('./*.output') + glob.glob('./*.error') + outfiles:
         if i in os.listdir('.'):
             with open(i, 'r') as f:
@@ -48,6 +50,7 @@ while not any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON
     if fail_detected:
         sys.exit("Exception detected in job output. Aborting.")
     assert sleeptime < limit, "Expected output not detected by the time limit."
+    assert user_in_queue(user),
 
 print(' done.', end=" ", flush=True)
 
