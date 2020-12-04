@@ -1,5 +1,5 @@
 # Primarily so an independent process, separate from a submitted job, can evaluate
-#   outputs and contents of a forces run. Necessary since the qsub command
+#   outputs and contents of a warpx run. Necessary since the qsub command
 #   succeeds regardless of if the job succeeds. For ECP-CI.
 
 import os
@@ -14,19 +14,7 @@ limit = 3000
 outfiles = ['job_run_libe_test.out']
 user = "csc250stms07"
 
-def get_Balsam_job_dirs():
-    return glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')
-
 print('Waiting on test completion for up to {} minutes...'.format(limit/60), flush=True)
-
-# If using Balsam, change to job-specific dir after waiting. Hopefully only one.
-if os.environ.get('BALSAM_DB_PATH'):
-    while not len(get_Balsam_job_dirs()):
-        sleep(5)
-        sleeptime += 5
-        assert sleeptime < limit, "Expected output not detected by the time limit."
-    print('Changing to Balsam job directory')
-    os.chdir(get_Balsam_job_dirs()[0])
 
 fail_detected = False
 old_lines = 'nothing'
