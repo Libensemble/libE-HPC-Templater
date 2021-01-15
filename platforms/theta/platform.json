@@ -14,7 +14,7 @@
         "do_balsam_plots": "false",
     	"plot_dir": "../../../",
         "balsam_plot_dir": "../../../",
-        "balsam_db_name": "0.7.1",
-        "conda_env_name": "again"
+        "balsam_db_name": "test_workflow",
+        "conda_env_name": "../../../ecpci-env"
     }
 }
