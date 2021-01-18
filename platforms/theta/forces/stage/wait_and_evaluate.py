@@ -33,6 +33,8 @@ if __name__ == '__main__':
             assert sleeptime < limit, "Expected output not detected by the time limit."
         print('Changing to Balsam job directory')
         os.chdir(get_Balsam_job_dirs()[0])
+    else:
+        USE_BALSAM = False
 
     fail_detected = False
     old_lines = 'nothing'
