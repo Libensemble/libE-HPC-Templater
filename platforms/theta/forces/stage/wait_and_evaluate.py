@@ -34,10 +34,12 @@ if __name__ == '__main__':
 
     # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
     if os.environ.get('BALSAM_DB_PATH'):
+        USE_BALSAM = True
         wait_for_Balsam_dirs()
 
     fail_detected = False
     old_lines = 'nothing'
+    fail_test_case = 'fail' in os.environ.get('TEST_TYPE').split('_')
 
     # Wait for env vars or files set by conclusion of run_libe_forces
     while not completion_files_detected():
@@ -52,7 +54,7 @@ if __name__ == '__main__':
                     for line in lines:
                         print(line)
                     old_lines = lines
-                if 'Traceback (most recent call last):\n' in lines and 'fail' not in os.environ.get('TEST_TYPE').split('_'):
+                if 'Traceback (most recent call last):\n' in lines and not fail_test_case:
                     fail_detected = True
 
         if fail_detected:
@@ -63,13 +65,14 @@ if __name__ == '__main__':
     print(' done.', end=" ", flush=True)
 
     # Evaluate output files based on type of error (if any)
-    if 'FAIL_ON_SIM' in os.listdir('.'):
-        test_libe_stats('Exception occurred\n')
-    elif 'FAIL_ON_SUBMIT' in os.listdir('.'):
-        test_libe_stats('Task Failed\n')
+    if USE_BALSAM:  #  So eval routines run separately from balsam job
+        if 'FAIL_ON_SIM' in os.listdir('.'):
+            test_libe_stats('Exception occurred\n')
+        elif 'FAIL_ON_SUBMIT' in os.listdir('.'):
+            test_libe_stats('Task Failed\n')
 
-    # Evaluate ensemble directory
-    if 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
-        with open('LIBE_EVALUATE_ENSEMBLE', 'r') as f:
-            [dir, nworkers, sim_max] = f.readlines()
-        test_ensemble_dir(dir.strip('\n'), int(nworkers.strip('\n')), int(sim_max.strip('\n')))
+        # Evaluate ensemble directory
+        if 'LIBE_EVALUATE_ENSEMBLE' in os.listdir('.'):
+            with open('LIBE_EVALUATE_ENSEMBLE', 'r') as f:
+                [dir, nworkers, sim_max] = f.readlines()
+            test_ensemble_dir(dir.strip('\n'), int(nworkers.strip('\n')), int(sim_max.strip('\n')), fail_test_case)
