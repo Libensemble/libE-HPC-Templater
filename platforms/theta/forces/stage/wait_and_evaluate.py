@@ -9,33 +9,30 @@ from time import sleep
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 from wait_on_queue import user_in_queue
 
-sleeptime = 0
-limit = 3000
-outfiles = ['job_run_libe_test.out']
-user = "csc250stms07"
-
 def get_Balsam_job_dirs():
     return glob.glob(os.environ['BALSAM_DB_PATH'] + '/data/libe_workflow/job_run_libe_forces_*')
-
-def wait_for_Balsam_dirs():
-    while not len(get_Balsam_job_dirs()):
-        sleep(5)
-        sleeptime += 5
-        assert sleeptime < limit, "Expected output not detected by the time limit."
-    print('Changing to Balsam job directory')
-    os.chdir(get_Balsam_job_dirs()[0])
 
 def completion_files_detected():
     return any([f in os.listdir('.') for f in ['LIBE_EVALUATE_ENSEMBLE', 'FAIL_ON_SIM', 'FAIL_ON_SUBMIT']])
 
 if __name__ == '__main__':
 
+    sleeptime = 0
+    limit = 3000
+    outfiles = ['job_run_libe_test.out']
+    user = "csc250stms07"
+
     print('Waiting on test completion for up to {} minutes...'.format(limit/60), flush=True)
 
     # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
     if os.environ.get('BALSAM_DB_PATH'):
         USE_BALSAM = True
-        wait_for_Balsam_dirs()
+        while not len(get_Balsam_job_dirs()):
+            sleep(5)
+            sleeptime += 5
+            assert sleeptime < limit, "Expected output not detected by the time limit."
+        print('Changing to Balsam job directory')
+        os.chdir(get_Balsam_job_dirs()[0])
 
     fail_detected = False
     old_lines = 'nothing'
