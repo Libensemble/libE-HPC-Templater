@@ -23,6 +23,7 @@ if __name__ == '__main__':
     user = "csc250stms07"
 
     print('Waiting on test completion for up to {} minutes...'.format(limit/60), flush=True)
+    time.sleep(5)
 
     # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
     if os.environ.get('BALSAM_DB_PATH'):
@@ -33,15 +34,16 @@ if __name__ == '__main__':
             assert sleeptime < limit, "Expected output not detected by the time limit."
         print('Changing to Balsam job directory')
         os.chdir(get_Balsam_job_dirs()[0])
+        print(os.getcwd())
     else:
         USE_BALSAM = False
 
-    fail_detected = False
     old_lines = 'nothing'
+    fail_line = 'Traceback (most recent call last):\n'
+    pass_line = 'Pass. Output directory ./ensemble contains expected files and structure.\n'
     fail_test_case = 'fail' in os.environ.get('TEST_TYPE').split('_')
 
-    # Wait for env vars or files set by conclusion of run_libe_forces
-    while not completion_files_detected():
+    while user_in_queue(user):
         sleep(20)
         sleeptime += 20
         for i in glob.glob('./*.output') + glob.glob('./*.error') + outfiles:
@@ -53,15 +55,15 @@ if __name__ == '__main__':
                     for line in lines:
                         print(line)
                     old_lines = lines
-                if 'Traceback (most recent call last):\n' in lines and not fail_test_case:
-                    fail_detected = True
+                if fail_line in lines and not fail_test_case:
+                    sys.exit("Exception detected in job output. Aborting.")
 
-        if fail_detected:
-            sys.exit("Exception detected in job output. Aborting.")
         assert sleeptime < limit, "Expected output not detected by the time limit."
-        assert user_in_queue(user), "User and job not actually in queue."
+        if completion_files_detected() or pass_line in lines:
+            break
 
     print(' done.', end=" ", flush=True)
+    assert completion_files_detected(), "Presumptive completion files not detected."
 
     # Evaluate output files based on type of error (if any)
     if USE_BALSAM:  #  So eval routines run separately from balsam job
