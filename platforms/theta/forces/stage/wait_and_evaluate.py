@@ -32,9 +32,9 @@ if __name__ == '__main__':
             sleep(5)
             sleeptime += 5
             assert sleeptime < limit, "Expected output not detected by the time limit."
-        print('Changing to Balsam job directory')
+        print('Changing to Balsam job directory', flush=True)
         os.chdir(get_Balsam_job_dirs()[0])
-        print(os.getcwd())
+        print(os.getcwd(), flush=True)
     else:
         USE_BALSAM = False
 
@@ -42,6 +42,7 @@ if __name__ == '__main__':
     fail_line = 'Traceback (most recent call last):\n'
     pass_line = 'Pass. Output directory ./ensemble contains expected files and structure.\n'
     fail_test_case = 'fail' in os.environ.get('TEST_TYPE').split('_')
+    success = False
 
     while user_in_queue(user):
         sleep(20)
@@ -57,9 +58,11 @@ if __name__ == '__main__':
                     old_lines = lines
                 if fail_line in lines and not fail_test_case:
                     sys.exit("Exception detected in job output. Aborting.")
+                elif pass_line in lines:
+                    success = True
 
         assert sleeptime < limit, "Expected output not detected by the time limit."
-        if completion_files_detected() or pass_line in lines:
+        if completion_files_detected() or success:
             break
 
     print(' done.', end=" ", flush=True)
