@@ -23,7 +23,7 @@ if __name__ == '__main__':
     user = "csc250stms07"
 
     print('Waiting on test completion for up to {} minutes...'.format(limit/60), flush=True)
-    time.sleep(5)
+    sleep(5)
 
     # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
     if os.environ.get('BALSAM_DB_PATH'):
