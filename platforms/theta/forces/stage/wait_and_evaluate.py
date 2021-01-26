@@ -63,10 +63,11 @@ if __name__ == '__main__':
 
         assert sleeptime < limit, "Expected output not detected by the time limit."
         if completion_files_detected() or success:
+            print('Completed test detected. Breaking loop...', flush=True)
             break
 
-    print(' done.', end=" ", flush=True)
-    assert completion_files_detected(), "Presumptive completion files not detected."
+    assert completion_files_detected() or success, \
+        "Presumptive completion files not detected, or run actually failed."
 
     # Evaluate output files based on type of error (if any)
     if USE_BALSAM:  #  So eval routines run separately from balsam job
