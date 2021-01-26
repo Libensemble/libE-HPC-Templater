@@ -28,6 +28,7 @@ if __name__ == '__main__':
     # If using Balsam, change to job-specific dir after waiting. Hopefully only one.
     if os.environ.get('BALSAM_DB_PATH'):
         USE_BALSAM = True
+        outfiles = ['job_run_libe_forces.out']
         while not len(get_Balsam_job_dirs()):
             sleep(5)
             sleeptime += 5
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     fail_test_case = 'fail' in os.environ.get('TEST_TYPE').split('_')
     success = False
 
-    while user_in_queue(user):
+    while True:
         sleep(20)
         sleeptime += 20
         for i in glob.glob('./*.output') + glob.glob('./*.error') + outfiles:
@@ -62,10 +63,12 @@ if __name__ == '__main__':
                     success = True
 
         assert sleeptime < limit, "Expected output not detected by the time limit."
+        print(os.listdir('.'))
         if completion_files_detected() or success:
             print('Completed test detected. Breaking loop...', flush=True)
             break
 
+    print(os.listdir('.'))
     assert completion_files_detected() or success, \
         "Presumptive completion files not detected, or run actually failed."
 
