@@ -37,6 +37,7 @@ if __name__ == '__main__':
         os.chdir(get_Balsam_job_dirs()[0])
         print(os.getcwd(), flush=True)
     else:
+        print('Balsam use not detected. Continuing...')
         USE_BALSAM = False
 
     old_lines = 'nothing'
