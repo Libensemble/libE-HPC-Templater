@@ -149,6 +149,7 @@ except ManagerException:
 else:
     if is_master:
         save_libE_output(H, persis_info, __file__, nworkers)
-        if sim_specs['user']['fail_on_submit']:
+        if FAIL_ON_SUBMIT:
             test_libe_stats('Task Failed\n')
-        test_ensemble_dir(libE_specs, './ensemble', nworkers, sim_max, is_failure)
+
+        test_ensemble_dir('./ensemble', nworkers, sim_max, is_failure)

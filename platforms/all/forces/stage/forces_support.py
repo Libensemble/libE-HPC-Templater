@@ -17,7 +17,7 @@ def test_libe_stats(status):
     print('Pass. libE_stats.txt correctly contains {} status for each sim instance.'.format(status[:-1]))
 
 
-def test_ensemble_dir(libE_specs, dir, nworkers, sim_max, is_failure):
+def test_ensemble_dir(dir, nworkers, sim_max, is_failure):
     assert os.path.isdir(dir), 'Specified ensemble directory {} not found.'.format(dir)
 
     sim_dirs = os.listdir(dir)

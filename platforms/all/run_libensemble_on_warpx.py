@@ -28,6 +28,12 @@ USE_BALSAM = True
 USE_BALSAM = False
 {% endif %}
 
+{% if zero_resource_workers is defined %}
+ZRW = True
+{% else %}
+ZRW = False
+{% endif %}
+
 import sys
 import os
 import numpy as np
@@ -230,3 +236,6 @@ H, persis_info, flag = libE(sim_specs, gen_specs, exit_criteria,
 # Save results to numpy file
 if is_master:
     save_libE_output(H, persis_info, __file__, nworkers)
+    if ZRW:
+        test_ensemble_log_zrw()
+    test_ensemble_dir('./ensemble', nworkerse, sim_max)

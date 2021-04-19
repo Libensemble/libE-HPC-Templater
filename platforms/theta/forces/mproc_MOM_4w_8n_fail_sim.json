@@ -9,7 +9,7 @@
     },
 
     "submit": {
-        "cobalt_num_nodes": 8,
+        "cobalt_num_nodes": 4,
         "queue": "debug-cache-quad",
         "num_workers": 4,
         "template": "mproc_MOM_template"
