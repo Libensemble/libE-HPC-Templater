@@ -48,25 +48,11 @@ nworkers, is_master, libE_specs, _ = parse_args()
 if is_master:
     print('\nRunning with {} workers\n'.format(nworkers))
 
-sim_app = os.path.abspath('../forces.x')
-
-# Normally would be pre-compiled
-if not USE_BALSAM:
-    # Can reference files in a parent directory.
-    if not os.path.isfile('../forces.x'):
-        if os.path.isfile('../build_forces.sh'):
-            import subprocess
-            here = os.getcwd()
-            os.chdir('..')  # so build_forces scripts dont have to be modified
-            subprocess.check_call(['./build_forces.sh'])
-            os.chdir(here)
-else:
-    # Need to have a local copy to stage into a Balsam working directory
-    if not os.path.isfile('./forces.x'):
-        if os.path.isfile('./build_forces.sh'):
-            import subprocess
-            subprocess.check_call(['./build_forces.sh'])
-    sim_app = os.path.abspath('./forces.x')
+if not os.path.isfile('./forces.x'):
+    if os.path.isfile('./build_forces.sh'):
+        import subprocess
+        subprocess.check_call(['./build_forces.sh'])
+sim_app = os.path.abspath('./forces.x')
 
 # Create executor and register sim to it.
 if USE_BALSAM:
