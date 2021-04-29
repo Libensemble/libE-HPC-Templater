@@ -38,6 +38,7 @@ import sys
 import os
 import numpy as np
 from warpx_simf import run_warpx  # Sim function from current directory
+from warpx_support import test_ensemble_dir, test_ensemble_log_zrw
 
 # Import libEnsemble modules
 from libensemble.libE import libE
