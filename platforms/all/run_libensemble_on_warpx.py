@@ -239,4 +239,4 @@ if is_master:
     save_libE_output(H, persis_info, __file__, nworkers)
     if ZRW:
         test_ensemble_log_zrw()
-    test_ensemble_dir('./ensemble', nworkerse, sim_max)
+    test_ensemble_dir('./ensemble', nworkers, sim_max)
