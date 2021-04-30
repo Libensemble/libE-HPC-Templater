@@ -10,7 +10,7 @@ mpi4py.rc.recv_mprobe = False
 
 # Import libEnsemble modules
 from libensemble.libE import libE
-from libensemble.manager import ManagerException
+from libensemble.manager import LoggedException
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
 from libensemble import libE_logger
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
@@ -128,7 +128,7 @@ try:
                                 alloc_specs=alloc_specs,
                                 libE_specs=libE_specs)
 
-except ManagerException:
+except LoggedException:
     if is_master and sim_specs['user']['fail_on_sim']:
         check_log_exception()
         test_libe_stats('Exception occurred\n')
