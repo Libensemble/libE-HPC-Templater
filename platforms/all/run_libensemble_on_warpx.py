@@ -73,7 +73,7 @@ libE_logger.set_level('DEBUG')
 nworkers, is_master, libE_specs, _ = parse_args()
 
 # Set to full path of warp executable
-sim_app = os.path.abspath({{ sim_app }})
+sim_app = os.path.abspath({{ warpx_sim_app }})
 
 # Problem dimension. This is the number of input parameters exposed,
 # that LibEnsemble will vary in order to minimize a single output parameter.
