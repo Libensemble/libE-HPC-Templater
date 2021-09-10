@@ -9,8 +9,6 @@
 	"submit": {
 		"job_name": "libe_mproc",
 		"project": "csc314",
-		"do_plots": "false",
-		"plot_dir": "../../plot_scripts",
 	    "job_wallclock_minutes": 20,
 		"libe_wallclock": 15,
 	    "conda_env_name": "libe-gcc",

@@ -12,7 +12,5 @@
 		"job_wallclock_minutes": 20,
 		"node_type": "RM",
 		"project": "msz3a9p",
-		"do_plots": "false",
-		"plot_dir": ".."
 	}
 }

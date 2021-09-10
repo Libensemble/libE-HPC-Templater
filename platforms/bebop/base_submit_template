@@ -33,10 +33,4 @@ echo All further output is from the process being run and not the pbs script.\n\
 
 $cmd
 
-if [[ $LIBE_PLOTS = "true" ]]; then
-  python $PLOT_DIR/plot_libe_calcs_util_v_time.py
-  python $PLOT_DIR/plot_libe_runs_util_v_time.py
-  python $PLOT_DIR/plot_libE_histogram.py
-fi
-
 echo Finished at: `date`
