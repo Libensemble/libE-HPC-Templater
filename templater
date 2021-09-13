@@ -42,8 +42,12 @@ def display_adjust_platform(platform, platform_file, platform_values):
     if adjust.upper() == 'Y':
         subprocess.call([os.environ.get('EDITOR', 'vim'), platform_file])
         print(platform_file, "adjusted. Continuing with templating.")
+        with open(platform_file) as p:
+            platform_values = json.load(p)
     else:
         print('Templating without adjusting platform.json.')
+
+    return platform_values
 
 
 def get_requested_platform_tests():
@@ -213,7 +217,7 @@ if __name__ == '__main__':
     with open(platform_file) as p:
         platform_values = json.load(p)
 
-    display_adjust_platform(platform, platform_file, platform_values)
+    platform_values = display_adjust_platform(platform, platform_file, platform_values)
 
     for test in req_tests:
         in_test_dir = os.path.join(in_platform_dir, test)
