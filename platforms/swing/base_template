@@ -3,7 +3,7 @@
 #SBATCH --account={{ project }}
 #SBATCH --time 00:{{ job_wallclock_minutes }}:00
 #SBATCH --nodes {{ num_nodes }}
-#SBATCH --ntasks= {{ num_tasks }}
+#SBATCH --ntasks={{ num_tasks }}
 #SBATCH --gres=gpu:{{ num_gpus }}
 
 export NUMBA_NUM_THREADS=1
