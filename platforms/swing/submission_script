@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=libE-opt
+#SBATCH --account=STARTUP-JNAVARRO
+#SBATCH --time 00:45:00
+#SBATCH --nodes 2
+#SBATCH --ntasks=8
+#SBATCH --gres=gpu:8
+
+#module load python/3.6
+#source activate $SCRATCH/fbpic_env
+
+export NUMBA_NUM_THREADS=1
+export OMP_NUM_THREADS= {{ omp_num_threads }}
+
+export PATH=/soft/openmpi/4.1.1/swing/bin:/soft/ucx/1.10.0/swing-defaults/bin:$PATH
+export LD_LIBRARY_PATH=/soft/openmpi/4.1.1/swing/lib:/soft/ucx/1.10.0/swing-defaults/lib:$LD_LIBRARY_PATH
+
+# Script to run libEnsemble using multiprocessing on launch nodes.
+# Assumes Conda environment is set up.
+
+python run_example.py --comms local --nworkers 9
