@@ -1,9 +1,9 @@
 import numpy as np
 import os
 
-from libe_opt.gen_functions import get_generator_function
-from libe_opt.alloc_functions import get_alloc_function_from_gen_type
-from libe_opt.sim_functions import run_simulation
+from gen_functions import get_generator_function
+from alloc_functions import get_alloc_function_from_gen_type
+from sim_functions import run_simulation
 
 
 def determine_fidelity_type_and_length(mf_parameters):
