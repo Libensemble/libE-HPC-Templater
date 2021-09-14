@@ -1,6 +1,5 @@
 {
     "calling": {
-        "gen_type": "'aposmm'",
         "template": "run_libe_fbpic.py",
         "run_async": true,
         "sim_max": 20

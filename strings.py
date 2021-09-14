@@ -1,6 +1,3 @@
-# THIS LOOKS UGLY AND SET UP IN AN UNNECESSARY WAY. In theory, it should be easier
-#  this way to add additional system-test-specific descriptive lines for each pair.
-
 check_any_adjust = "- Optionally make test-specific adjustments to the .json files in ./platforms/PLATFORM/TEST"
 check_balsam = "- If testing with Balsam, install via pip: [pip install balsam-flow]\n" + \
                "- Then, initalize a database with: [balsam init ~/my_workflow]\n"
