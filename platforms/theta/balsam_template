@@ -87,17 +87,4 @@ balsam job --name job_$SCRIPT_BASENAME --workflow $WORKFLOW_NAME --application $
 #Run job
 balsam launcher --consume-all --job-mode=mpi --num-transition-threads=1
 
-if [[ $LIBE_PLOTS = "true" ]]; then
-  python {{ plot_dir }}plot_libe_calcs_util_v_time.py
-  python {{ plot_dir }}plot_libE_histogram.py
-  python {{ plot_dir }}plot_libe_runs_util_v_time.py
-fi
-
-if [[ $BALSAM_PLOTS = "true" ]]; then
-#   export MPLBACKEND=TkAgg
-  python {{ balsam_plot_dir }}plot_util_v_time.py
-  python {{ balsam_plot_dir }}plot_jobs_v_time.py
-  python {{ balsam_plot_dir }}plot_waiting_v_time.py
-fi
-
 # source balsamdeactivate

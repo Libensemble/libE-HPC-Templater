@@ -9,12 +9,12 @@ https://jinja.palletsprojects.com/en/2.11.x/
 
 ``pip install Jinja2``
 
-Supported platforms are LCRC's Bebop, ALCF's Theta, NERSC's Cori, OLCF's Summit, and PSC's Bridges.
+Supported platforms are LCRC's Bebop, LCRC's Swing, ALCF's Theta, NERSC's Cori, OLCF's Summit, and PSC's Bridges.
 Specify any specific platform to generate a testing environment
-at runtime with any number of ``--bebop``, ``--theta``, ``--cori``, ``--summit``, and ``--bridges``.
+at runtime with one of ``--bebop``, ``--swing``, ``--theta``, ``--cori``, ``--summit``, or ``--bridges``.
 
-Currently generates testing environments for the Forces and WarpX scaling tests.
-Use ``--forces`` and ``--warpx``.
+Currently generates testing environments for the Forces, WarpX, and fbpic scaling tests.
+Use ``--forces``, ``--warpx``, and ``--fbpic``.
 
 Additional options are supported automatically if corresponding
 platform and test directories are created. For instance, adding a platform ``foo``

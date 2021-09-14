@@ -1,7 +1,7 @@
 {
 	"calling": {
         "nthreads": "1",
-		"sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'",
+		"warpx_sim_app": "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'",
 		"persis_gen": false,
 		"sim_kill_minutes": 5,
 		"nthreads": 2
@@ -10,10 +10,6 @@
 	"submit": {
         "job_wallclock_minutes": 40,
 	    "project": "CSC250STMS07",
-    	"do_plots": "false",
-        "do_balsam_plots": "false",
-    	"plot_dir": "../../../",
-        "balsam_plot_dir": "../../../",
         "balsam_db_name": "0.7.1",
         "conda_env_name": "again"
     }

@@ -1,0 +1,11 @@
+{
+	"calling": {
+	},
+
+	"submit": {
+		"job_name": "libE_test",
+		"queue": "gpu",
+		"project": "STARTUP-",
+	    "job_wallclock_minutes": 45
+	}
+}

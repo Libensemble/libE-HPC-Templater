@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name={{ job_name }}
+#SBATCH --account={{ project }}
+#SBATCH --time 00:{{ job_wallclock_minutes }}:00
+#SBATCH --nodes {{ num_nodes }}
+#SBATCH --ntasks={{ num_tasks }}
+#SBATCH --gres=gpu:{{ num_gpus }}
+
+export NUMBA_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+
+export PATH=/soft/openmpi/4.1.1/swing/bin:/soft/ucx/1.10.0/swing-defaults/bin:$PATH
+export LD_LIBRARY_PATH=/soft/openmpi/4.1.1/swing/lib:/soft/ucx/1.10.0/swing-defaults/lib:$LD_LIBRARY_PATH
+
+# Script to run libEnsemble using multiprocessing on launch nodes.
+# Assumes Conda environment is set up.
+
+python {{ test }} --comms local --nworkers {{ num_workers }}
