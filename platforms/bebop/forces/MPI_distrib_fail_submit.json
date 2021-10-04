@@ -1,7 +1,6 @@
 {
     "calling": {
         "persis_gen": false,
-        "mpi_exctr_args": "auto_resources=True, central_mode=False",
         "num_sim_particles": 2.0e4,
         "fail_on_submit": true,
         "mpi_disable_mprobes": true,

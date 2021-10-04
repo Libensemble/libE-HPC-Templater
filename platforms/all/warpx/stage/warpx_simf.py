@@ -33,7 +33,7 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
 
     num_procs = sim_specs['user'].get('num_procs', None)
     num_nodes = sim_specs['user'].get('num_nodes', None)
-    ranks_per_node = sim_specs['user'].get('ranks_per_node', None)
+    procs_per_node = sim_specs['user'].get('procs_per_node', None)
     e_args = sim_specs['user'].get('e_args', None)
 
     exctr = Executor.executor  # Get Executor
@@ -49,15 +49,15 @@ def run_warpx(H, persis_info, sim_specs, libE_info):
 
     # Launch the executor to actually run the WarpX simulation
     # Field variables can be declared as None - same as if not provided
-    task = exctr.submit(calc_type='sim',
+    task = exctr.submit(app_name='warpx',
                         num_procs=num_procs,
                         num_nodes=num_nodes,
-                        ranks_per_node=ranks_per_node,
+                        procs_per_node=procs_per_node,
                         extra_args=e_args,
                         app_args=app_args,
                         stdout='out.txt',
                         stderr='err.txt',
-                        wait_on_run=True)
+                        wait_on_start=True)
 
     # Periodically check the status of the simulation
     poll_interval = 1  # secs

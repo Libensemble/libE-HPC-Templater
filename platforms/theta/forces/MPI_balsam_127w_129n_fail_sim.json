@@ -1,7 +1,6 @@
 {
     "calling": {
         "use_balsam": true,
-        "balsam_exctr_args": "auto_resources=True, central_mode=True",
         "num_sim_particles": 1e5,
         "sim_max": 512,
         "fail_on_sim": true,
@@ -15,7 +14,7 @@
         "wallclock": 5,
         "workflow": "libe_workflow",
         "balsam_num_nodes": 2,
-        "balsam_ranks_per_node": 64,
+        "balsam_procs_per_node": 64,
         "job_wallclock_minutes": 5,
         "template": "balsam_template"
     }

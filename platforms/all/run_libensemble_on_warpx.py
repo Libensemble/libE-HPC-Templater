@@ -63,14 +63,16 @@ from libensemble import libE_logger
 
 if USE_BALSAM:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
-    exctr = BalsamMPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[{{ zero_resource_workers }}]{% endif %})
+    exctr = BalsamMPIExecutor()
 else:
     from libensemble.executors.mpi_executor import MPIExecutor
-    exctr = MPIExecutor(central_mode=True{% if zero_resource_workers is defined %}, zero_resource_workers=[{{ zero_resource_workers }}]{% endif %})
+    exctr = MPIExecutor()
 
 libE_logger.set_level('DEBUG')
 
 nworkers, is_master, libE_specs, _ = parse_args()
+
+{% if zero_resource_workers is defined %}libE_specs['zero_resource_workers']=[{{ zero_resource_workers }}]{% endif %}
 
 # Set to full path of warp executable
 sim_app = os.path.abspath({{ warpx_sim_app }})
@@ -79,7 +81,7 @@ sim_app = os.path.abspath({{ warpx_sim_app }})
 # that LibEnsemble will vary in order to minimize a single output parameter.
 n = 4
 
-exctr.register_calc(full_path=sim_app, calc_type='sim')
+exctr.register_calc(full_path=sim_app, app_name='warpx')
 
 # State the objective function, its arguments, output, and necessary parameters
 # (and their sizes). Here, the 'user' field is for the user's (in this case,
@@ -124,7 +126,7 @@ sim_specs = {
         'OMP_NUM_THREADS': {{ nthreads }},
         {%+ if num_procs is defined %}'num_procs': {{ num_procs }},{% endif %}
         {%+ if num_nodes is defined %}'num_nodes': {{ num_nodes }},{% endif %}
-        {%+ if ranks_per_node is defined %}'ranks_per_node': {{ ranks_per_node }},{% endif %}
+        {%+ if procs_per_node is defined %}'procs_per_node': {{ procs_per_node }},{% endif %}
         {%+ if e_args is defined %}'e_args': {{ e_args }}{% endif %}
     }
 }
@@ -207,12 +209,7 @@ elif generator_type == 'aposmm':
         }
     }
 
-    alloc_specs = {
-        # Allocator function, decides what a worker should do.
-        # We use a LibEnsemble allocator.
-        'alloc_f': alloc_f,
-        'out': [('given_back', bool)],
-        'user': {}}
+    alloc_specs = {'alloc_f': alloc_f}
 
 else:
     print("you shouldn' hit that")

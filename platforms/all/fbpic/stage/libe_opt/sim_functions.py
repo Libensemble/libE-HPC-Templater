@@ -53,7 +53,7 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
     # Launch the executor to actually run the WarpX simulation
     resources = Resources.resources.worker_resources
 
-    #os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"    
+    #os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 
     if Resources.resources.glob_resources.launcher != 'jsrun':
         #print('not setting CUDA_VISIBLE_DEVICES slots on node', resources.slots_on_node,flush=True)
@@ -69,7 +69,7 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
     if extra_args is not None:
         task = exctr.submit(calc_type='sim',
                             num_nodes=num_nodes,
-                            ranks_per_node=cores_per_node,
+                            procs_per_node=cores_per_node,
                             extra_args=extra_args,
                             app_args=sim_script,
                             stdout='out.txt',
@@ -79,7 +79,7 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
         task = exctr.submit(calc_type='sim',
                             num_procs=cores_per_node*num_nodes, #unnecesary but tesitng
                             num_nodes=num_nodes,
-                            ranks_per_node=cores_per_node,
+                            procs_per_node=cores_per_node,
                             app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',

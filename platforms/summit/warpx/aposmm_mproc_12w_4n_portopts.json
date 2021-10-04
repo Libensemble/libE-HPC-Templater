@@ -3,7 +3,7 @@
         "gen_type": "'aposmm'",
         "template": "run_libensemble_on_warpx.py",
         "num_nodes": "1",
-        "ranks_per_node": "2",
+        "procs_per_node": "2",
         "e_args": "'-a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\"'",
         "nthreads": 1,
 	"sim_max": 48
