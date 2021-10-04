@@ -3,6 +3,7 @@
         "use_balsam": true,
         "num_sim_particles": 1e5,
         "sim_max": 8,
+        "cores": 16,
         "fail_on_sim": true,
         "template": "run_libe_forces.py"
     },
