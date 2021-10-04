@@ -12,7 +12,7 @@ mpi4py.rc.recv_mprobe = False
 from libensemble.libE import libE
 from libensemble.manager import LoggedException
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
-from libensemble import libE_logger
+from libensemble import logger
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 
 {% if use_balsam is defined %}
@@ -41,7 +41,7 @@ else:
     from libensemble.alloc_funcs.give_sim_work_first import give_sim_work_first as alloc_f
 
 
-libE_logger.set_level('DEBUG')  # INFO is now default
+logger.set_level('DEBUG')  # INFO is now default
 
 nworkers, is_master, libE_specs, _ = parse_args()
 
