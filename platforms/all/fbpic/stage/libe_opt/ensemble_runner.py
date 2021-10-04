@@ -32,7 +32,7 @@ def run_ensemble(
     libE_specs['zero_resource_workers'] = [1]
     exctr = MPIExecutor()
     if sim_template.endswith('.py'):
-        exctr.register_calc(full_path='python', calc_type='sim')
+        exctr.register_app(full_path='python', calc_type='sim')
     else:
         # By default, if the template is not a `.py` file, we run
         # it with an executable. The executable should have a `.ex` at the end
@@ -42,7 +42,7 @@ def run_ensemble(
             raise ValueError('You need to copy the WarpX executable in this folder.')
         else:
             executable = executables[0]
-            exctr.register_calc(full_path=executable, calc_type='sim')
+            exctr.register_app(full_path=executable, calc_type='sim')
         libE_specs['sim_dir_copy_files'].append(executable)
 
     # libE logger

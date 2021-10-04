@@ -81,7 +81,7 @@ sim_app = os.path.abspath({{ warpx_sim_app }})
 # that LibEnsemble will vary in order to minimize a single output parameter.
 n = 4
 
-exctr.register_calc(full_path=sim_app, app_name='warpx')
+exctr.register_app(full_path=sim_app, app_name='warpx')
 
 # State the objective function, its arguments, output, and necessary parameters
 # (and their sizes). Here, the 'user' field is for the user's (in this case,
