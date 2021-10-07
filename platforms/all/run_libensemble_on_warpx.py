@@ -68,7 +68,7 @@ else:
     from libensemble.executors.mpi_executor import MPIExecutor
     exctr = MPIExecutor()
 
-libE_logger.set_level('DEBUG')
+logger.set_level('DEBUG')
 
 nworkers, is_master, libE_specs, _ = parse_args()
 
