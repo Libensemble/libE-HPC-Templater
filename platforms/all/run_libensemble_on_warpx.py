@@ -59,7 +59,7 @@ else:
 
 from libensemble.tools import parse_args, save_libE_output, \
     add_unique_random_streams
-from libensemble import libE_logger
+from libensemble import logger
 
 if USE_BALSAM:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
@@ -176,7 +176,7 @@ elif generator_type == 'aposmm':
     gen_specs = {
         # Generator function. Will randomly generate new sim inputs 'x'.
         'gen_f': gen_f,
-        'in': [],
+        'persis_in': ['f', 'x', 'x_on_cube', 'sim_id', 'local_min', 'local_pt'],
         'out': [
             # parameters to input into the simulation.
             ('x', float, (n,)),
