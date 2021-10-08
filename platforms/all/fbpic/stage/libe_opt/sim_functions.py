@@ -74,7 +74,7 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
                             app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
-                            wait_on_run=True)
+                            wait_on_start=True)
     else:
         task = exctr.submit(calc_type='sim',
                             num_procs=cores_per_node*num_nodes, #unnecesary but tesitng
@@ -83,7 +83,7 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
                             app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
-                            wait_on_run=True)
+                            wait_on_start=True)
 
     # Periodically check the status of the simulation
     poll_interval = 10  # secs

@@ -14,7 +14,7 @@
 
 #Requirements for running:
 # Comms set to 'local' and set/receive number of workers: e.g. libE_specs = {'nprocesses': 16, 'comms': 'local'}
-# If use job_controller, set auto-resources=True and central_mode=True. [**************** maybe auto if comms local/mproc)]
+# If use job_controller, set auto-resources=True and dedicated_mode=True. [**************** maybe auto if comms local/mproc)]
 # Note: Requires a schedular having an environment variable giving a global nodelist in a supported format (eg. SLURM/COBALT)
 #       Otherwise a worker_list file will be required.
 
