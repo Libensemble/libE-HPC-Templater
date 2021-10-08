@@ -88,7 +88,7 @@ def create_gen_specs(gen_type, nworkers, var_params, mf_params=None):
         # Generator function. Will randomly generate new sim inputs 'x'.
         'gen_f': get_generator_function(gen_type),
         # Generator input. This is a RNG, no need for inputs.
-        persis_in: ['x', 'f', 'sim_id']
+        persis_in: ['x', 'f', 'sim_id'],
         'out': [
             # parameters to input into the simulation.
             ('x', float, (n,)),
