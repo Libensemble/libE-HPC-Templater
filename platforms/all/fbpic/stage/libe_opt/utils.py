@@ -88,7 +88,6 @@ def create_gen_specs(gen_type, nworkers, var_params, mf_params=None):
         # Generator function. Will randomly generate new sim inputs 'x'.
         'gen_f': get_generator_function(gen_type),
         # Generator input. This is a RNG, no need for inputs.
-        'in': ['sim_id', 'x', 'f'],
         'out': [
             # parameters to input into the simulation.
             ('x', float, (n,)),
@@ -134,6 +133,7 @@ def create_gen_specs(gen_type, nworkers, var_params, mf_params=None):
             # or a random sample point.
             ('local_pt', bool)
         ]
+        gen_specs['persis_in'] = ['f', 'x', 'x_on_cube', 'sim_id', 'local_min', 'local_pt']
         # Number of sims for initial random sampling.
         # Optimizer starts afterwards.
         gen_specs['user']['initial_sample_size'] =  max(nworkers-1, 1)
