@@ -1,17 +1,94 @@
-from libensemble.tools import parse_args
-from libe_opt.ensemble_runner import run_ensemble
-
+import os
+import numpy as np
 from varying_parameters import varying_parameters
 from analysis_script import analyze_simulation, analyzed_quantities
 from mf_parameters import mf_parameters
 
-gen_type = 'bo'
-sim_max = {{ sim_max }}
-run_async = {{ run_async }}
-nworkers, is_master, libE_specs, _ = parse_args()
+from libensemble.libE import libE
+from libensemble.tools import parse_args
+from libensemble.tools import save_libE_output, add_unique_random_streams
+from libensemble.executors.mpi_executor import MPIExecutor
 
-run_ensemble(
-    nworkers, sim_max, is_master, gen_type,
-    analyzed_params=analyzed_quantities, var_params=varying_parameters,
-    mf_params=mf_parameters, analysis_func=analyze_simulation,
-    libE_specs=libE_specs, run_async=run_async)
+from libensemble.alloc_funcs.start_only_persistent import only_persistent_gens
+from libe_opt.persistent_gp import persistent_gp_mf_disc_gen_f  # modified for larger resource set variation
+from libe_opt.sim_functions import run_simulation
+from libensemble import logger
+
+logger.set_level('DEBUG')
+
+# SH TODO: Also need to make changes to the template_simulation_script including MPI and num steps.
+
+gen_type = 'bo'
+sim_max = 20  ##### {{ sim_max }}
+run_async = True  ####### {{ run_async }}
+max_rsets_per_worker = 4  #{{max_rsets_per_worker}}
+custom_info={'mpi_runner':'srun'}  # {{ mpi_runner }}  #tempalte this - but ideally  only want to set custom_info if you want it...
+USE_CUDA_VISIBLE_DEVICES = False  # {{set_CUDA_VISIBLE_DEVICES}}
+MPICH_GPU_SUPPORT = True  # {{MPICH_GPU_SUPPORT}}
+
+nworkers, is_master, libE_specs, _ = parse_args()
+sim_template = 'template_simulation_script.py'
+
+sim_specs={'sim_f': run_simulation,
+           'in': ['x', 'resource_sets', 'z'],
+           'out': [('f', float),
+                   ('energy_med', float, (1,)),
+                   ('energy_mad', float, (1,)),
+                   ('charge', float, (1,)),
+                   ('laser_scale', float, (1,)),
+                   ('z_foc', float, (1,)),
+                   ('mult', float, (1,)),
+                   ('plasma_scale', float, (1,)),
+                   ('resolution', float, None)],
+           'user': {'var_params': ['laser_scale', 'z_foc', 'mult', 'plasma_scale'],
+                    'analysis_func': analyze_simulation,
+                    'sim_template': sim_template,
+                    'z_name': 'resolution',
+                    'USE_CUDA_VISIBLE_DEVICES': USE_CUDA_VISIBLE_DEVICES,
+                    'MPICH_GPU_SUPPORT':MPICH_GPU_SUPPORT,
+                    }
+           }
+
+gen_specs={'gen_f': persistent_gp_mf_disc_gen_f,
+           'persis_in': ['x', 'f', 'sim_id', 'z'],
+           'out': [('x', float, (4,)),
+                   ('resource_sets', int),
+                   ('z', float, None)],
+           'user': {'gen_batch_size': 8,
+                    'lb': np.array([0.7, 3. , 0.6, 0.1]),
+                    'ub': np.array([1.05, 7.5 , 0.8 , 1.5 ]),
+                    'name': 'resolution', 'range': [2.0, 4.0],
+                    'discrete': True,
+                    'cost_func': lambda z: z[0][0]**3,
+                    'max_rsets_per_worker': max_rsets_per_worker
+                    }
+           }
+
+alloc_specs={'alloc_f': only_persistent_gens,
+             'out': [('given_back', bool)],
+             'user': {'async_return': True}}
+
+
+libE_specs['sim_dirs_make'] = True
+libE_specs['sim_dir_copy_files'] = [sim_template]
+libE_specs['save_every_k_sims'] = 5
+libE_specs['dedicated_mode'] = False   # False is default.
+libE_specs['zero_resource_workers'] = [1]
+
+exit_criteria = {'sim_max': sim_max}  # Exit after running sim_max simulations
+
+
+# Setup MPI executor
+exctr = MPIExecutor(custom_info=custom_info)
+exctr.register_app(full_path='simulation_script.py', calc_type='sim')
+
+# Create a different random number stream for each worker and the manager
+persis_info = add_unique_random_streams({}, nworkers + 1)
+
+# Run LibEnsemble, and store results in history array H
+H, persis_info, flag = libE(sim_specs, gen_specs, exit_criteria,
+                            persis_info, alloc_specs, libE_specs)
+
+# Save results to numpy file
+if is_master:
+    save_libE_output(H, persis_info, __file__, nworkers)
