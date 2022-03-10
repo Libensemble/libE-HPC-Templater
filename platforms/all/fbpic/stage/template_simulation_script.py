@@ -168,7 +168,10 @@ if __name__ == '__main__':
                     ]
     # Remove step 0 outputs
     sim.diags[0].snapshots.pop(0)
-    
-    N_step = int(T_interact/sim.dt)
+
+    # N_step = int(T_interact/sim.dt)
+    N_step = int(T_interact/sim.dt)//10  # small for libE testing
+    print('resolution {} timestep(dt) {} num steps {} Nr {} Nz {}'.format(resolution, dt, N_step, Nr, Nz))
+
     ### Run the simulation
     sim.step( N_step )
