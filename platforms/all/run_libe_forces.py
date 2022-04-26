@@ -15,10 +15,10 @@ from libensemble.tools import parse_args, save_libE_output, add_unique_random_st
 from libensemble import logger
 from forces_support import test_libe_stats, test_ensemble_dir, check_log_exception
 
-{% if use_balsam is defined %}
-USE_BALSAM = {{ use_balsam }}
+{% if use_balsam1 is defined %}
+use_balsam1 = {{ use_balsam1 }}
 {% else %}
-USE_BALSAM = False
+use_balsam1 = False
 {% endif %}
 
 {% if persis_gen is defined %}
@@ -55,7 +55,7 @@ if not os.path.isfile('./forces.x'):
 sim_app = os.path.abspath('./forces.x')
 
 # Create executor and register sim to it.
-if USE_BALSAM:
+if use_balsam1:
     from libensemble.executors.balsam_executor import BalsamMPIExecutor
     exctr = BalsamMPIExecutor()
 else:

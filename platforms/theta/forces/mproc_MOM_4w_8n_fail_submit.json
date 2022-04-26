@@ -1,6 +1,6 @@
 {
     "calling": {
-        "use_balsam": false,
+        "use_balsam1": false,
         "num_sim_particles": 1e5,
         "sim_max": 8,
         "fail_on_submit": true,
