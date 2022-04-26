@@ -56,8 +56,8 @@ sim_app = os.path.abspath('./forces.x')
 
 # Create executor and register sim to it.
 if use_balsam1:
-    from libensemble.executors.balsam_executor import BalsamMPIExecutor
-    exctr = BalsamMPIExecutor()
+    from libensemble.executors.legacy_balsam_executor import LegacyBalsamMPIExecutor
+    exctr = LegacyBalsamMPIExecutor()
 else:
     from libensemble.executors.mpi_executor import MPIExecutor
     exctr = MPIExecutor()
