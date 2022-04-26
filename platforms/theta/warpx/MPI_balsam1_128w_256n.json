@@ -1,7 +1,7 @@
 {
     "calling": {
         "gen_type": "'aposmm'",
-        "use_balsam": true,
+        "use_balsam1": true,
         "sim_max": 256,
         "num_procs": 32,
         "template": "run_libensemble_on_warpx.py"
@@ -15,6 +15,6 @@
         "workflow": "libe_workflow",
         "balsam_num_nodes": 2,
         "balsam_procs_per_node": 64,
-        "template": "balsam_template"
+        "template": "balsam1_template"
     }
 }

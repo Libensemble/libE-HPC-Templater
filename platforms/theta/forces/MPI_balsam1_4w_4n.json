@@ -1,6 +1,6 @@
 {
     "calling": {
-        "use_balsam": true,
+        "use_balsam1": true,
         "num_sim_particles": 1e5,
         "sim_max": 8,
         "cores": 16,
@@ -15,6 +15,6 @@
         "workflow": "libe_workflow",
         "balsam_num_nodes": 1,
         "balsam_procs_per_node": 5,
-        "template": "balsam_template"
+        "template": "balsam1_template"
     }
 }

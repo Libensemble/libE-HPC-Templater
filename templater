@@ -8,7 +8,7 @@ import pprint
 import argparse
 import subprocess
 from jinja2 import Environment, FileSystemLoader
-from strings import check_any_adjust, check_balsam, notice, see_docs
+from strings import check_any_adjust, check_balsam1, check_balsam2, notice, see_docs
 
 platform_base = "./platforms"
 all_dir = os.path.join(platform_base, "all")
@@ -22,7 +22,9 @@ def display_instructions(platform, tests):
 
     for test in tests:
         print(check_any_adjust.replace('PLATFORM', platform).replace('TEST', test))
-    print(check_balsam)
+    print(check_balsam1)
+    print("----------")
+    print(check_balsam2)
 
     print(see_docs)
     print("On continuing, you can adjust {}-specific values.".format(platform.title()))
@@ -240,6 +242,6 @@ if __name__ == '__main__':
             out_test_dir = make_test_dir(out_platform_dir, variant)
 
             write_script(out_test_dir, calling_values['template'], calling_values, jinja_env)
-            write_script(out_test_dir, 'submit_' + variant + '.sh', submit_values, jinja_env)
+            write_script(out_test_dir, 'submit_' + variant, submit_values, jinja_env)
 
         run_prepare_scripts(out_platform_dir)
