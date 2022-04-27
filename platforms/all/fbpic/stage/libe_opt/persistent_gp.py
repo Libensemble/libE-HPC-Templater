@@ -9,7 +9,9 @@ This `gen_f` is meant to be used with the `alloc_f` function
 """
 
 import numpy as np
-from libensemble.message_numbers import STOP_TAG, PERSIS_STOP, FINISHED_PERSISTENT_GEN_TAG, EVAL_GEN_TAG
+from libensemble.message_numbers import (STOP_TAG, PERSIS_STOP, EVAL_GEN_TAG,
+                                         FINISHED_PERSISTENT_GEN_TAG)
+
 from libensemble.tools.persistent_support import PersistentSupport
 
 # import dragonfly Gaussian Process functions
@@ -33,7 +35,8 @@ def persistent_gp_mf_disc_gen_f(H, persis_info, gen_specs, libE_info):
     # Extract bounds of the parameter space, and batch size
     ub_list = gen_specs['user']['ub']
     lb_list = gen_specs['user']['lb']
-    max_rsets = gen_specs['user']['max_rsets_per_worker']
+    max_rsets = gen_specs['user'].get('max_rsets_per_worker')
+
     ps = PersistentSupport(libE_info, EVAL_GEN_TAG)
 
     # Multifidelity settings.
@@ -99,8 +102,15 @@ def persistent_gp_mf_disc_gen_f(H, persis_info, gen_specs, libE_info):
             z, input_vector = opt.ask()
             H_o['x'][i] = input_vector
             H_o['z'][i] = z[0]
-            # H_o['resource_sets'][i] = max(1, int(z[0]/2))
-            H_o['resource_sets'][i] = np.random.randint(1, max_rsets)
+
+            if max_rsets is not None:
+                # Vary resources without concern of problem resolution (testing only)
+                print('Setting rsets: Using max_rsets') #tmp line
+                H_o['resource_sets'][i] = np.random.randint(1, max_rsets + 1)
+            else:
+                print('Setting rsets: Using resolution') #tmp line
+                H_o['resource_sets'][i] = max(1, int(z[0]/2))
+
             print(f"gp_disc_gen point {i} resource_sets {H_o['resource_sets'][i]}")
 
         # Send data and get results from finished simulation

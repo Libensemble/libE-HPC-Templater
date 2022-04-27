@@ -18,7 +18,7 @@ logger.set_level('DEBUG')
 gen_type = 'bo'
 sim_max = {{ sim_max }}
 run_async = {{ run_async }}
-max_rsets_per_worker = {{max_rsets_per_worker}}
+max_rsets_per_worker = {{max_rsets_per_worker}}  # If None then use range
 
 USE_CUDA_VISIBLE_DEVICES = {{ cuda_visible_devices }}
 MPICH_GPU_SUPPORT = {{ mpich_gpu_support }}
@@ -78,10 +78,12 @@ exit_criteria = {'sim_max': sim_max}  # Exit after running sim_max simulations
 
 # Setup MPI executor
 {% if mpi_runner is defined %}
-    exctr = MPIExecutor(custom_info={'mpi_runner': {{ mpi_runner }} })
+exctr = MPIExecutor(custom_info={'mpi_runner': '{{ mpi_runner }}' })
 {% else %}
-    exctr = MPIExecutor()
+exctr = MPIExecutor()
+{% endif %}
 
+# Can registesr app even though does not yet exist at this name/path
 exctr.register_app(full_path='simulation_script.py', calc_type='sim')
 
 # Create a different random number stream for each worker and the manager

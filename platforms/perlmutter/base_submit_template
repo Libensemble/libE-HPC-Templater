@@ -28,7 +28,8 @@ export PYTHONNOUSERSITE=1
 . activate $CONDA_ENV_NAME
 
 #export MPICH_GPU_SUPPORT_ENABLED=1  # This is set in sim_func
-export FBPIC_ENABLE_GPUDIRECT=1
+#export FBPIC_ENABLE_GPUDIRECT=1  # Currently not working
+export FBPIC_ENABLE_GPUDIRECT=0
 export SLURM_EXACT=1
 export SLURM_MEM_PER_NODE=0
 

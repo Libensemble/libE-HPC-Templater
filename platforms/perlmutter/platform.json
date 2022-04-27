@@ -8,7 +8,7 @@
 	"submit": {
 		"job_name": "libE_test",
 		"project": "m3909_g",
-		"job_wallclock_minutes": 10,
+		"job_wallclock_minutes": 15,
 		"conda_env_name": "libe_pmutter",
 		"node_type": "gpu"
 	}

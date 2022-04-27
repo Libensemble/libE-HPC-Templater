@@ -76,7 +76,6 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
                             num_nodes=num_nodes,
                             procs_per_node=cores_per_node,
                             extra_args=extra_args,
-                            app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
                             wait_on_start=True)
@@ -85,7 +84,6 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
                             num_procs=cores_per_node*num_nodes, #unnecesary but tesitng
                             num_nodes=num_nodes,
                             procs_per_node=cores_per_node,
-                            app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
                             wait_on_start=True)

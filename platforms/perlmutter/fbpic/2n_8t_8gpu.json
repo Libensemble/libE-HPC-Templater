@@ -10,6 +10,7 @@
     "submit": {
         "num_nodes": 2,
         "num_workers": 9,
-        "template": "base_submit_template"
+        "template": "base_submit_template",
+        "cmd_suffix": "--comms local --nworkers $NUM_WORKERS"
     }
 }
