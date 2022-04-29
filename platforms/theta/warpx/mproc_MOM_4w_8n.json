@@ -2,7 +2,9 @@
     "calling": {
         "gen_type": "'aposmm'",
         "sim_max": 16,
-        "num_procs": 8,
+        "num_procs": 64,
+        "num_nodes": 2,
+        "procs_per_node": 32,
         "template": "run_libensemble_on_warpx.py"
     },
 
