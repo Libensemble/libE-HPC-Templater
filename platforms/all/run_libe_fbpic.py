@@ -20,6 +20,8 @@ sim_max = {{ sim_max }}
 run_async = {{ run_async }}
 max_rsets_per_worker = {{max_rsets_per_worker}}  # If None then use range
 
+scheduler_opts = {'match_slots':{{ match_slots }}, 'split2fit':{{ split2fit }}}
+
 USE_CUDA_VISIBLE_DEVICES = {{ cuda_visible_devices }}
 MPICH_GPU_SUPPORT = {{ mpich_gpu_support }}
 

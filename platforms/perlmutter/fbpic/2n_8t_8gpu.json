@@ -4,7 +4,9 @@
         "run_async": true,
         "sim_max": 24,
         "max_rsets_per_worker": 4,
-        "cuda_visible_devices": "False"
+        "cuda_visible_devices": "False",
+        "match_slots": true,
+        "split2fit": true
     },
 
     "submit": {
