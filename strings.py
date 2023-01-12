@@ -26,5 +26,3 @@ notice = "NOTICE:\nMany of the templater's produced tests may require " + \
       "they will\nfunction. The following adjustments " + \
       "can be made on a test-by-test basis\nafter templating, but we " + \
       "recommend performing them prior:\n"
-
-see_docs = "Platform documentation and guides: https://libensemble.readthedocs.io/en/develop/platforms/platforms_index.html#instructions-for-specific-platforms\n"
