@@ -1,6 +1,4 @@
 check_any_adjust = "- Optionally make test-specific adjustments to the .json files in ./platforms/PLATFORM/TEST"
-check_balsam1 = "- If testing with Balsam1, install via pip: [pip install balsam-flow]\n" + \
-               "- Then, initalize a database with: [balsam init ~/my_workflow]\n"
 
 check_balsam2 = """
 - If testing with Balsam2, install via pip: [pip install balsam]

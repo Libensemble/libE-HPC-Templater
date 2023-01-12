@@ -9,6 +9,11 @@ https://jinja.palletsprojects.com/en/2.11.x/
 
 ``pip install Jinja2``
 
+and PSI/J-python:
+
+``git clone https://github.com/ExaWorks/psij-python.git``
+``cd psij-python; pip install -e .``
+
 Supported platforms are LCRC's Bebop, LCRC's Swing, ALCF's Theta, NERSC's Cori, OLCF's Summit, and PSC's Bridges.
 Specify any specific platform to generate a testing environment
 at runtime with one of ``--bebop``, ``--swing``, ``--theta``, ``--cori``, ``--summit``, or ``--bridges``.
@@ -22,6 +27,12 @@ with test directory ``foo/bar`` enables `` --foo --bar`` options.
 
 Usage
 -----
+
+templater make theta all  # should also cache recent system specification so no need to specify again
+templater make forces
+templater run all         # will have to submit one-at-a-time because of queue policy on certain systems
+templater run bebop all   # can submit all at once on other systems
+templater check           # iterate through and affirm results match expected
 
 - Make all tests for a single platform:
 

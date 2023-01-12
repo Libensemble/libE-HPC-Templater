@@ -22,7 +22,6 @@ def display_instructions(platform, tests):
 
     for test in tests:
         print(check_any_adjust.replace('PLATFORM', platform).replace('TEST', test))
-    print(check_balsam1)
     print("----------")
     print(check_balsam2)
 
