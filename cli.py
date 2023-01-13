@@ -1,46 +1,32 @@
 #!/usr/bin/env python
 
-import os
-import sys
 import json
-import click
-import shutil
+import os
 import pprint
-import argparse
 import subprocess
-import click
 from pathlib import Path
+
+import click
 from jinja2 import Environment, FileSystemLoader
+
+from utils import (
+    check_make_args,
+    display_exit,
+    make_out_platform_dir,
+    make_test_dir,
+    run_prepare_scripts,
+    write_script,
+)
 
 platform_base = Path(__file__).parent.absolute() / "platforms"
 all_dir = platform_base / "all"
 all_platforms = [x.stem for x in platform_base.iterdir() if x != all_dir]
-all_tests = [x.stem for x in all_dir.iterdir() if x.is_dir()]
 
-def display_exit(ex):
-    click.echo(str(ex))
-    sys.exit(1)
-
-def make_out_platform_dir(platform, test, in_platform_dir):
-    """ Make a top-level directory labeled by platform and test name. Stage in files."""
-    out_platform_dir = platform + '_' + test.split('.')[0]
-    if not os.path.isdir(out_platform_dir):
-        shutil.copytree(os.path.join(all_dir, test, "stage"), out_platform_dir)
-        in_platform_stage = os.path.join(in_platform_dir, test, "stage")
-        if not os.path.isdir(in_platform_stage):
-            print("\n Writing: ./" + out_platform_dir)
-            return out_platform_dir
-        for file in os.listdir(in_platform_stage):
-            shutil.copy2(os.path.join(in_platform_stage, file),
-                         os.path.join(out_platform_dir, file))
-
-    print("\n Writing: ./" + out_platform_dir)
-    return out_platform_dir
 
 @click.command()
 @click.argument("path", nargs=1)
 def check(path):
-    """Check a tests directory (or `all`) for passes/fails."""
+    """Check a test directory (or `all`) for passes/fails."""
     click.echo("checking")
 
 
@@ -53,39 +39,52 @@ def submit(path):
 
 @click.command()
 @click.argument("machine", nargs=1)
-@click.argument("test", nargs=1)
-def make(machine, test):
+@click.argument("tests", nargs=1)
+def make(machine, tests):
     """Make tests by machine and variant (or `all`)."""
-    try:
-        assert machine in all_platforms, "Specified machine is invalid. run `templater show machines` for valid targets."
-        assert test == "all" or test in all_tests, "Specified test is invalid. use `all` or run `templater show tests` for valid targets."
-    except AssertionError as ex:
-        display_exit(ex)
 
     platform_dir = platform_base / machine
-    platform_test_dirs = [i for i in platform_dir.iterdir() if i.is_dir()]
-    platform_test_strs = [i.stem for i in platform_test_dirs]
-    if test != "all":
-        try:
-            assert test in platform_test_strs, "Specified test isn't supported."
-        except AssertionError as ex:
-            display_exit(ex)
-    else:
-        test = platform_test_strs
+    tests = check_make_args(machine, tests, platform_dir)
 
-    file_loader = FileSystemLoader(platform_dir)
+    file_loader = FileSystemLoader([platform_dir, all_dir])
     jinja_env = Environment(loader=file_loader, lstrip_blocks=True)
 
     with open(platform_dir / "platform.json") as p:
         platform_values = json.load(p)
 
-    for t in test:
-        in_test_dir = platform_dir / t
+    for test in tests:
+        in_test_dir = platform_dir / test
         variant_files = [i for i in in_test_dir.glob("*.json")]
-        import ipdb; ipdb.set_trace()
-        pass
+        out_platform_dir = make_out_platform_dir(machine, test, platform_dir)
 
-    pass
+        for variant in variant_files:
+            with open(variant) as f:
+                variant_config = json.load(f)
+
+            calling_values = variant_config["calling"]
+            submit_values = variant_config["submit"]
+            single_test = {"tests": calling_values["template"]}
+            submit_values = {
+                **single_test,
+                **platform_values["submit"],
+                **submit_values,
+            }
+            calling_values = {**platform_values["calling"], **calling_values}
+
+            variant_str = variant.stem.split(".json")[0]
+
+            out_test_dir = make_test_dir(out_platform_dir, variant_str)
+            write_script(
+                out_test_dir, calling_values["template"], calling_values, jinja_env
+            )
+            write_script(
+                out_test_dir,
+                "submit_" + variant_str,
+                submit_values,
+                jinja_env,
+            )
+
+        run_prepare_scripts(out_platform_dir)
 
 
 @click.command()
@@ -108,8 +107,6 @@ def config(platform):
         print(str(platform_file), "adjusted.")
 
 
-# ---
-
 @click.command()
 def ls():
     """Display all currently supported machines and their tests"""
@@ -125,7 +122,7 @@ def ls():
 
 
 @click.group()
-def _main():
+def main():
     """libEnsemble Scaling Tests Templater
 
     Make test-specific adjustments to the .json files in libE-templater/platforms/PLATFORM/TEST
@@ -133,11 +130,11 @@ def _main():
     pass
 
 
-_main.add_command(check)
-_main.add_command(submit)
-_main.add_command(make)
-_main.add_command(config)
-_main.add_command(ls)
+main.add_command(check)
+main.add_command(submit)
+main.add_command(make)
+main.add_command(config)
+main.add_command(ls)
 
 if __name__ == "__main__":
-    _main()
+    main()
