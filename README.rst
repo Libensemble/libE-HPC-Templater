@@ -18,7 +18,7 @@ Installs a ``templater`` utility for generating tests::
         templater/platforms/PLATFORM/TEST
 
     Options:
-    --help  Show this message and exit.
+        --help  Show this message and exit.
 
     Commands:
         check   Check a test directory (or `all`) for passes/fails.
