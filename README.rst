@@ -85,22 +85,22 @@ and templates in directories named after each platform and platform-agnostic
 configurations and templates in ``all``. Each of these directories contains
 sub-directories, templates, and configurations for each supported test. For example,
 ``platforms/bebop`` contains ``forces`` and ``warpx`` directories that match both supported tests,
-two different templates for submission scripts (used by both tests), and ``platform.json``,
+two different templates for submission scripts (used by both tests), and ``platform.yaml``,
 containing parameters universal to tests on that platform.
 
 As an example, ``platforms/bebop/forces`` contains both a ``stage`` directory
-and multiple ``.json`` files. Each ``.json`` file corresponds to a variant of ``forces``,
+and multiple ``.yaml`` files. Each ``.yaml`` file corresponds to a variant of ``forces``,
 with different numbers of nodes, comm-types, etc. that can be tested on ``bebop``.
 ``stage`` contains files to be copied to the output test-directory ``bebop_forces``.::
 
     /platforms
         /bebop
-            platform.json
+            platform.yaml
             template1
             template2
             /forces
-                variant1.json
-                variant2.json
+                variant1.yaml
+                variant2.yaml
                 /stage
                     file1
                     file2
@@ -114,14 +114,14 @@ Adjusting Tests
 ---------------
 
 Calling scripts and batch submission scripts are templated by parameters in test-specific
-``.json`` files and platform-specific ``platform.json`` files. Each file contains
+``.yaml`` files and platform-specific ``platform.yaml`` files. Each file contains
 ``"calling"`` and ``"submit"`` labels, corresponding to Jinja fields in the calling script
 and batch submission script templates respectively.
 
-Note the following about ``platform.json``:
+Note the following about ``platform.yaml``:
 
-    1) Parameters specified in ``platform.json`` don't have to be universal for all test types. For instance, ``"nthreads": 1`` can be included and templated for each WarpX test, but doesn't have to appear in Forces templates.
-    2) Parameters in ``platform.json`` can also appear in test-specific configurations. Test configurations will override values from ``platform.json``.
+    1) Parameters specified in ``platform.yaml`` don't have to be universal for all test types. For instance, ``"nthreads": 1`` can be included and templated for each WarpX test, but doesn't have to appear in Forces templates.
+    2) Parameters in ``platform.yaml`` can also appear in test-specific configurations. Test configurations will override values from ``platform.yaml``.
 
 New Test Example
 ----------------
@@ -134,8 +134,8 @@ or ``platforms/theta``.
 
 2) Create a test directory, ``platforms/theta/particles``.
 
-3) Place configuration ``.json`` files to populate templates within this new directory.
-In this case, they'll be named ``mpi_128-nodes.json`` and ``multiprocess_64-nodes.json``.
+3) Place configuration ``.yaml`` files to populate templates within this new directory.
+In this case, they'll be named ``mpi_128-nodes.yaml`` and ``multiprocess_64-nodes.yaml``.
 They must contain ``"calling"`` and ``"submit"`` keys matching a ``"template"``
 key-value pairs and any number of other key-value pairs.
 For example::
