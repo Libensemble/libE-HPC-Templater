@@ -1,81 +1,91 @@
 libE-templater
 ==============
 
-Generate libEnsemble testing environments from templates for a variety of HPC platforms.
+Generate libEnsemble testing environments from templates for a variety of HPC platforms::
 
-Requires Jinja:
+    git clone https://github.com/Libensemble/libE-HPC-Templater.git
+    cd libE-HPC-Templater; pip install -e .
 
-https://jinja.palletsprojects.com/en/2.11.x/
+Installs a ``templater`` utility for generating tests::
 
-``pip install Jinja2``
+    $ templater --help
 
-and PSI/J-python:
+    Usage: templater [OPTIONS] COMMAND [ARGS]...
 
-``git clone https://github.com/ExaWorks/psij-python.git``
-``cd psij-python; pip install -e .``
+        libEnsemble Scaling Tests Templater
 
-Supported platforms are LCRC's Bebop, LCRC's Swing, ALCF's Theta, NERSC's Cori, OLCF's Summit, and PSC's Bridges.
-Specify any specific platform to generate a testing environment
-at runtime with one of ``--bebop``, ``--swing``, ``--theta``, ``--cori``, ``--summit``, or ``--bridges``.
+        Make test-specific adjustments to the .yaml files in libE-
+        templater/platforms/PLATFORM/TEST
 
-Currently generates testing environments for the Forces, WarpX, and fbpic scaling tests.
-Use ``--forces``, ``--warpx``, and ``--fbpic``.
+    Options:
+    --help  Show this message and exit.
 
-Additional options are supported automatically if corresponding
-platform and test directories are created. For instance, adding a platform ``foo``
-with test directory ``foo/bar`` enables `` --foo --bar`` options.
+    Commands:
+        check   Check a test directory (or `all`) for passes/fails.
+        config  Edit the base settings for a given machine.
+        ls      Display all currently supported machines and their tests
+        make    Make tests by machine and variant (or `all`).
+        submit  Try submitting each of the tests in a directory (or `all`).
 
 Usage
 -----
 
-templater make theta all  # should also cache recent system specification so no need to specify again
-templater make forces
-templater run all         # will have to submit one-at-a-time because of queue policy on certain systems
-templater run bebop all   # can submit all at once on other systems
-templater check           # iterate through and affirm results match expected
+- See all supported machines and their tests::
 
-- Make all tests for a single platform:
+    $ templater ls
 
-    ``$ ./templater --theta --all``
+    Supported Machines and Tests:
+        - Swing:   fbpic,
+        - Summit:  warpx, forces,
+        - Bridges: warpx, forces,
+        - Bebop:   warpx, forces,
+        - Cori:    forces,
+        - Theta:   warpx, forces,
 
-- Make only Forces tests for Cori:
+- Modify machine-specific configuration::
 
-    ``$ ./templater --cori --forces``
+    $ templater config summit
 
-Users are presented with reminders on how they may need to customize or prepare
-their working environment or test configurations prior to templating. These instructions
-and reminders can be skipped by providing the ``--skip_instructions`` argument. In the
-event that previous templated tests are detected and the ``--reset`` argument is
-provided, the templater can assist the user with either removing the previous
-templated test directory, or overwriting specific test cases::
+    Summit Configuration: /Users/.../libE-templater/platforms/summit/platform.yaml
 
-    $ ls
-    summit_warpx/
+    ------------------------------------------------------------------------------------------------------
 
-    $ ./templater --summit --warpx --reset
+    {'calling': {'nthreads': 4,
+                'sim_kill_minutes': 5,
+                'warpx_sim_app': "os.environ['HOME'] + "
+                                "'/warpx/Bin/main2d.gnu.TPROF.MPI.CUDA.ex'"},
+    'submit': {'alloc_flags': 'smt1',
+                'conda_env_name': 'libe-gcc',
+                'job_name': 'libe_mproc',
+                'job_wallclock_minutes': 20,
+                'libe_wallclock': 15,
+                'project': 'csc314'}}
 
-    ...
+    Adjust any of the above platform parameters? (Y/N):
 
-    WARNING: Directory for Warpx on Summit already exists.
+- Create tests for a machine::
 
-    (D)elete previous ./summit_warpx, or (O)verwrite specific test directories? Any other key to exit: o
+    $ templater make theta all
 
-    Which test directories to overwrite? (e.g. 145). Skip with any non-integer.
-    0) ./summit_warpx/test_aposmm_mproc_zrw_13w_4n_portopts
-    1) ./summit_warpx/test_aposmm_mproc_24w_4n
-    2) ./summit_warpx/test_aposmm_mproc_4w_8n
-    3) ./summit_warpx/test_aposmm_mproc_12w_4n
-    4) ./summit_warpx/test_aposmm_mproc_4w_8n_portops
-    5) ./summit_warpx/test_aposmm_mproc_zrw_65w_128n_portops
-    6) ./summit_warpx/test_aposmm_mproc_zrw_25w_4n
-    7) ./summit_warpx/test_aposmm_mproc_12w_4n_portopts
-    8) ./summit_warpx/test_aposmm_mproc_4w_4n
-    Choices: 145
+    Writing: ./theta_warpx
+    --test_mproc_MOM_zero_resource_workers_5w_8n
+    --test_mproc_MOM_4w_8n
+    --test_mproc_MOM_128w_256n
 
-     Writing: ./summit_warpx
-       --test_aposmm_mproc_24w_4n
-       --test_aposmm_mproc_4w_8n_portops
-       --test_aposmm_mproc_zrw_65w_128n_portops
+    Writing: ./theta_forces
+    --test_mproc_MOM_4w_8n_fail_sim
+    --test_mproc_MOM_4w_8n
+    --test_MPI_balsam2_4w_4n
+    --test_mproc_MOM_128w_128n
+    --test_mproc_MOM_4w_8n_fail_submit
+
+- Submit one (or more) tests to the scheduler::
+
+    COMING SOON
+
+- Check the results of completed tests::
+
+    COMING SOON
 
 Utility Structure
 -----------------
@@ -140,19 +150,12 @@ They must contain ``"calling"`` and ``"submit"`` keys matching a ``"template"``
 key-value pairs and any number of other key-value pairs.
 For example::
 
-    {
-        "calling": {
-            "sample_parameter": true,
-            "template": "my_calling_template.py"
-        },
+    calling:
+        sample_parameter: true
+        template: my_calling_template.py
+    submit:
+        another_parameter: 123
+        template: my_submission_template.sh
 
-        "submit": {
-            "another_parameter": 123,
-            "template": "my_submission_template.sh"
-        }
-    }
-
-4) Append reminders and instructions for this test to ``instructions`` in ``strings.py``
-
-5) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
+4) (Optional) place files to copy over to the eventual output directory, ``theta_particles``,
 within a new directory ``stage`` inside the above test directory.
