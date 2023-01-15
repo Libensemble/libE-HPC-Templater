@@ -1,0 +1,12 @@
+calling:
+    gen_type: "'aposmm'"
+    zero_resource_workers: 1
+    template: run_libensemble_on_warpx.py
+    num_procs: '12'
+    e_args: "'-a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\"'"
+    nthreads: '1'
+    sim_max: 256
+submit:
+    num_nodes: 128
+    num_workers: 65
+    template: mproc_template

@@ -1,0 +1,10 @@
+calling:
+    warpx_sim_app: "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'"
+    num_sim_particles: 20000
+    sim_kill_minutes: 5
+    nthreads: 1
+submit:
+    job_name: libE_test
+    job_wallclock_minutes: 20
+    node_type: RM
+    project: msz3a9p

@@ -1,0 +1,11 @@
+calling:
+    gen_type: "'aposmm'"
+    zero_resource_workers: 1
+    sim_max: 16
+    num_procs: 8
+    template: run_libensemble_on_warpx.py
+submit:
+    cobalt_num_nodes: 8
+    queue: debug-cache-quad
+    num_workers: 5
+    template: mproc_MOM_template

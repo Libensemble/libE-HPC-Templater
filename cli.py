@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import json
+import yaml
 import os
 import pprint
 import subprocess
@@ -49,17 +49,17 @@ def make(machine, tests):
     file_loader = FileSystemLoader([platform_dir, all_dir])
     jinja_env = Environment(loader=file_loader, lstrip_blocks=True)
 
-    with open(platform_dir / "platform.json") as p:
-        platform_values = json.load(p)
+    with (platform_dir / "platform.yaml").open() as p:
+        platform_values = yaml.full_load(p)
 
     for test in tests:
         in_test_dir = platform_dir / test
-        variant_files = [i for i in in_test_dir.glob("*.json")]
+        variant_files = [i for i in in_test_dir.glob("*.yaml")]
         out_platform_dir = make_out_platform_dir(machine, test, platform_dir)
 
         for variant in variant_files:
-            with open(variant) as f:
-                variant_config = json.load(f)
+            with variant.open() as f:
+                variant_config = yaml.full_load(f)
 
             calling_values = variant_config["calling"]
             submit_values = variant_config["submit"]
@@ -71,7 +71,7 @@ def make(machine, tests):
             }
             calling_values = {**platform_values["calling"], **calling_values}
 
-            variant_str = variant.stem.split(".json")[0]
+            variant_str = variant.stem.split(".yaml")[0]
 
             out_test_dir = make_test_dir(out_platform_dir, variant_str)
             write_script(
@@ -91,14 +91,14 @@ def make(machine, tests):
 @click.argument("platform", nargs=1)
 def config(platform):
     """Edit the base settings for a given machine."""
-    platform_file = platform_base / platform / "platform.json"
+    platform_file = platform_base / platform / "platform.yaml"
     config_label = (
         "\n" + platform.title() + " Configuration: " + str(platform_file) + "\n"
     )
     click.echo(config_label)
     click.echo("-" * (len(config_label) - 3) + "\n")
-    with open(platform_file, "r") as f:
-        platform_values = json.load(f)
+    with platform_file.open() as f:
+        platform_values = yaml.full_load(f)
 
     pprint.pprint(platform_values)
     adjust = input("\nAdjust any of the above platform parameters? (Y/N): ")
@@ -125,7 +125,7 @@ def ls():
 def main():
     """libEnsemble Scaling Tests Templater
 
-    Make test-specific adjustments to the .json files in libE-templater/platforms/PLATFORM/TEST
+    Make test-specific adjustments to the .yaml files in libE-templater/platforms/PLATFORM/TEST
     """
     pass
 

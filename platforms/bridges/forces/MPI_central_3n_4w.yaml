@@ -1,0 +1,11 @@
+calling:
+    sim_max: 8
+    mpi_disable_mprobes: true
+    template: run_libe_forces.py
+submit:
+    num_nodes: 3
+    num_workers: 4
+    exports:
+        - 'export I_MPI_FABRICS=shm:tmi'
+    cmd_prefix: mpirun -np $(($NUM_WORKERS+1)) -ppn $(($NUM_WORKERS+1))
+    template: base_submit_template
