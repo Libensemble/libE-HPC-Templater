@@ -39,7 +39,6 @@ Usage
         - Summit:  warpx, forces,
         - Bridges: warpx, forces,
         - Bebop:   warpx, forces,
-        - Cori:    forces,
         - Theta:   warpx, forces,
 
 - Modify machine-specific configuration::
