@@ -22,10 +22,10 @@ def run_forces(H, persis_info, sim_specs, libE_info):
     exctr = libE_info["executor"]
 
     app_type = "forces"
-    if sim_specs["user"].get("max_procs"):
+    if sim_specs["user"]["variant"] == "MULTIAPP":
         app_type = H["app_type"][0].decode()
 
-    if not sim_specs["user"].get("max_procs") and not sim_specs["user"].get("max_gpus"):
+    if sim_specs["user"]["variant"] == "BASE":
         task = exctr.submit(
             app_name=app_type,
             app_args=args,

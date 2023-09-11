@@ -82,6 +82,7 @@ def setup_gen_specs(VARIANT, nsim_workers):
     else:
         gen_specs.gen_f = persistent_uniform
         gen_specs.user.update(BIG_BOUNDS)
+    gen_specs.user["variant"] = VARIANT
 
     return gen_specs
 
