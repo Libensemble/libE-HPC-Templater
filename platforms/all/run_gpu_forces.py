@@ -73,7 +73,7 @@ def setup_gen_specs(VARIANT, nsim_workers):
         gen_specs.user["ub"] = np.array([10000])
         gen_specs.user["max_procs"] = nsim_workers // 2
 
-    elif VARIANT == "VAR_RESOURCES":
+    elif VARIANT == "VARRESOURCES":
         gen_specs.gen_f = uniform_sample_with_var_gpus
         gen_specs.outputs.append(("num_gpus", int))
         gen_specs.user.update(BIG_BOUNDS)
