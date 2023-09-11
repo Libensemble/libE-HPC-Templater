@@ -22,12 +22,6 @@ import mpi4py
 mpi4py.rc.recv_mprobe = False
 {% endif %}
 
-{% if use_balsam1 is defined %}
-use_balsam1 = True
-{% else %}
-use_balsam1 = False
-{% endif %}
-
 {% if zero_resource_workers is defined %}
 ZRW = True
 {% else %}
@@ -61,12 +55,9 @@ from libensemble.tools import parse_args, save_libE_output, \
     add_unique_random_streams
 from libensemble import logger
 
-if use_balsam1:
-    from libensemble.executors.balsam_executor import BalsamMPIExecutor
-    exctr = BalsamMPIExecutor()
-else:
-    from libensemble.executors.mpi_executor import MPIExecutor
-    exctr = MPIExecutor()
+
+from libensemble.executors.mpi_executor import MPIExecutor
+exctr = MPIExecutor()
 
 logger.set_level('DEBUG')
 

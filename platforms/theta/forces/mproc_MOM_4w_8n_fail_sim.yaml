@@ -1,5 +1,4 @@
 calling:
-  use_balsam1: false
   num_sim_particles: 100000.0
   sim_max: 8
   fail_on_sim: true

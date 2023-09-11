@@ -24,20 +24,6 @@ all_platforms = [x.stem for x in platform_base.iterdir() if x != all_dir]
 
 
 @click.command()
-@click.argument("path", nargs=1)
-def check(path):
-    """Check a test directory (or `all`) for passes/fails."""
-    click.echo("checking")
-
-
-@click.command()
-@click.argument("path", nargs=1)
-def submit(path):
-    """Try submitting each of the tests in a directory (or `all`)."""
-    click.echo("submitting")
-
-
-@click.command()
 @click.argument("machine", nargs=1)
 @click.argument("tests", nargs=1)
 def make(machine, tests):
@@ -130,8 +116,6 @@ def main():
     pass
 
 
-main.add_command(check)
-main.add_command(submit)
 main.add_command(make)
 main.add_command(config)
 main.add_command(ls)
