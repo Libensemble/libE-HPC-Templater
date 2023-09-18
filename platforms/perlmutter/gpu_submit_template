@@ -12,10 +12,12 @@ export EXE={{ test }}
 
 export NUM_WORKERS={{ num_workers }}
 
+export VARIANT={{ variant }}
+
 export CONDA_ENV_NAME={{ conda_env_name }}
 
 echo -e "Slurm job ID: $SLURM_JOBID"
 
-python $EXE --comms local --nworkers $NUM_WORKERS
+python $EXE --comms local --nworkers $NUM_WORKERS --variant $VARIANT
 
 echo Finished at: `date`
