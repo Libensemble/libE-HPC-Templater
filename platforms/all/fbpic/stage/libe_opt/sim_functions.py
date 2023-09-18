@@ -6,7 +6,6 @@ from libensemble.resources.resources import Resources
 from libensemble.executors.executor import Executor
 from libensemble.message_numbers import WORKER_DONE, TASK_FAILED
 
-#import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)
 
 def run_simulation(H, persis_info, sim_specs, libE_info):
     """
@@ -42,36 +41,41 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
     # Create simulation input file.
     sim_template = sim_specs['user']['sim_template']
     sim_script = sim_template[len('template_'):] # Strip 'template_' from name
+
     with open(sim_template, 'r') as f:
         template = jinja2.Template( f.read() )
     with open(sim_script, 'w') as f:
         f.write( template.render(values_dict) )
     os.remove(sim_template)
 
-    # Passed to command line in addition to the executable.
     exctr = Executor.executor  # Get Executor
-    # Launch the executor to actually run the WarpX simulation
     resources = Resources.resources.worker_resources
 
-    #os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
+    if sim_specs['user']['USE_CUDA_VISIBLE_DEVICES']:
+        slots = resources.slots
+        assert (
+            resources.matching_slots
+        ), "Error: Cannot set CUDA_VISIBLE_DEVICES when unmatching slots on nodes {}".format(slots)
 
-    if Resources.resources.glob_resources.launcher != 'jsrun':
-        #print('not setting CUDA_VISIBLE_DEVICES slots on node', resources.slots_on_node,flush=True)
-        print('Setting CUDA_VISIBLE_DEVICES to slots on node', resources.slots_on_node,flush=True)
-        #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # testing if makes a difference
-        os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
-            map(str,resources.slots_on_node))
+        print('Setting CUDA_VISIBLE_DEVICES to slots on node', slots, flush=True)
+        resources.set_env_to_slots("CUDA_VISIBLE_DEVICES")
+
     num_nodes = resources.local_node_count
     cores_per_node = resources.slot_count #One CPU per GPU
-    print('num_nodes',num_nodes,flush=True)
-    print('cores_per_node',cores_per_node,flush=True)
-    extra_args = os.environ.get( 'LIBE_SIM_EXTRA_ARGS', None )
+    print(f"Worker {libE_info['workerID']}  num_nodes {num_nodes}  cores_per_node {cores_per_node}",flush=True)
+
+    #extra_args = os.environ.get( 'LIBE_SIM_EXTRA_ARGS', None )
+    extra_args = "--gpus-per-task 1"
+
+    if sim_specs['user']['MPICH_GPU_SUPPORT']:
+        os.environ['MPICH_GPU_SUPPORT_ENABLED'] = "1"
+
+    # Launch the executor to actually run the WarpX simulation
     if extra_args is not None:
         task = exctr.submit(calc_type='sim',
                             num_nodes=num_nodes,
                             procs_per_node=cores_per_node,
                             extra_args=extra_args,
-                            app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
                             wait_on_start=True)
@@ -80,7 +84,6 @@ def run_simulation(H, persis_info, sim_specs, libE_info):
                             num_procs=cores_per_node*num_nodes, #unnecesary but tesitng
                             num_nodes=num_nodes,
                             procs_per_node=cores_per_node,
-                            app_args=sim_script,
                             stdout='out.txt',
                             stderr='err.txt',
                             wait_on_start=True)

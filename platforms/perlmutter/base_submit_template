@@ -1,0 +1,53 @@
+#!/bin/bash
+#SBATCH -J {{ job_name }}
+#SBATCH -N {{ num_nodes }}
+#SBATCH -o tlib.%j.%N.out
+#SBATCH -e tlib.%j.%N.error
+#SBATCH -t 00:{{ job_wallclock_minutes }}
+#SBATCH -A {{ project }}
+#SBATCH -C {{ node_type }}
+
+# User to edit these variables
+export EXE={{ test }}
+
+export NUM_WORKERS={{ num_workers }}
+
+# Name of Conda environment
+export CONDA_ENV_NAME={{ conda_env_name }}
+
+export LIBE_PLOTS={{ do_plots }} # Require plot scripts in $PLOT_DIR (see at end)
+export PLOT_DIR={{ plot_dir }}
+#---------------------------------------------------------------------------------------------
+#Test
+echo -e "Slurm job ID: $SLURM_JOBID"
+
+cd $SLURM_SUBMIT_DIR
+
+# Activate conda environment
+export PYTHONNOUSERSITE=1
+. activate $CONDA_ENV_NAME
+
+#export MPICH_GPU_SUPPORT_ENABLED=1  # This is set in sim_func
+#export FBPIC_ENABLE_GPUDIRECT=1  # Currently not working
+export FBPIC_ENABLE_GPUDIRECT=0
+export SLURM_EXACT=1
+export SLURM_MEM_PER_NODE=0
+
+# A little useful information for the log file...
+echo -e "Master process running on: $HOSTNAME"
+echo -e "Directory is:  $PWD"
+
+# Testing
+echo -e "Conda env is: $CONDA_DEFAULT_ENV"
+echo -e "Slurm nodelist is: $SLURM_NODELIST"
+
+cmd="{{ cmd_prefix }} python $EXE {{ cmd_suffix }}"
+
+echo The command is: $cmd
+echo End PBS script information.
+echo All further output is from the process being run and not the submission script.\n\n $cmd # Print the date again -- when finished
+
+$cmd
+
+# Print the date again -- when finished
+echo Finished at: `date`
