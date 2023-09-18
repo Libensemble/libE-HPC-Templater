@@ -1,9 +1,0 @@
-calling:
-  num_sim_particles: 100000.0
-  sim_max: 512
-  template: run_libe_forces.py
-submit:
-  cobalt_num_nodes: 128
-  queue: default
-  num_workers: 128
-  template: mproc_MOM_template
