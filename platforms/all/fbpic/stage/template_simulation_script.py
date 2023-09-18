@@ -43,10 +43,11 @@ dens_n2 = dens_n2*mult
 
 
 # The simulation box
-Nz = int( 800*{{resolution}} )      # Number of gridpoints along z
+res = {{resolution}}
+Nz = int(800 * res)      # Number of gridpoints along z
 zmax = 0.e-6     # Right end of the simulation box (meters)
 zmin = -80.e-6   # Left end of the simulation box (meters)
-Nr = int( 67.5*{{resolution}} )     # Number of gridpoints along r
+Nr = int(67.5 * res)     # Number of gridpoints along r
 rmax = 135.e-6   # Length of the box along r (meters)
 Nm = 2           # Number of modes used
 # Boost factor
@@ -168,7 +169,10 @@ if __name__ == '__main__':
                     ]
     # Remove step 0 outputs
     sim.diags[0].snapshots.pop(0)
-    
-    N_step = int(T_interact/sim.dt)
+
+    # N_step = int(T_interact/sim.dt)
+    N_step = int(T_interact/sim.dt)//100  # small for libE testing
+    print('resolution {} timestep(dt) {} num steps {} Nr {} Nz {}'.format(res, dt, N_step, Nr, Nz))
+
     ### Run the simulation
     sim.step( N_step )

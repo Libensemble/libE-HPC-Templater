@@ -1,0 +1,18 @@
+{
+    "calling": {
+        "template": "run_libe_fbpic.py",
+        "run_async": true,
+        "sim_max": 24,
+        "max_rsets_per_worker": 4,
+        "cuda_visible_devices": "False",
+        "match_slots": true,
+        "split2fit": true
+    },
+
+    "submit": {
+        "num_nodes": 2,
+        "num_workers": 9,
+        "template": "base_submit_template",
+        "cmd_suffix": "--comms local --nworkers $NUM_WORKERS"
+    }
+}
