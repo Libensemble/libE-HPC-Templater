@@ -1,0 +1,9 @@
+calling:
+    num_sim_particles: 100000
+    sim_max: 512
+    template: run_libe_forces.py
+submit:
+    num_nodes: 129
+    num_workers: 128
+    cmd_suffix: '--comms local --nworkers $NUM_WORKERS > out.txt 2>&1'
+    template: base_submit_template
