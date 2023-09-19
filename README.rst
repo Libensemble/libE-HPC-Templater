@@ -35,11 +35,11 @@ Usage
     $ templater ls
 
     Supported Machines and Tests:
-        - Swing:   fbpic,
-        - Summit:  warpx, forces,
-        - Bridges: warpx, forces,
-        - Bebop:   warpx, forces,
-        - Theta:   warpx, forces,
+       - Perlmutter:  gpu_forces, forces, fbpic,
+       - Swing:       fbpic,
+       - Summit:      warpx, forces,
+       - Bridges:     warpx, forces,
+       - Bebop:       warpx, forces,
 
 - Modify machine-specific configuration::
 
@@ -78,59 +78,39 @@ Usage
     --test_mproc_MOM_128w_128n
     --test_mproc_MOM_4w_8n_fail_submit
 
-- Submit one (or more) tests to the scheduler::
-
-    COMING SOON
-
-- Check the results of completed tests::
-
-    COMING SOON
-
 Utility Structure
 -----------------
 
-The ``platforms`` directory contains platform-specific test configurations
-and templates in directories named after each platform and platform-agnostic
-configurations and templates in ``all``. Each of these directories contains
-sub-directories, templates, and configurations for each supported test. For example,
-``platforms/bebop`` contains ``forces`` and ``warpx`` directories that match both supported tests,
-two different templates for submission scripts (used by both tests), and ``platform.yaml``,
-containing parameters universal to tests on that platform.
+The ``platforms`` directory contains:
 
-As an example, ``platforms/bebop/forces`` contains both a ``stage`` directory
-and multiple ``.yaml`` files. Each ``.yaml`` file corresponds to a variant of ``forces``,
-with different numbers of nodes, comm-types, etc. that can be tested on ``bebop``.
-``stage`` contains files to be copied to the output test-directory ``bebop_forces``.::
+- Platform-specific test configs and templates
+- Platform-agnostic configs and templates in ``all``.
 
-    /platforms
-        /bebop
-            platform.yaml
-            template1
-            template2
-            /forces
-                variant1.yaml
-                variant2.yaml
-                /stage
-                    file1
-                    file2
+Each *platform* directory has:
+- Test-type specific directories
+- Templates for scheduler submission scripts
+- A ``platform.yaml`` with universal parameters for that platform
 
-Once a test output directory has been created, the templater will run each
-batch script prefixed with "prepare" in the output directory. This is helpful
-for setting permissions on shell scripts or copying files to variant directories.
-These scripts should be placed in any ``stage`` directory to be copied over.
+Each *test* directory has:
+- A ``stage`` directory containing files to copy into the output test directory
+- ``.yaml`` files corresponding to test-variants
+
+Any staged shell-scripts prefixed with **"prepare"** will be run by the templater
+in the output directory. This can help copy files into test-variant directories
+or adjust permissions on shell scripts.
 
 Adjusting Tests
 ---------------
 
-Calling scripts and batch submission scripts are templated by parameters in test-specific
-``.yaml`` files and platform-specific ``platform.yaml`` files. Each file contains
-``"calling"`` and ``"submit"`` labels, corresponding to Jinja fields in the calling script
-and batch submission script templates respectively.
+Within all ``.yaml`` files:
+
+- ``calling:``: parameters in libEnsemble python-initialization scripts
+- ``submit:``: parameters in batch submission scripts
 
 Note the following about ``platform.yaml``:
 
-    1) Parameters specified in ``platform.yaml`` don't have to be universal for all test types. For instance, ``"nthreads": 1`` can be included and templated for each WarpX test, but doesn't have to appear in Forces templates.
-    2) Parameters in ``platform.yaml`` can also appear in test-specific configurations. Test configurations will override values from ``platform.yaml``.
+    1) Parameters don't have to be universal for all tests. For instance, ``"nthreads": 1`` can be included for each WarpX test, but doesn't have to appear in Forces templates.
+    2) Parameters can also appear in test-specific configurations. Test configurations will override values from ``platform.yaml``.
 
 New Test Example
 ----------------

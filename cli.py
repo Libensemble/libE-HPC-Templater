@@ -99,7 +99,7 @@ def ls():
     click.echo("Supported Machines and Tests:")
     for x in all_platforms:
         out = "   - {}: "
-        out = out.format(x.title()).ljust(14)
+        out = out.format(x.title()).ljust(18)
         platform_dir = platform_base / x
         platform_tests = [i for i in platform_dir.iterdir() if i.is_dir()]
         for i in platform_tests:
