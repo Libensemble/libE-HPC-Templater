@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH -J {{ job_name }}
+#SBATCH -A {{ project }}
+#SBATCH -C gpu
+#SBATCH --time 00:{{ job_wallclock_minutes }}
+#SBATCH --nodes {{ num_nodes }}
+
+export MPICH_GPU_SUPPORT_ENABLED=1
+export SLURM_EXACT=1
+
+export EXE={{ test }}
+
+export NUM_WORKERS={{ num_workers }}
+
+export VARIANT={{ variant }}
+
+export CONDA_ENV_NAME={{ conda_env_name }}
+
+echo -e "Slurm job ID: $SLURM_JOBID"
+
+python $EXE --comms local --nworkers $NUM_WORKERS --variant $VARIANT
+
+echo Finished at: `date`

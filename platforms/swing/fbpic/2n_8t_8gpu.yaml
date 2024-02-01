@@ -1,0 +1,11 @@
+calling:
+    template: run_libe_fbpic.py
+    run_async: true
+    sim_max: 20
+submit:
+    num_nodes: 2
+    num_tasks: 8
+    num_gpus: 8
+    num_workers: 9
+    omp_num_threads: 1
+    template: base_template

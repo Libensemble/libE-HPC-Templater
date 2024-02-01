@@ -1,0 +1,9 @@
+calling:
+    nthreads: 1
+    warpx_sim_app: "os.environ['HOME'] + '/warpx/Bin/main2d.gnu.TPROF.MPI.OMP.ex'"
+    sim_kill_minutes: 5
+submit:
+    job_name: libE_test
+    job_wallclock_minutes: 30
+    node_type: knlall
+    project: COMPASSOPT

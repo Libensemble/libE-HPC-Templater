@@ -1,0 +1,7 @@
+calling:
+    template: run_gpu_forces.py
+submit:
+    num_nodes: 1
+    num_workers: 5
+    variant: varresources
+    template: gpu_submit_template
