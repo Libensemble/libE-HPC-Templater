@@ -49,7 +49,7 @@ def make(machine, tests):
 
             calling_values = variant_config["calling"]
             submit_values = variant_config["submit"]
-            single_test = {"tests": calling_values["template"]}
+            single_test = {"test": calling_values["template"]}
             submit_values = {
                 **single_test,
                 **platform_values["submit"],
